@@ -1,0 +1,352 @@
+<title>ПрофСервис</title>
+<style>
+  :root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --surface-2: #eef1f8;
+    --text: #171a21;
+    --text-muted: #5c6270;
+    --border: #e2e5ee;
+    --accent: #3457e6;
+    --accent-hover: #2743bf;
+    --accent-soft: #e8ecfd;
+    --success-bg: #e4f7ea;
+    --success-text: #197a44;
+    --error-bg: #fbe9e7;
+    --error-text: #b23b2e;
+    --shadow-soft: 0 2px 14px rgba(23, 26, 33, 0.05);
+    --shadow-card: 0 16px 40px rgba(23, 26, 33, 0.09);
+    --radius-md: 12px;
+    --radius-lg: 22px;
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14161c;
+      --surface: #1c1f27;
+      --surface-2: #23262f;
+      --text: #eef0f5;
+      --text-muted: #a2a8b6;
+      --border: #2c2f3a;
+      --accent: #7a93ff;
+      --accent-hover: #93a8ff;
+      --accent-soft: #262d4d;
+      --success-bg: #163326;
+      --success-text: #5fd493;
+      --error-bg: #3a1f1c;
+      --error-text: #ef8f80;
+      --shadow-soft: 0 2px 14px rgba(0, 0, 0, 0.25);
+      --shadow-card: 0 16px 40px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #14161c;
+    --surface: #1c1f27;
+    --surface-2: #23262f;
+    --text: #eef0f5;
+    --text-muted: #a2a8b6;
+    --border: #2c2f3a;
+    --accent: #7a93ff;
+    --accent-hover: #93a8ff;
+    --accent-soft: #262d4d;
+    --success-bg: #163326;
+    --success-text: #5fd493;
+    --error-bg: #3a1f1c;
+    --error-text: #ef8f80;
+    --shadow-soft: 0 2px 14px rgba(0, 0, 0, 0.25);
+    --shadow-card: 0 16px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    padding-inline: 16px;
+  }
+
+  .wrap { max-width: 1040px; margin: 0 auto; }
+
+  h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
+
+  /* Header */
+  .header {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    margin-inline: -16px;
+    padding-inline: 16px;
+  }
+  .header__inner {
+    max-width: 1040px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 16px;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand__mark {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--accent); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 600; font-size: 16px;
+    flex-shrink: 0;
+  }
+  .brand__name { font-size: 19px; font-weight: 600; font-family: var(--font-display); }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 999px;
+    background: var(--success-bg); color: var(--success-text);
+    font-size: 13px; font-weight: 600; white-space: nowrap;
+  }
+  .badge__dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--success-text); flex-shrink: 0;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) { .badge__dot { animation: none; } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* Hero */
+  .hero { padding-block: 64px 48px; }
+  .hero__inner { max-width: 660px; }
+  .hero__eyebrow {
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px;
+    font-weight: 600; color: var(--accent); margin-bottom: 14px;
+  }
+  .hero__title { font-size: clamp(30px, 4.2vw, 46px); line-height: 1.12; margin-bottom: 16px; }
+  .hero__subtitle { font-size: 17px; color: var(--text-muted); margin: 0 0 28px; max-width: 540px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border: none; border-radius: var(--radius-md);
+    padding: 14px 28px; font-size: 15px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    font-family: var(--font-body);
+    background: var(--accent); color: #fff;
+    transition: background-color 0.15s ease;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* Services */
+  .services { padding-block: 8px 56px; }
+  .section-title { font-size: clamp(22px, 3vw, 28px); margin-bottom: 6px; }
+  .section-sub { color: var(--text-muted); font-size: 14px; margin: 0 0 28px; }
+  .services__grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  }
+  .service {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 24px 20px;
+    box-shadow: var(--shadow-soft);
+  }
+  .service__icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px; font-size: 18px;
+  }
+  .service__title { font-family: var(--font-body); font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .service__text { font-size: 13.5px; color: var(--text-muted); margin: 0; }
+
+  /* Form */
+  .request { padding-block: 8px 72px; }
+  .request__card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 36px;
+    box-shadow: var(--shadow-card); max-width: 540px; margin: 0 auto;
+  }
+  .form { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 13px; font-weight: 600; }
+  .field input, .field textarea {
+    width: 100%; padding: 12px 14px; border: 1px solid var(--border);
+    border-radius: var(--radius-md); font-size: 15px; font-family: var(--font-body);
+    color: var(--text); background: var(--surface-2);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .field input:focus, .field textarea:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft); background: var(--surface);
+  }
+  .field textarea { resize: vertical; min-height: 92px; }
+  .form__submit { margin-top: 4px; width: 100%; }
+  .form__result {
+    margin: 0; min-height: 20px; font-size: 14px; font-weight: 600; text-align: center;
+  }
+  .form__result.show { padding: 12px 14px; border-radius: var(--radius-md); }
+  .form__result.success { color: var(--success-text); background: var(--success-bg); }
+  .form__result.error { color: var(--error-text); background: var(--error-bg); }
+
+  .note {
+    margin-top: 16px; font-size: 12.5px; color: var(--text-muted);
+    text-align: center;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding-block: 24px calc(24px + env(safe-area-inset-bottom, 0px));
+    text-align: center; color: var(--text-muted); font-size: 13px;
+    margin-inline: -16px; padding-inline: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .services__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .hero { padding-block: 44px 36px; }
+    .services { padding-block: 4px 40px; }
+    .services__grid { grid-template-columns: 1fr; }
+    .request__card { padding: 26px 20px; }
+  }
+</style>
+
+<div class="header">
+  <div class="header__inner">
+    <div class="brand">
+      <span class="brand__mark">ПС</span>
+      <span class="brand__name">ПрофСервис</span>
+    </div>
+    <div class="badge">
+      <span class="badge__dot"></span>
+      Принимаем заявки
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="hero__inner">
+      <div class="hero__eyebrow">Выезд в день обращения</div>
+      <h1 class="hero__title">Профессиональные услуги для вашего дома и бизнеса</h1>
+      <p class="hero__subtitle">Работаем быстро, честно и без лишних вопросов. Оставьте заявку — перезвоним и согласуем удобное время.</p>
+      <a href="#request-form" class="btn">Оставить заявку</a>
+    </div>
+  </section>
+
+  <section class="services">
+    <h2 class="section-title">Наши услуги</h2>
+    <p class="section-sub">Коротко о том, с чем мы помогаем каждый день</p>
+    <div class="services__grid">
+      <div class="service">
+        <div class="service__icon">🛠️</div>
+        <div class="service__title">Ремонт и обслуживание</div>
+        <p class="service__text">Устранение неисправностей и плановое обслуживание техники и оборудования.</p>
+      </div>
+      <div class="service">
+        <div class="service__icon">🚚</div>
+        <div class="service__title">Выезд специалиста</div>
+        <p class="service__text">Приезжаем в удобное время в пределах города и ближайших районов.</p>
+      </div>
+      <div class="service">
+        <div class="service__icon">💬</div>
+        <div class="service__title">Консультация</div>
+        <p class="service__text">Бесплатно подскажем оптимальное решение под вашу задачу.</p>
+      </div>
+      <div class="service">
+        <div class="service__icon">✅</div>
+        <div class="service__title">Гарантия качества</div>
+        <p class="service__text">Даём гарантию на все виды выполненных работ и материалы.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="request" id="request-form">
+    <div class="request__card">
+      <h2 class="section-title">Оставить заявку</h2>
+      <p class="section-sub">Заполните форму — мы свяжемся с вами в течение рабочего дня.</p>
+
+      <form class="form" id="requestForm" novalidate>
+        <div class="field">
+          <label for="name">Имя</label>
+          <input type="text" id="name" name="name" placeholder="Ваше имя" required>
+        </div>
+        <div class="field">
+          <label for="phone">Телефон</label>
+          <input type="tel" id="phone" name="phone" placeholder="+7 (___) ___-__-__" required>
+        </div>
+        <div class="field">
+          <label for="message">Сообщение</label>
+          <textarea id="message" name="message" placeholder="Опишите вашу задачу" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn form__submit" id="submitBtn">
+          <span id="submitBtnText">Отправить заявку</span>
+        </button>
+        <p class="form__result" id="formResult" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="note">Это демо-предпросмотр дизайна. Заявка реально отправляется на подключённый Google-скрипт — можете попробовать.</p>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> ПрофСервис. Все права защищены.</div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbx95IK1qzW2LIgArSapuitUUtnW2rdqaqtQQdEniaLhxntVgdwAGLoy6t6kMV_8BU2w/exec';
+
+  const form = document.getElementById('requestForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const submitBtnText = document.getElementById('submitBtnText');
+  const resultEl = document.getElementById('formResult');
+
+  function setLoading(isLoading) {
+    submitBtn.disabled = isLoading;
+    submitBtnText.textContent = isLoading ? 'Отправка...' : 'Отправить заявку';
+  }
+
+  function showResult(text, type) {
+    resultEl.textContent = text;
+    resultEl.classList.remove('success', 'error', 'show');
+    resultEl.classList.add('show', type);
+  }
+
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const name = form.name.value.trim();
+    const phone = form.phone.value.trim();
+    const message = form.message.value.trim();
+
+    if (!name || !phone) {
+      showResult('Пожалуйста, заполните имя и телефон.', 'error');
+      return;
+    }
+
+    setLoading(true);
+    resultEl.className = 'form__result';
+    resultEl.textContent = '';
+
+    try {
+      await fetch(ENDPOINT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, message }),
+      });
+      showResult('Заявка отправлена, мы свяжемся с вами', 'success');
+      form.reset();
+    } catch (error) {
+      showResult('Не удалось отправить заявку. Попробуйте ещё раз.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
