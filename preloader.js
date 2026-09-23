@@ -16,7 +16,7 @@
   const MAX_MS = 12000; // и снимается не позже, даже если что-то зависло
   const TURNS = 2;      // сколько полных оборотов каска делает до конца загрузки
   const FADE_MS = 500;
-  const TURN_MS = 2800; // один оборот каски
+  const TURN_MS = 2300; // один оборот каски
   const EASE = 0.8;     // 0 — равномерно, ближе к 1 — дольше смотрит на зрителя
 
   const canvas = document.getElementById('helmetCanvas');
