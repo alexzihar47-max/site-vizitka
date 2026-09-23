@@ -12,8 +12,9 @@
   const root = document.documentElement;
   if (!root.classList.contains('is-loading')) return;
 
-  const MIN_MS = 3000;  // экран держится минимум столько
-  const MAX_MS = 9000;  // и снимается не позже, даже если что-то зависло
+  const MIN_MS = 3000;  // минимум, если 3D недоступно
+  const MAX_MS = 12000; // и снимается не позже, даже если что-то зависло
+  const TURNS = 2;      // сколько полных оборотов каска делает до конца загрузки
   const FADE_MS = 500;
   const TURN_MS = 2800; // один оборот каски
   const EASE = 0.8;     // 0 — равномерно, ближе к 1 — дольше смотрит на зрителя
@@ -398,10 +399,12 @@
   // ======================================================================
 
   // Внутри оборота скорость 1 − EASE·cos(2πf): у «лица» (f = 0) почти стоит,
-  // на обратной стороне разгоняется. Фаза подобрана так, что к концу
-  // загрузки каска снова смотрит на зрителя.
+  // на обратной стороне разгоняется. Отсчёт идёт с момента появления каски:
+  // она появляется лицом к зрителю и после TURNS оборотов снова смотрит на него.
+  let spinStart = null;
+
   function yawAt(now) {
-    const x = (now - MIN_MS) / TURN_MS;
+    const x = (now - spinStart) / TURN_MS;
     const turn = Math.floor(x);
     const f = x - turn;
     return TAU * (turn + f - EASE * Math.sin(TAU * f) / TAU);
@@ -437,17 +440,29 @@
   function frame(now) {
     if (finished) return;
 
+    if (render && spinStart === null) spinStart = now;
+
+    // Конец загрузки: когда каска закончит TURNS оборотов. Пока 3D ещё
+    // грузится, считаем, что обороты начнутся прямо сейчас. Без 3D или при
+    // «уменьшении движения» хватает MIN_MS.
+    let end = MIN_MS;
+    if (!reduceMotion) {
+      if (spinStart !== null) end = spinStart + TURNS * TURN_MS;
+      else if (!sceneSettled) end = now + TURNS * TURN_MS;
+    }
+    end = Math.max(end, MIN_MS);
+
     // Прогресс идёт по времени, но не дальше 90%, пока страница и каска
     // реально не загрузились.
     const ready = windowLoaded && sceneSettled;
-    const byTime = Math.min(1, now / MIN_MS);
+    const byTime = Math.min(1, now / end);
     const target = Math.min(byTime, ready ? 1 : 0.9);
     // сглаживание по реальному времени, а не по кадрам: на слабом
     // устройстве с низким FPS прогресс идёт с той же скоростью
     const dt = Math.min(100, Math.max(0, now - lastNow));
     lastNow = now;
     shown += (target - shown) * (1 - Math.exp(-dt / 130));
-    if (target === 1 && shown > 0.995) shown = 1;
+    if (target === 1 && shown > 0.97) shown = 1; // не тянем хвост: каска уже смотрит на зрителя
     if (!hideStarted) setProgress(shown);
     if (shown === 1) hide();
 
