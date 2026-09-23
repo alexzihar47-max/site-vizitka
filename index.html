@@ -14,18 +14,16 @@
   <script>document.documentElement.classList.add('is-loading');</script>
 
   <div class="preloader" aria-hidden="true">
-    <div class="preloader__stage">
-      <svg class="preloader__helmet" viewBox="0 0 64 44" width="56" height="39">
-        <path d="M10 33 C10 16 20 5 32 5 C44 5 54 16 54 33 Z" class="helmet-dome"/>
-        <path d="M27.5 5.6 C26.6 14 26.4 24 26.6 33 M36.5 5.6 C37.4 14 37.6 24 37.4 33" class="helmet-rib"/>
-        <path d="M18 10.5 C14.8 17 13.8 25 14 33 M46 10.5 C49.2 17 50.2 25 50 33" class="helmet-rib"/>
-        <path d="M3 34.5 C3 31.8 7 30.5 12 30.5 L52 30.5 C57 30.5 61 31.8 61 34.5 C61 37.2 57 38.5 52 38.5 L12 38.5 C7 38.5 3 37.2 3 34.5 Z" class="helmet-brim"/>
-        <rect x="29" y="13" width="6" height="2.4" class="helmet-mark"/>
-      </svg>
-      <span class="preloader__shadow"></span>
+    <canvas class="preloader__canvas" id="helmetCanvas" width="150" height="150"></canvas>
+    <div class="preloader__meta">
+      <div class="preloader__row">
+        <span class="preloader__label">ONYX</span>
+        <span class="preloader__pct" id="preloaderPct">0%</span>
+      </div>
+      <div class="preloader__track"><div class="preloader__bar" id="preloaderBar"></div></div>
     </div>
-    <span class="preloader__label">ONYX</span>
   </div>
+  <script src="preloader.js"></script>
 
   <header class="header">
     <div class="container header__inner">

@@ -88,45 +88,25 @@ h1, h2, h3 {
   visibility: hidden;
 }
 
-.preloader__stage {
+.preloader__canvas {
+  display: block;
+  width: 150px;
+  height: 150px;
+  /* красное свечение «пола» под каской */
+  background: radial-gradient(ellipse 36% 8% at 50% 80%, rgba(226, 55, 44, 0.45), transparent);
+}
+
+.preloader__meta {
+  width: 180px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  perspective: 400px;
+  gap: 10px;
 }
 
-.preloader__helmet {
-  display: block;
-  animation: helmet-spin 1.8s linear infinite;
-}
-
-.helmet-dome {
-  fill: var(--text);
-}
-
-.helmet-brim {
-  fill: #d6cfcb;
-}
-
-.helmet-rib {
-  fill: none;
-  stroke: #aaa2a6;
-  stroke-width: 1.1;
-  stroke-linecap: round;
-}
-
-.helmet-mark {
-  fill: var(--accent);
-}
-
-/* Тень сужается, когда каска повёрнута ребром: полпериода вращения. */
-.preloader__shadow {
-  width: 46px;
-  height: 7px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(226, 55, 44, 0.45) 0%, transparent 70%);
-  animation: helmet-shadow 0.45s ease-in-out infinite alternate;
+.preloader__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
 
 .preloader__label {
@@ -134,25 +114,28 @@ h1, h2, h3 {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.32em;
-  padding-left: 0.32em;
+  color: var(--text);
+}
+
+.preloader__pct {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
-@keyframes helmet-spin {
-  from { transform: rotateY(0deg); }
-  to { transform: rotateY(360deg); }
+.preloader__track {
+  height: 2px;
+  background: var(--border-strong);
+  overflow: hidden;
 }
 
-@keyframes helmet-shadow {
-  from { transform: scaleX(1); }
-  to { transform: scaleX(0.45); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .preloader__helmet,
-  .preloader__shadow {
-    animation: none;
-  }
+.preloader__bar {
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
 }
 
 /* ===== Header ===== */

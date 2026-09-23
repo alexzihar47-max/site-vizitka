@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Собирает artifact-preview.html из index.html, style.css и script.js.
+"""Собирает artifact-preview.html из index.html, style.css и локальных скриптов.
 
 Artifact-страница оборачивается платформой в свой <html>/<head>/<body>,
 поэтому здесь берём только шрифты из <head>, содержимое <body>,
@@ -30,7 +30,6 @@ PREVIEW_CSS = """
 def main() -> None:
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     css = (ROOT / "style.css").read_text(encoding="utf-8")
-    js = (ROOT / "script.js").read_text(encoding="utf-8")
 
     head = re.search(r"<head>(.*?)</head>", html, re.S).group(1)
     font_links = [
@@ -40,7 +39,12 @@ def main() -> None:
     ]
 
     body = re.search(r"<body>(.*?)</body>", html, re.S).group(1)
-    body = re.sub(r'\s*<script src="script\.js"></script>\s*', "\n", body)
+    # каждый <script src="local.js"> встраиваем на его же место
+    def inline_script(match: "re.Match[str]") -> str:
+        code = (ROOT / match.group(1)).read_text(encoding="utf-8").rstrip()
+        return "<script>\n" + code + "\n</script>"
+
+    body = re.sub(r'<script src="([\w.-]+\.js)"></script>', inline_script, body)
     if "</form>" not in body:
         raise SystemExit("index.html: не найдена форма заявки")
     body = body.replace("</form>", "</form>\n" + PREVIEW_NOTE, 1)
@@ -54,9 +58,6 @@ def main() -> None:
             PREVIEW_CSS.strip(),
             "</style>",
             body.strip(),
-            "<script>",
-            js.rstrip(),
-            "</script>",
             "",
         ]
     )
