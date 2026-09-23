@@ -1,12 +1,13 @@
-// Экран загрузки: 3D-каска (WebGL, без библиотек) + прогресс загрузки.
+// Экран загрузки: реалистичная 3D-каска (three.js) + прогресс загрузки.
 //
-// Модель повторяет обычную строительную каску: высокий купол с широкой
-// центральной полосой и боковыми рёбрами, козырёк спереди, край поднимается
-// к бокам, слоты под наушники, вентиляционные прорези, чёрное оголовье
-// с регулятором сзади и красный логотип на лбу.
+// Корпус — одна непрерывная поверхность, как в 3D-редакторе: купол плавно
+// переходит в козырёк, край завальцован, у пластика есть толщина и
+// внутренняя сторона. Рельеф и бобышки слотов под наушники — часть формы.
+// Материал — глянцевый ABS с лаковым слоем, свет — студийные софтбоксы
+// в отражениях и красный контровой свет.
 //
 // Вращение неравномерное: лицом к зрителю каска почти замирает,
-// а остальную часть оборота проходит быстро.
+// остальную часть оборота проходит быстро.
 (function () {
   const root = document.documentElement;
   if (!root.classList.contains('is-loading')) return;
@@ -23,304 +24,382 @@
   const reduceMotion = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---------- математика ----------
   const TAU = Math.PI * 2;
   const HALF = Math.PI / 2;
 
-  function norm(a) {
-    const l = Math.hypot(a[0], a[1], a[2]) || 1;
-    return [a[0] / l, a[1] / l, a[2] / l];
+  let render = null;               // появится, когда сцена готова
+  let sceneSettled = !canvas || !canvas.dataset.three;
+
+  if (!sceneSettled) {
+    // путь без «./» браузер счёл бы именем пакета, поэтому делаем полный адрес
+    const src = new URL(canvas.dataset.three, document.baseURI).href;
+    import(src).then(function (THREE) {
+      render = buildHelmet(THREE, canvas);
+      canvas.classList.add('is-ready');
+    }).catch(function () {
+      canvas.style.display = 'none'; // без 3D показываем только прогресс
+    }).then(function () {
+      sceneSettled = true;
+    });
+  } else if (canvas) {
+    canvas.style.display = 'none';
   }
-  function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
-  function add(a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; }
-  function sub(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
-  function scale(a, k) { return [a[0] * k, a[1] * k, a[2] * k]; }
-  function cross(a, b) {
-    return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-  }
+
+  // ======================================================================
+  // Модель
+  // ======================================================================
   function smoothstep(a, b, x) {
     const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
     return t * t * (3 - 2 * t);
   }
+  function smoothBox(x, half, soft) {
+    return smoothstep(-half - soft, -half, x) * (1 - smoothstep(half, half + soft, x));
+  }
+  function angleDiff(a, b) {
+    let d = (a - b) % TAU;
+    if (d > Math.PI) d -= TAU;
+    if (d < -Math.PI) d += TAU;
+    return d;
+  }
+  function bezier(p0, p1, p2, p3, t) {
+    const m = 1 - t;
+    const a = m * m * m, b = 3 * m * m * t, c = 3 * m * t * t, d = t * t * t;
+    return [a * p0[0] + b * p1[0] + c * p2[0] + d * p3[0], a * p0[1] + b * p1[1] + c * p2[1] + d * p3[1]];
+  }
 
-  // ---------- форма каски ----------
-  // Оси: y — вверх, +z — перёд каски (козырёк), x — вбок.
-  const ELONG = 1.16; // вытянута вперёд-назад
+  // Оси: y — вверх, +z — перёд (козырёк), x — вбок.
+  const ELONG = 1.16;   // вытянута вперёд-назад
+  const H = 1.1;        // высота купола над краем
+  const FIL = 0.07;     // высота скругления между куполом и козырьком
+  const R0 = 1.04;      // радиус купола у края
+  const THICK = 0.035;  // толщина пластика
+  const EDGE_R = 0.02;  // радиус завальцовки края
 
-  // Край каски поднимается от козырька к бокам и чуть опускается сзади.
-  function rimRise(u) {
+  // край поднимается от козырька к бокам и чуть опускается сзади
+  function rimY(u) {
     const s = Math.sin(u);
     return 0.06 * (1 - Math.max(0, s)) - 0.02 * Math.pow(Math.max(0, -s), 2);
   }
+  function lipLength(u) {
+    return 0.075 + 0.2 * Math.pow(Math.max(0, Math.sin(u)), 3);
+  }
+  function lipDrop(u) {
+    const f = Math.max(0, Math.sin(u));
+    return 0.02 + 0.07 * f * f;
+  }
 
-  function domePoint(u, v) {
-    const t = v / HALF;
-    // бока ближе к вертикали, у края купол слегка расширяется
-    const s = Math.pow(Math.sin(v), 0.72) * (1 + 0.04 * Math.pow(t, 8));
-    const x = s * Math.cos(u);
-    const y = Math.cos(v) * 1.1;
-    const z = s * Math.sin(u) * ELONG;
-    // широкая центральная полоса и два боковых ребра; к краю сходят на нет
+  const SLOTS = [0.5, -0.5, Math.PI + 0.5, Math.PI - 0.5];
+
+  // рельеф купола: центральная полоса, боковые рёбра, бобышки слотов
+  function relief(u, t, x) {
     const ax = Math.abs(x);
-    const relief = 0.028 * (1 - smoothstep(0.11, 0.22, ax)) +
-      0.016 * Math.exp(-Math.pow((ax - 0.44) / 0.07, 2));
-    const k = 1 + relief * (1 - Math.pow(t, 4));
-    return [x * k, y * k + rimRise(u) * Math.pow(t, 3), z * k];
+    let r = (0.024 * (1 - smoothstep(0.11, 0.2, ax)) +
+      0.014 * Math.exp(-Math.pow((ax - 0.44) / 0.07, 2))) * (1 - Math.pow(t, 4));
+    for (let i = 0; i < SLOTS.length; i++) {
+      r += 0.03 * smoothBox(angleDiff(u, SLOTS[i]), 0.075, 0.03) * smoothBox(t - 0.855, 0.05, 0.025);
+    }
+    return r;
   }
 
-  const BRIM_THICK = 0.04;
-
-  function brimPoint(u, t, bottom) {
-    const front = Math.max(0, Math.sin(u));
-    // короткий козырёк спереди, по бокам и сзади узкий бортик
-    const outer = 1.075 + 0.2 * Math.pow(front, 3);
-    const r = 1 + (outer - 1) * t;
-    let y = 0.005 + rimRise(u) - 0.03 * t * t - 0.09 * t * t * front * front;
-    if (bottom) y -= BRIM_THICK;
-    return [r * Math.cos(u), y, r * Math.sin(u) * ELONG];
+  function domeOuter(u, th) {
+    const t = th / HALF;
+    // подъём края затухает к макушке, иначе сечения сходились бы в ней на разной высоте
+    const cy = FIL + rimY(u) * Math.pow(t, 3);
+    const r = Math.pow(Math.sin(th), 0.72) * (1 + 0.04 * Math.pow(t, 8));
+    const y = cy + (H - FIL) * Math.cos(th);
+    const k = 1 + relief(u, t, r * Math.cos(u));
+    return [r * k * Math.cos(u), cy + (y - cy) * k, r * k * Math.sin(u) * ELONG];
   }
 
-  // ---------- сборка сетки ----------
-  const WHITE = [0.93, 0.91, 0.895];
-  const BLACK = [0.07, 0.07, 0.075];
-  const positions = [];
-  const normals = [];
-  const colors = [];
-  const indices = [];
+  const ND = 48;  // купол
+  const NB = 22;  // козырёк сверху и снизу
+  const NE = 10;  // завальцовка
 
-  function vertex(p, n, c) {
-    positions.push(p[0], p[1], p[2]);
-    normals.push(n[0], n[1], n[2]);
-    colors.push(c[0], c[1], c[2]);
-    return positions.length / 3 - 1;
+  // Профиль одного сечения: снаружи купол → скругление → козырёк →
+  // завальцовка → низ козырька → внутренняя сторона купола.
+  function section(u) {
+    const pts = [];
+    const cu = Math.cos(u), su = Math.sin(u);
+    const to3 = function (p) { return [p[0] * cu, p[1], p[0] * su * ELONG]; };
+    const yb = rimY(u);
+    const L = lipLength(u), D = lipDrop(u);
+
+    for (let j = 0; j <= ND; j++) pts.push(domeOuter(u, HALF * j / ND));
+
+    const P0 = [R0, yb + FIL], P1 = [R0, yb + 0.012];
+    const P2 = [R0 + 0.45 * L, yb - 0.25 * D], P3 = [R0 + L, yb - D];
+    for (let k = 1; k <= NB; k++) pts.push(to3(bezier(P0, P1, P2, P3, k / NB)));
+
+    const tl = Math.hypot(P3[0] - P2[0], P3[1] - P2[1]);
+    const T = [(P3[0] - P2[0]) / tl, (P3[1] - P2[1]) / tl];
+    const up = [-T[1], T[0]];
+    const C = [P3[0] - up[0] * EDGE_R, P3[1] - up[1] * EDGE_R];
+    for (let k = 1; k <= NE; k++) {
+      const phi = HALF - Math.PI * k / NE;
+      pts.push(to3([
+        C[0] + up[0] * EDGE_R * Math.sin(phi) + T[0] * EDGE_R * Math.cos(phi),
+        C[1] + up[1] * EDGE_R * Math.sin(phi) + T[1] * EDGE_R * Math.cos(phi)
+      ]));
+    }
+
+    const Q3 = [P3[0] - up[0] * 2 * EDGE_R, P3[1] - up[1] * 2 * EDGE_R];
+    const Q2 = [P2[0], P2[1] - 2 * EDGE_R];
+    const Q1 = [R0 - THICK, yb - 0.01];
+    const Q0 = [R0 - THICK, yb + FIL];
+    for (let k = 1; k <= NB; k++) pts.push(to3(bezier(Q3, Q2, Q1, Q0, k / NB)));
+
+    const inner = (R0 - THICK) / R0;
+    for (let j = ND - 1; j >= 0; j--) {
+      const th = HALF * j / ND;
+      const t = th / HALF;
+      const r = inner * Math.pow(Math.sin(th), 0.72) * (1 + 0.04 * Math.pow(t, 8));
+      pts.push(to3([r, FIL + yb * Math.pow(t, 3) + (H - THICK - FIL) * Math.cos(th)]));
+    }
+    return pts;
   }
 
-  // Сетка по параметрам (a, b) из [0,1]; гладкие нормали по конечным
-  // разностям, направление задаёт hint (наружу от поверхности).
-  function addSurface(fn, nu, nv, hint, color) {
-    const base = positions.length / 3;
+  function shellGeometry(THREE) {
+    const NU = 220;
+    const rows = [];
+    for (let i = 0; i < NU; i++) rows.push(section(TAU * i / NU));
+    const NP = rows[0].length;
+
+    const pos = new Float32Array((NU + 1) * NP * 3);
+    const nor = new Float32Array((NU + 1) * NP * 3);
+    const sub = function (a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; };
+
+    for (let i = 0; i <= NU; i++) {
+      const ic = i % NU;
+      const prev = rows[(ic - 1 + NU) % NU], next = rows[(ic + 1) % NU], cur = rows[ic];
+      for (let j = 0; j < NP; j++) {
+        const p = cur[j];
+        let n;
+        if (j === 0) n = [0, 1, 0];
+        else if (j === NP - 1) n = [0, -1, 0];
+        else {
+          const du = sub(next[j], prev[j]);
+          const ds = sub(cur[j + 1], cur[j - 1]);
+          n = [du[1] * ds[2] - du[2] * ds[1], du[2] * ds[0] - du[0] * ds[2], du[0] * ds[1] - du[1] * ds[0]];
+          const l = Math.hypot(n[0], n[1], n[2]) || 1;
+          n = [n[0] / l, n[1] / l, n[2] / l];
+        }
+        const o = (i * NP + j) * 3;
+        pos[o] = p[0]; pos[o + 1] = p[1]; pos[o + 2] = p[2];
+        nor[o] = n[0]; nor[o + 1] = n[1]; nor[o + 2] = n[2];
+      }
+    }
+
+    const idx = new Uint32Array(NU * (NP - 1) * 6);
+    let q = 0;
+    for (let i = 0; i < NU; i++) {
+      for (let j = 0; j < NP - 1; j++) {
+        const a = i * NP + j, b = (i + 1) * NP + j, c = a + 1, d = b + 1;
+        idx[q++] = a; idx[q++] = b; idx[q++] = c;
+        idx[q++] = b; idx[q++] = d; idx[q++] = c;
+      }
+    }
+
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+    g.setIndex(new THREE.BufferAttribute(idx, 1));
+    return g;
+  }
+
+  // Наклейка, повторяющая поверхность купола: логотип и вентиляция.
+  function surfacePatch(THREE, uc, du, thc, dth, flipU) {
+    const nx = 24, ny = 8;
+    const pos = [], uv = [], idx = [];
     const e = 1e-3;
-    for (let j = 0; j <= nv; j++) {
-      for (let i = 0; i <= nu; i++) {
-        const a = i / nu;
-        const b = j / nv;
-        const p = fn(a, b);
-        const du = sub(fn(a + e, b), fn(a - e, b));
-        const dv = sub(fn(a, Math.min(1, b + e)), fn(a, Math.max(0, b - e)));
-        let n = cross(du, dv);
-        if (Math.hypot(n[0], n[1], n[2]) < 1e-9) n = [0, 1, 0];
-        n = norm(n);
-        if (dot(n, hint(p)) < 0) n = scale(n, -1);
-        vertex(p, n, color);
+    for (let iy = 0; iy <= ny; iy++) {
+      for (let ix = 0; ix <= nx; ix++) {
+        const s = ix / nx;
+        const u = uc + du * (flipU ? 1 - 2 * s : 2 * s - 1);
+        const th = thc - dth + 2 * dth * iy / ny;
+        const p = domeOuter(u, th);
+        const a = domeOuter(u + e, th), b = domeOuter(u - e, th);
+        const c = domeOuter(u, th + e), d = domeOuter(u, th - e);
+        const tu = [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+        const tt = [c[0] - d[0], c[1] - d[1], c[2] - d[2]];
+        let n = [tu[1] * tt[2] - tu[2] * tt[1], tu[2] * tt[0] - tu[0] * tt[2], tu[0] * tt[1] - tu[1] * tt[0]];
+        const l = Math.hypot(n[0], n[1], n[2]) || 1;
+        n = [n[0] / l, n[1] / l, n[2] / l];
+        if (n[0] * p[0] + n[2] * p[2] < 0) n = [-n[0], -n[1], -n[2]];
+        pos.push(p[0] + n[0] * 0.003, p[1] + n[1] * 0.003, p[2] + n[2] * 0.003);
+        uv.push(s, 1 - iy / ny);
       }
     }
-    const row = nu + 1;
-    for (let j = 0; j < nv; j++) {
-      for (let i = 0; i < nu; i++) {
-        const k = base + j * row + i;
-        indices.push(k, k + 1, k + row, k + 1, k + row + 1, k + row);
+    for (let iy = 0; iy < ny; iy++) {
+      for (let ix = 0; ix < nx; ix++) {
+        const a = iy * (nx + 1) + ix, b = a + 1, c = a + nx + 1, d = c + 1;
+        idx.push(a, c, b, b, c, d);
       }
     }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
   }
 
-  // Прямоугольный выступ на поверхности: центр, три оси, полуразмеры.
-  function addBox(center, ax, ay, az, hx, hy, hz, color) {
-    const faces = [
-      [az, ax, ay, hz, hx, hy], [scale(az, -1), ax, ay, hz, hx, hy],
-      [ax, ay, az, hx, hy, hz], [scale(ax, -1), ay, az, hx, hy, hz],
-      [ay, az, ax, hy, hz, hx], [scale(ay, -1), az, ax, hy, hz, hx]
-    ];
-    faces.forEach(function (f) {
-      const n = f[0], s1 = f[1], s2 = f[2];
-      const c = add(center, scale(n, f[3]));
-      const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(function (q) {
-        return vertex(add(c, add(scale(s1, q[0] * f[4]), scale(s2, q[1] * f[5]))), n, color);
-      });
-      indices.push(corners[0], corners[1], corners[2], corners[0], corners[2], corners[3]);
+  function canvasTexture(THREE, w, h, paint) {
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    paint(c.getContext('2d'), w, h);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+    return tex;
+  }
+
+  // Студия для отражений: тёмная комната с софтбоксами и красной полосой.
+  function studioEnvironment(THREE, renderer) {
+    const env = new THREE.Scene();
+    env.add(new THREE.Mesh(
+      new THREE.BoxGeometry(24, 14, 24),
+      new THREE.MeshBasicMaterial({ color: 0x0d0c0e, side: THREE.BackSide })
+    ));
+    const panel = function (w, h, color, power, x, y, z) {
+      const m = new THREE.Mesh(
+        new THREE.PlaneGeometry(w, h),
+        new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(power), side: THREE.DoubleSide })
+      );
+      m.position.set(x, y, z);
+      m.lookAt(0, 0.4, 0);
+      env.add(m);
+    };
+    panel(9, 3.5, 0xffffff, 3.2, 0, 6.5, 1.5);      // верхний софтбокс
+    panel(3.5, 7, 0xffffff, 2.6, -8, 2, 5);         // ключевой слева-спереди
+    panel(2.2, 7, 0xfff4ec, 1.2, 8, 1.5, 4);        // заполняющий справа
+    panel(1.4, 8, 0xff3b2e, 3.0, 6, 1.5, -8);       // красная полоса сзади-справа
+    panel(12, 3, 0xffffff, 0.35, 0, -6.5, 0);       // слабый отражённый снизу
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const tex = pmrem.fromScene(env, 0.03).texture;
+    pmrem.dispose();
+    return tex;
+  }
+
+  function buildHelmet(THREE, canvas) {
+    const size = canvas.clientWidth || 170;
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(size, size, false);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const scene = new THREE.Scene();
+    scene.environment = studioEnvironment(THREE, renderer);
+
+    const camera = new THREE.PerspectiveCamera(27, 1, 0.1, 50);
+    camera.position.set(0, 1.35, 6.4);
+    camera.lookAt(0, 0.43, 0);
+
+    const rimLight = new THREE.DirectionalLight(0xff3b2e, 2.4);
+    rimLight.position.set(3.5, 1.5, -3);
+    scene.add(rimLight);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.7);
+    keyLight.position.set(-2.5, 3.5, 3);
+    scene.add(keyLight);
+
+    const helmet = new THREE.Group();
+    scene.add(helmet);
+
+    // корпус: глянцевый белый ABS
+    const plastic = new THREE.MeshPhysicalMaterial({
+      color: 0xf2f0ec, roughness: 0.34, metalness: 0,
+      clearcoat: 1, clearcoatRoughness: 0.07
     });
-  }
+    helmet.add(new THREE.Mesh(shellGeometry(THREE), plastic));
 
-  const SEG = 144;
-  const TAU_A = function (a) { return a * TAU; };
-
-  // купол
-  addSurface(function (a, b) { return domePoint(TAU_A(a), b * HALF); }, SEG, 32,
-    function (p) { return p; }, WHITE);
-  // козырёк и бортик: верх, низ, торец
-  addSurface(function (a, b) { return brimPoint(TAU_A(a), b, false); }, SEG, 4,
-    function () { return [0, 1, 0]; }, WHITE);
-  addSurface(function (a, b) { return brimPoint(TAU_A(a), b, true); }, SEG, 4,
-    function () { return [0, -1, 0]; }, WHITE);
-  // скруглённый торец козырька
-  addSurface(function (a, b) {
-    const u = TAU_A(a);
-    const top = brimPoint(u, 1, false);
-    const out = norm([Math.cos(u), 0, Math.sin(u) * ELONG]);
-    const phi = HALF - b * Math.PI;
-    const half = BRIM_THICK / 2;
-    const bulge = half * Math.cos(phi);
-    return [top[0] + out[0] * bulge, top[1] - half + half * Math.sin(phi), top[2] + out[2] * bulge];
-  }, SEG, 6, function (p) { return [p[0], 0, p[2]]; }, WHITE);
-
-  // чёрное оголовье внутри: лента, видна снизу по бокам и сзади
-  function bandPoint(u, b, r) {
-    const depth = 0.1 + 0.2 * Math.max(0, -Math.sin(u)); // сзади свисает ниже
-    return [r * Math.cos(u), 0.06 - (0.06 + depth) * b, r * Math.sin(u) * ELONG * 0.96];
-  }
-  addSurface(function (a, b) { return bandPoint(TAU_A(a), b, 0.86); }, 64, 2,
-    function (p) { return [p[0], 0, p[2]]; }, BLACK);
-  addSurface(function (a, b) { return bandPoint(TAU_A(a), b, 0.84); }, 64, 2,
-    function (p) { return [-p[0], 0, -p[2]]; }, BLACK);
-
-  // регулятор-«колёсико» сзади
-  const KNOB = [0, -0.16, -0.86 * ELONG * 0.96];
-  addSurface(function (a, b) {
-    const u = TAU_A(a);
-    return [KNOB[0] + 0.12 * Math.cos(u), KNOB[1] + 0.12 * Math.sin(u), KNOB[2] - 0.09 * b];
-  }, 32, 1, function (p) { return [p[0] - KNOB[0], p[1] - KNOB[1], 0]; }, BLACK);
-  addSurface(function (a, b) {
-    const u = TAU_A(a);
-    return [KNOB[0] + 0.12 * b * Math.cos(u), KNOB[1] + 0.12 * b * Math.sin(u), KNOB[2] - 0.09];
-  }, 32, 1, function () { return [0, 0, -1]; }, BLACK);
-
-  // слоты под наушники: по два на каждом боку, у края купола
-  [0.55, -0.55, Math.PI + 0.55, Math.PI - 0.55].forEach(function (u) {
-    const base = domePoint(u, HALF * 0.9);
-    const out = norm([Math.cos(u), 0, Math.sin(u) * ELONG]);
-    const along = norm([-Math.sin(u) * ELONG, 0, Math.cos(u)]);
-    addBox(add(base, scale(out, 0.01)), along, [0, 1, 0], out, 0.085, 0.055, 0.03, WHITE);
-  });
-
-  // ---------- WebGL ----------
-  let draw = null;
-
-  const gl = canvas && canvas.getContext &&
-    (canvas.getContext('webgl', { antialias: true, alpha: true, premultipliedAlpha: true }) ||
-     canvas.getContext('experimental-webgl'));
-
-  if (gl) {
-    const vs = [
-      'attribute vec3 aPos;',
-      'attribute vec3 aNor;',
-      'attribute vec3 aCol;',
-      'uniform mat3 uRot;',
-      'uniform float uF;',
-      'uniform mediump float uCam;', // точность должна совпадать с фрагментным шейдером
-      'varying vec3 vN;',
-      'varying vec3 vP;',
-      'varying vec3 vObj;',
-      'varying vec3 vCol;',
-      'void main() {',
-      '  vObj = aPos;',
-      '  vCol = aCol;',
-      '  vec3 p = uRot * (aPos - vec3(0.0, 0.42, 0.0));',
-      '  vN = uRot * aNor;',
-      '  vP = p;',
-      '  float w = uCam - p.z;',
-      '  gl_Position = vec4(p.x * uF, p.y * uF + 0.02 * w, -p.z / 3.0 * w, w);',
-      '}'
-    ].join('\n');
-
-    const fs = [
-      'precision mediump float;',
-      'varying vec3 vN;',
-      'varying vec3 vP;',
-      'varying vec3 vObj;',
-      'varying vec3 vCol;',
-      'uniform vec3 uKey;',
-      'uniform vec3 uRim;',
-      'uniform float uCam;',
-      'void main() {',
-      '  vec3 n = normalize(vN);',
-      '  vec3 V = normalize(vec3(0.0, 0.0, uCam) - vP);',
-      '  vec3 red = vec3(0.886, 0.216, 0.173);',
-      '  vec3 base = vCol;',
-      '  float shell = step(0.5, vCol.r);',
-      // красный логотип на лбу, на центральной полосе
-      '  float logo = shell * step(0.6, vObj.z) * (1.0 - smoothstep(0.1, 0.112, abs(vObj.x)))',
-      '             * smoothstep(0.3, 0.312, vObj.y) * (1.0 - smoothstep(0.44, 0.452, vObj.y));',
-      // вентиляционные прорези по бокам
-      '  float vz = (vObj.z + 0.08) / 0.42;',
-      '  float vent = shell * step(0.6, abs(vObj.x)) * step(0.0, vz) * step(vz, 1.0)',
-      '             * step(fract(vz * 5.0), 0.62)',
-      '             * smoothstep(0.585, 0.595, vObj.y) * (1.0 - smoothstep(0.625, 0.635, vObj.y));',
-      '  base = mix(base, red, logo);',
-      '  base = mix(base, vec3(0.16, 0.15, 0.16), vent);',
-      '  float diff = max(dot(n, uKey), 0.0);',
-      '  float rim = pow(max(dot(n, uRim), 0.0), 1.4);',
-      '  float fres = pow(1.0 - max(dot(n, V), 0.0), 3.0);',
-      '  vec3 H = normalize(uKey + V);',
-      '  float spec = pow(max(dot(n, H), 0.0), 40.0) * mix(0.15, 0.4, shell);',
-      '  vec3 c = base * (0.34 + 0.66 * diff) + red * (0.9 * rim + 0.25 * fres) * mix(0.35, 1.0, shell) + vec3(spec);',
-      '  gl_FragColor = vec4(min(c, vec3(1.0)), 1.0);',
-      '}'
-    ].join('\n');
-
-    const compile = function (type, src) {
-      const sh = gl.createShader(type);
-      gl.shaderSource(sh, src);
-      gl.compileShader(sh);
-      return sh;
+    const decal = function (map) {
+      return new THREE.MeshPhysicalMaterial({
+        map: map, transparent: true, depthWrite: false, roughness: 0.4, side: THREE.DoubleSide,
+        clearcoat: 1, clearcoatRoughness: 0.08,
+        polygonOffset: true, polygonOffsetFactor: -4
+      });
     };
 
-    const prog = gl.createProgram();
-    gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
-    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
-    gl.linkProgram(prog);
+    // логотип ONYX на лбу
+    const logo = canvasTexture(THREE, 512, 160, function (ctx, w, h) {
+      ctx.fillStyle = '#e2372c';
+      ctx.font = '700 132px Oswald, "Arial Narrow", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('ONYX', w / 2, h / 2 + 6);
+    });
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, HALF, 0.13, 0.9, 0.045, true), decal(logo)));
 
-    if (gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      gl.useProgram(prog);
+    // вентиляционные прорези по бокам
+    const vents = canvasTexture(THREE, 512, 64, function (ctx, w, h) {
+      ctx.fillStyle = '#141214';
+      for (let i = 0; i < 5; i++) {
+        const x = 20 + i * 98, y = 12, rw = 70, rh = h - 24, r = rh / 2;
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + rw, y, x + rw, y + rh, r);
+        ctx.arcTo(x + rw, y + rh, x, y + rh, r);
+        ctx.arcTo(x, y + rh, x, y, r);
+        ctx.arcTo(x, y, x + rw, y, r);
+        ctx.fill();
+      }
+    });
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, 0.12, 0.2, 0.62, 0.02, false), decal(vents)));
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, Math.PI - 0.12, 0.2, 0.62, 0.02, false), decal(vents)));
 
-      const upload = function (target, data, attr) {
-        gl.bindBuffer(target, gl.createBuffer());
-        gl.bufferData(target, data, gl.STATIC_DRAW);
-        if (attr) {
-          const loc = gl.getAttribLocation(prog, attr);
-          gl.enableVertexAttribArray(loc);
-          gl.vertexAttribPointer(loc, 3, gl.FLOAT, false, 0, 0);
-        }
-      };
-      upload(gl.ARRAY_BUFFER, new Float32Array(positions), 'aPos');
-      upload(gl.ARRAY_BUFFER, new Float32Array(normals), 'aNor');
-      upload(gl.ARRAY_BUFFER, new Float32Array(colors), 'aCol');
-      upload(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices));
-
-      const uRot = gl.getUniformLocation(prog, 'uRot');
-      gl.uniform1f(gl.getUniformLocation(prog, 'uF'), 2.9);
-      gl.uniform1f(gl.getUniformLocation(prog, 'uCam'), 6.0);
-      gl.uniform3fv(gl.getUniformLocation(prog, 'uKey'), norm([-0.55, 0.75, 0.6]));
-      gl.uniform3fv(gl.getUniformLocation(prog, 'uRim'), norm([0.8, 0.15, -0.7]));
-
-      gl.enable(gl.DEPTH_TEST);
-      gl.clearColor(0, 0, 0, 0);
-
-      const resize = function () {
-        const rect = canvas.getBoundingClientRect();
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.round((rect.width || 150) * dpr);
-        canvas.height = Math.round((rect.height || 150) * dpr);
-        gl.viewport(0, 0, canvas.width, canvas.height);
-      };
-      resize();
-      window.addEventListener('resize', resize);
-
-      draw = function (yaw, pitch) {
-        const c = Math.cos(yaw), s = Math.sin(yaw);
-        const cp = Math.cos(pitch), sp = Math.sin(pitch);
-        // поворот вокруг вертикали, затем наклон к зрителю (матрица по столбцам)
-        gl.uniformMatrix3fv(uRot, false, [c, sp * s, -cp * s, 0, cp, sp, s, -sp * c, cp * c]);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
-      };
+    // оголовье: чёрная лента, сзади свисает ниже, и рифлёный регулятор
+    const rubber = new THREE.MeshStandardMaterial({ color: 0x151414, roughness: 0.55, side: THREE.DoubleSide });
+    const bandPos = [], bandIdx = [];
+    const BU = 96;
+    for (let i = 0; i <= BU; i++) {
+      const u = TAU * i / BU;
+      const back = Math.max(0, -Math.sin(u));
+      const yTop = rimY(u) + 0.06;
+      const yBot = rimY(u) * 0.3 - (0.06 + 0.2 * back);
+      const x = 0.93 * Math.cos(u), z = 0.93 * Math.sin(u) * ELONG * 0.96;
+      bandPos.push(x, yTop, z, x, yBot, z);
+      if (i < BU) {
+        const a = i * 2;
+        bandIdx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
+      }
     }
+    const band = new THREE.BufferGeometry();
+    band.setAttribute('position', new THREE.Float32BufferAttribute(bandPos, 3));
+    band.setIndex(bandIdx);
+    band.computeVertexNormals();
+    helmet.add(new THREE.Mesh(band, rubber));
+
+    const knobGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.08, 96, 1);
+    const kp = knobGeo.attributes.position;
+    for (let i = 0; i < kp.count; i++) {
+      const x = kp.getX(i), z = kp.getZ(i);
+      if (Math.hypot(x, z) > 0.1) {
+        const k = 1 + 0.07 * Math.pow(Math.max(0, Math.cos(20 * Math.atan2(z, x))), 0.6);
+        kp.setX(i, x * k);
+        kp.setZ(i, z * k);
+      }
+    }
+    knobGeo.computeVertexNormals();
+    knobGeo.rotateX(HALF);
+    const knob = new THREE.Mesh(knobGeo, new THREE.MeshStandardMaterial({ color: 0x151414, roughness: 0.5 }));
+    knob.position.set(0, -0.17, -(0.93 * ELONG * 0.96 + 0.05));
+    helmet.add(knob);
+
+    return function (yaw, tilt) {
+      helmet.rotation.y = yaw;
+      helmet.rotation.x = tilt;
+      renderer.render(scene, camera);
+    };
   }
 
-  // без WebGL показываем только прогресс
-  if (!draw && canvas) canvas.style.display = 'none';
+  // ======================================================================
+  // Вращение и прогресс
+  // ======================================================================
 
-  // Угол поворота во времени. Внутри оборота скорость 1 − EASE·cos(2πf):
-  // у «лица» (f = 0) почти стоит, на обратной стороне разгоняется.
-  // Фаза подобрана так, что к концу загрузки каска снова смотрит на зрителя.
+  // Внутри оборота скорость 1 − EASE·cos(2πf): у «лица» (f = 0) почти стоит,
+  // на обратной стороне разгоняется. Фаза подобрана так, что к концу
+  // загрузки каска снова смотрит на зрителя.
   function yawAt(now) {
     const x = (now - MIN_MS) / TURN_MS;
     const turn = Math.floor(x);
@@ -328,14 +407,14 @@
     return TAU * (turn + f - EASE * Math.sin(TAU * f) / TAU);
   }
 
-  // ---------- прогресс ----------
-  let loaded = document.readyState === 'complete';
+  let windowLoaded = document.readyState === 'complete';
   let shown = 0;
   let finished = false;
   let hideStarted = false;
   let drewStatic = false;
+  let lastNow = 0;
 
-  window.addEventListener('load', function () { loaded = true; });
+  window.addEventListener('load', function () { windowLoaded = true; });
 
   function setProgress(value) {
     if (bar) bar.style.transform = 'scaleX(' + value.toFixed(4) + ')';
@@ -358,19 +437,25 @@
   function frame(now) {
     if (finished) return;
 
-    // Прогресс идёт по времени, но не дальше 90%, пока страница реально не загрузилась.
+    // Прогресс идёт по времени, но не дальше 90%, пока страница и каска
+    // реально не загрузились.
+    const ready = windowLoaded && sceneSettled;
     const byTime = Math.min(1, now / MIN_MS);
-    const target = Math.min(byTime, loaded ? 1 : 0.9);
-    shown += (target - shown) * 0.12;
+    const target = Math.min(byTime, ready ? 1 : 0.9);
+    // сглаживание по реальному времени, а не по кадрам: на слабом
+    // устройстве с низким FPS прогресс идёт с той же скоростью
+    const dt = Math.min(100, Math.max(0, now - lastNow));
+    lastNow = now;
+    shown += (target - shown) * (1 - Math.exp(-dt / 130));
     if (target === 1 && shown > 0.995) shown = 1;
     if (!hideStarted) setProgress(shown);
     if (shown === 1) hide();
 
-    if (draw) {
+    if (render) {
       if (!reduceMotion) {
-        draw(yawAt(now), 0.2 + 0.03 * Math.sin(now / 900));
+        render(yawAt(now), 0.025 * Math.sin(now / 900));
       } else if (!drewStatic) {
-        draw(0.45, 0.2);
+        render(0.45, 0);
         drewStatic = true;
       }
     }
@@ -379,7 +464,7 @@
   }
 
   // страховка на случай, если вкладка в фоне и кадры не рисуются
-  setTimeout(function () { loaded = true; hide(); }, MAX_MS);
+  setTimeout(function () { windowLoaded = true; sceneSettled = true; hide(); }, MAX_MS);
 
   requestAnimationFrame(frame);
 })();

@@ -45,6 +45,12 @@ def main() -> None:
         return "<script>\n" + code + "\n</script>"
 
     body = re.sub(r'<script src="([\w.-]+\.js)"></script>', inline_script, body)
+
+    # three.js в предпросмотре берём с jsDelivr: песочница пускает скрипты оттуда
+    body = body.replace(
+        'data-three="vendor/three.module.min.js"',
+        'data-three="https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.module.min.js"',
+    )
     if "</form>" not in body:
         raise SystemExit("index.html: не найдена форма заявки")
     body = body.replace("</form>", "</form>\n" + PREVIEW_NOTE, 1)
