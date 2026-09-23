@@ -430,6 +430,8 @@
     setProgress(1);
     setTimeout(function () {
       root.classList.add('preloader-hide');
+      // сигнал сайту: экран загрузки гаснет, можно запускать анимацию первого экрана
+      document.dispatchEvent(new CustomEvent('preloader:hide'));
       setTimeout(function () {
         finished = true;
         root.classList.remove('is-loading', 'preloader-hide');

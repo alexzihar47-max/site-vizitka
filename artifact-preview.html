@@ -1,35 +1,34 @@
 <title>ONYX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
 <style>
 /* =====================================================================
    ONYX — стили
    ===================================================================== */
 
 :root {
-  --bg: #0f0d10;
-  --surface: #17141a;
-  --surface-2: #1e1a21;
-  --glass: rgba(20, 17, 22, 0.55);
-  --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.16);
+  --bg: #0e0c0f;
+  --surface: #161318;
+  --surface-2: #1e1a20;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.18);
   --text: #f3efeb;
-  --text-muted: #a39ca1;
+  --text-muted: #9e979c;
   --accent: #e2372c;
   --accent-warm: #ff6a2b;
-  --accent-glow: rgba(226, 55, 44, 0.3);
-  --success: #4caf7d;
+  --success: #5fd493;
   --error: #ff6b5e;
 
   --font-display: 'Unbounded', 'Arial Black', sans-serif;
   --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
 
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
   --r-xl: 32px;
-  --r-lg: 24px;
-  --r-md: 16px;
-  --max: 1240px;
-  --gutter: clamp(16px, 4vw, 40px);
+  --r-lg: 22px;
+  --max: 1280px;
+  --gutter: clamp(16px, 4vw, 48px);
 }
 
 * { box-sizing: border-box; }
@@ -44,20 +43,29 @@ body {
   font-size: 16px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 img { max-width: 100%; display: block; }
-
 a { color: inherit; }
+p { margin: 0; }
 
 h1, h2, h3 {
   margin: 0;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: -0.03em;
   text-wrap: balance;
 }
 
-p { margin: 0; }
+/* курсивная антиква — акцент в заголовках */
+h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.1em;
+  letter-spacing: -0.01em;
+  color: var(--accent-warm);
+}
 
 .container {
   max-width: var(--max);
@@ -65,22 +73,7 @@ p { margin: 0; }
   padding-inline: var(--gutter);
 }
 
-.section { padding-block: clamp(64px, 9vw, 112px); }
-
-.eyebrow {
-  margin-bottom: 14px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent-warm);
-}
-
-.section-title {
-  font-size: clamp(28px, 3.6vw, 44px);
-  line-height: 1.1;
-  margin-bottom: 20px;
-}
+.section { padding-block: clamp(80px, 11vw, 150px); }
 
 .muted { color: var(--text-muted); }
 
@@ -88,6 +81,8 @@ p { margin: 0; }
   outline: 2px solid var(--accent-warm);
   outline-offset: 3px;
 }
+
+::selection { background: var(--accent); color: #fff; }
 
 /* Метка «замените на свои данные» */
 .ph {
@@ -97,32 +92,73 @@ p { margin: 0; }
   background: rgba(255, 106, 43, 0.1);
 }
 
-/* ===== Кнопки-пилюли ===== */
+/* плёночное зерно поверх страницы */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ===== Общие элементы ===== */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.kicker span { color: var(--accent-warm); letter-spacing: 0.04em; }
+
+.title {
+  font-size: clamp(34px, 5vw, 72px);
+  line-height: 1.02;
+}
+
+.title--xl { font-size: clamp(40px, 6.2vw, 96px); line-height: 0.98; }
+
+.section-head { margin-bottom: clamp(40px, 5vw, 72px); }
+
+.section-head--row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
 .pill {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  padding: 7px 7px 7px 22px;
+  padding: 7px 7px 7px 24px;
   border-radius: 999px;
   border: 1px solid transparent;
-  font: 600 14px/1 var(--font-body);
+  font: 600 15px/1 var(--font-body);
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 
 .pill__arrow {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  font-size: 16px;
-  transition: transform 0.2s ease;
+  font-size: 17px;
+  transition: transform 0.35s var(--ease);
 }
 
-.pill:hover .pill__arrow { transform: translateX(3px); }
+.pill:hover .pill__arrow { transform: rotate(-45deg); }
 
 .pill--light { background: var(--text); color: #141114; }
 .pill--light .pill__arrow { background: var(--accent); color: #fff; }
@@ -130,21 +166,46 @@ p { margin: 0; }
 
 .pill--dark { background: var(--surface-2); color: var(--text); border-color: var(--line-strong); }
 .pill--dark .pill__arrow { background: var(--accent); color: #fff; }
-.pill--dark:hover { border-color: var(--accent); }
+.pill--dark:hover { border-color: var(--accent-warm); }
 
-.pill--outline { background: transparent; color: var(--text); border-color: var(--line-strong); }
-.pill--outline .pill__arrow { border: 1px solid var(--line-strong); }
-.pill--outline:hover { border-color: var(--text); }
+.pill--accent { background: var(--accent); color: #fff; }
+.pill--accent .pill__arrow { background: #fff; color: var(--accent); }
+.pill--accent:hover { background: #f0463a; }
 
 .pill:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.link-arrow {
+  position: relative;
+  display: inline-flex;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  padding-bottom: 4px;
+}
+
+.link-arrow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform-origin: right;
+  transition: transform 0.45s var(--ease);
+}
+
+.link-arrow:hover::after { transform: scaleX(0); }
 
 /* ===== Места под фото ===== */
 .photo {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   background:
-    radial-gradient(120% 90% at 85% 10%, rgba(226, 55, 44, 0.22), transparent 60%),
-    linear-gradient(160deg, #221c21, #141115);
+    radial-gradient(120% 90% at 85% 10%, rgba(226, 55, 44, 0.24), transparent 60%),
+    linear-gradient(160deg, #221c21, #121014);
   border-radius: var(--r-lg);
 }
 
@@ -156,7 +217,7 @@ p { margin: 0; }
     linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 28px 28px;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .photo__img {
@@ -166,6 +227,7 @@ p { margin: 0; }
   height: 100%;
   object-fit: cover;
   z-index: 1;
+  transition: transform 1.2s var(--ease);
 }
 
 .photo__label {
@@ -176,7 +238,7 @@ p { margin: 0; }
   padding: 6px 12px;
   border: 1px dashed rgba(255, 106, 43, 0.75);
   border-radius: 999px;
-  background: rgba(15, 13, 16, 0.6);
+  background: rgba(14, 12, 15, 0.65);
   font-size: 12px;
   font-weight: 600;
   color: var(--text-muted);
@@ -185,19 +247,17 @@ p { margin: 0; }
 .photo__art {
   position: absolute;
   z-index: 1;
-  right: 4%;
+  left: 10%;
   top: 50%;
-  width: min(46%, 560px);
+  width: 80%;
   transform: translateY(-50%);
-  opacity: 0.55;
+  opacity: 0.6;
 }
 
-/* когда фото загрузилось — заглушки не нужны */
 .photo.has-img::before,
 .photo.has-img .photo__label,
 .photo.has-img .photo__art { display: none; }
 
-.art-grid { stroke: rgba(255, 255, 255, 0.05); stroke-width: 1; }
 .art-wall { fill: none; stroke: rgba(255, 255, 255, 0.45); stroke-width: 3; }
 .art-thin { stroke: rgba(255, 255, 255, 0.22); stroke-width: 2; }
 .art-accent { fill: none; stroke: var(--accent-warm); stroke-width: 1.4; }
@@ -273,18 +333,29 @@ p { margin: 0; }
   transform: scaleX(0);
 }
 
+
 /* ===== Шапка ===== */
 .header {
-  position: absolute;
-  top: env(safe-area-inset-top, 0px);
+  position: fixed;
+  top: 0;
   left: 0;
   right: 0;
-  z-index: 20;
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 22px var(--gutter);
+  padding: calc(22px + env(safe-area-inset-top, 0px)) var(--gutter) 22px;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.35s ease, padding 0.35s ease, border-color 0.35s ease;
+}
+
+.header.is-scrolled {
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  padding-bottom: 12px;
+  background: rgba(14, 12, 15, 0.78);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
 }
 
 .logo {
@@ -293,33 +364,34 @@ p { margin: 0; }
   text-decoration: none;
 }
 
-.nav {
-  display: flex;
-  gap: 4px;
-  padding: 5px;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  background: rgba(15, 13, 16, 0.35);
-  backdrop-filter: blur(10px);
-}
+.nav { display: flex; gap: 30px; }
 
 .nav a {
-  padding: 8px 16px;
-  border-radius: 999px;
+  position: relative;
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  color: rgba(243, 239, 235, 0.85);
-  transition: background-color 0.2s ease;
+  color: rgba(243, 239, 235, 0.8);
+  padding-block: 4px;
 }
 
-.nav a:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
-
-.header__side {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--accent-warm);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease);
 }
+
+.nav a:hover { color: #fff; }
+.nav a:hover::after { transform: scaleX(1); }
+
+.header__side { display: flex; align-items: center; gap: 12px; }
 
 .status-badge {
   display: inline-flex;
@@ -327,644 +399,801 @@ p { margin: 0; }
   gap: 8px;
   padding: 8px 14px;
   border-radius: 999px;
-  background: rgba(15, 13, 16, 0.45);
   border: 1px solid var(--line-strong);
+  background: rgba(14, 12, 15, 0.4);
   backdrop-filter: blur(10px);
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
 }
 
+.status-badge__short { display: none; }
+
 .status-badge__dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: #4cd17f;
-  box-shadow: 0 0 0 3px rgba(76, 209, 127, 0.22);
+  box-shadow: 0 0 0 0 rgba(76, 209, 127, 0.5);
+  animation: ping 2.2s ease-out infinite;
 }
+
+@keyframes ping {
+  0% { box-shadow: 0 0 0 0 rgba(76, 209, 127, 0.5); }
+  80%, 100% { box-shadow: 0 0 0 8px rgba(76, 209, 127, 0); }
+}
+
+.menu-btn {
+  display: none;
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: rgba(14, 12, 15, 0.4);
+  cursor: pointer;
+}
+
+.menu-btn span {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 1.5px;
+  background: var(--text);
+  transition: transform 0.35s var(--ease);
+}
+
+.menu-btn span:first-child { top: 18px; }
+.menu-btn span:last-child { top: 26px; }
+.menu-open .menu-btn span:first-child { transform: translateY(4px) rotate(45deg); }
+.menu-open .menu-btn span:last-child { transform: translateY(-4px) rotate(-45deg); }
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  padding: 100px var(--gutter) 48px;
+  background: var(--bg);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.menu-open .menu { opacity: 1; visibility: visible; }
+.menu-open body { overflow: hidden; }
+
+.menu__nav { display: grid; gap: 8px; }
+
+.menu__nav a {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-size: clamp(34px, 9vw, 56px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  padding-block: 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.menu__nav span { font-size: 13px; color: var(--accent-warm); letter-spacing: 0; }
+
+.menu .pill { align-self: flex-start; }
 
 /* ===== Главный экран ===== */
 .hero {
   position: relative;
-  min-height: clamp(680px, 100svh, 940px);
-  display: flex;
-  border-radius: 0 0 var(--r-xl) var(--r-xl);
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.photo--hero {
-  position: absolute;
-  inset: 0;
-  border-radius: 0;
-  z-index: -1;
-}
-
-.photo--hero .photo__label,
-.photo--request .photo__label {
-  left: auto;
-  bottom: auto;
-  right: var(--gutter);
-  top: 92px;
-}
-
-.photo--request .photo__label { top: 20px; right: 20px; }
-
-.photo--hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background:
-    radial-gradient(70% 60% at 85% 0%, rgba(255, 106, 43, 0.38), transparent 70%),
-    linear-gradient(180deg, rgba(15, 13, 16, 0.55) 0%, rgba(15, 13, 16, 0.1) 35%, rgba(15, 13, 16, 0.55) 70%, rgba(15, 13, 16, 0.92) 100%);
-}
-
-.hero__inner {
-  width: 100%;
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 104px var(--gutter) 28px;
-  display: flex;
-  flex-direction: column;
-}
-
-.hero__wordmark {
-  font: 800 clamp(96px, 23vw, 330px)/0.82 var(--font-display);
-  letter-spacing: -0.05em;
-  color: rgba(255, 255, 255, 0.94);
-  margin-left: -0.04em;
-  user-select: none;
-}
-
-.hero__row {
-  margin-top: auto;
-  padding-top: 40px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
-}
-
-.hero__text { max-width: 620px; }
-
-.hero__title {
-  font-size: clamp(30px, 3.8vw, 50px);
-  line-height: 1.08;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.hero__lead {
-  max-width: 480px;
-  margin-bottom: 26px;
-  color: rgba(243, 239, 235, 0.8);
-}
-
-.hero__note {
+  min-height: clamp(680px, 100svh, 1000px);
   display: flex;
   align-items: center;
-  gap: 12px;
-  max-width: 280px;
+  padding-block: 128px 64px;
+  overflow: hidden;
+}
+
+.hero__glow {
+  position: absolute;
+  width: 70vw;
+  height: 70vw;
+  max-width: 1100px;
+  max-height: 1100px;
+  right: -18vw;
+  top: -30vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 106, 43, 0.28), rgba(226, 55, 44, 0.1) 40%, transparent 68%);
+  pointer-events: none;
+}
+
+.hero__grid {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+}
+
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
   font-size: 13px;
-  color: rgba(243, 239, 235, 0.8);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
-.hero__note-icon {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--line-strong);
-}
+.dash { width: 44px; height: 1px; background: var(--accent-warm); }
 
-.service-cards {
-  margin-top: 36px;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.service-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 20px 20px 56px;
-  border-radius: var(--r-md);
-  border: 1px solid var(--line-strong);
-  background: var(--glass);
-  backdrop-filter: blur(14px);
-  text-decoration: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.service-card:hover { border-color: rgba(255, 106, 43, 0.6); background: rgba(20, 17, 22, 0.75); }
-
-.service-card__icon {
-  width: 34px;
-  height: 34px;
-  margin-bottom: 6px;
-  fill: none;
-  stroke: var(--text);
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.service-card h3 { font-size: 16px; }
-.service-card p { font-size: 13px; color: var(--text-muted); }
-
-.service-card__arrow {
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--text);
-  color: #141114;
-  font-size: 14px;
-}
-
-/* ===== О студии ===== */
-.about__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 0.9fr);
-  gap: 24px;
-  align-items: stretch;
-}
-
-.about__text { display: flex; flex-direction: column; align-items: flex-start; }
-.about__text .muted { margin-bottom: 20px; }
-
-.checklist {
-  list-style: none;
-  margin: 0 0 28px;
-  padding: 0;
-  display: grid;
-  gap: 10px;
-  font-size: 14.5px;
-}
-
-.checklist li {
-  position: relative;
-  padding-left: 30px;
-}
-
-.checklist li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 2px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 1px solid var(--accent-warm);
-  background:
-    linear-gradient(45deg, transparent 45%, var(--accent-warm) 45%, var(--accent-warm) 55%, transparent 55%) 6px 7px / 4px 5px no-repeat,
-    linear-gradient(-45deg, transparent 45%, var(--accent-warm) 45%, var(--accent-warm) 55%, transparent 55%) 8px 4px / 5px 8px no-repeat;
-}
-
-.checklist--compact { margin-bottom: 24px; font-size: 14px; }
-
-.photo--about { min-height: 380px; }
-
-.about__features { display: grid; gap: 12px; }
-
-.feature {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  padding: 20px;
-  border-radius: var(--r-md);
-  background: var(--surface);
-  border: 1px solid var(--line);
-}
-
-.feature__icon {
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  padding: 8px;
-  border-radius: 12px;
-  background: var(--surface-2);
-  fill: none;
-  stroke: var(--accent-warm);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.feature h3 { font-size: 16px; margin-bottom: 4px; }
-.feature p { font-size: 13.5px; color: var(--text-muted); }
-
-/* ===== Проекты ===== */
-.projects { padding-top: 0; }
-
-.section-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
+.hero__title {
+  font-size: clamp(46px, 6.6vw, 108px);
+  line-height: 0.96;
+  letter-spacing: -0.045em;
   margin-bottom: 32px;
 }
 
-.section-head .section-title { margin-bottom: 0; }
-
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.project {
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--r-lg);
-  background: var(--surface);
-  border: 1px solid var(--line);
+.hero__title .line {
+  display: block;
   overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
 }
 
-.photo--project {
-  aspect-ratio: 4 / 3;
-  border-radius: 0;
+.hero__title .line > span { display: inline-block; }
+
+.hero__lead {
+  max-width: 440px;
+  margin-bottom: 32px;
+  font-size: 17px;
+  color: var(--text-muted);
 }
 
-.project__body { padding: 20px 22px 22px; display: grid; gap: 8px; }
-
-.project__title { font-size: 19px; }
-
-.project__meta {
+.hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
-  font-size: 13.5px;
-  color: var(--text-muted);
-}
-
-.project__tag {
-  justify-self: start;
-  margin-top: 4px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: var(--surface-2);
-  font-size: 12.5px;
-  font-weight: 600;
-}
-
-/* ===== Цифры ===== */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-radius: var(--r-lg);
-  background:
-    radial-gradient(60% 140% at 100% 0%, rgba(226, 55, 44, 0.28), transparent 60%),
-    var(--surface);
-  border: 1px solid var(--line);
-}
-
-.stat {
-  display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 30px 28px;
+  gap: 16px 28px;
+  margin-bottom: 56px;
 }
 
-.stat + .stat { border-left: 1px solid var(--line); }
-
-.stat__icon {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  fill: none;
-  stroke: var(--accent-warm);
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.stat__value {
-  font: 800 clamp(24px, 2.6vw, 32px)/1.1 var(--font-display);
-  font-variant-numeric: tabular-nums;
-}
-
-.stat__label { font-size: 13.5px; color: var(--text-muted); }
-
-/* ===== Этапы ===== */
-.steps {
-  list-style: none;
-  margin: 12px 0 0;
-  padding: 0;
+.hero__meta {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  justify-content: start;
+  gap: 16px 48px;
+  margin: 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
 }
 
-.step {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 22px 20px;
-  border-radius: var(--r-md);
-  background: var(--surface);
-  border: 1px solid var(--line);
-}
-
-/* стрелка между этапами */
-.step:not(:last-child)::after {
-  content: "→";
-  position: absolute;
-  right: -22px;
-  top: 50%;
-  transform: translateY(-50%);
+.hero__meta dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--text-muted);
-  font-size: 16px;
+  margin-bottom: 4px;
 }
 
-.step__num {
+.hero__meta dd { margin: 0; font-size: 14px; font-weight: 600; }
+
+.hero__visual { position: relative; }
+
+.photo--hero {
+  aspect-ratio: 4 / 5;
+  max-height: 72svh;
+  width: 100%;
+  border-radius: var(--r-xl);
+}
+
+.photo--hero .photo__img { transform: scale(1.12); transition: none; }
+
+.hero__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.hero__caption span:first-child {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.badge-spin {
+  position: absolute;
+  left: -62px;
+  bottom: 18%;
+  z-index: 4;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 128px;
+  height: 128px;
   border-radius: 50%;
-  border: 1px solid var(--line-strong);
-  font-size: 12px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 20px 50px rgba(226, 55, 44, 0.35);
+  transition: transform 0.4s var(--ease);
 }
 
-.step__icon {
-  width: 30px;
-  height: 30px;
-  fill: none;
-  stroke: var(--accent-warm);
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
+.badge-spin:hover { transform: scale(1.06); }
 
-.step h3 { font-size: 16px; }
-.step p { font-size: 13.5px; color: var(--text-muted); flex-grow: 1; }
-
-.step__time {
-  align-self: flex-start;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--surface-2);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-/* ===== Направления ===== */
-.directions { padding-top: 0; }
-
-.directions__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.direction {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  border-radius: var(--r-lg);
-  background: var(--surface);
-  border: 1px solid var(--line);
-  overflow: hidden;
-}
-
-.direction__text {
-  padding: 32px 28px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.direction__title {
-  font-size: clamp(22px, 2vw, 26px);
-  line-height: 1.15;
-  margin-bottom: 12px;
-}
-
-.direction__text .muted { font-size: 14.5px; margin-bottom: 18px; }
-
-.photo--direction { border-radius: 0; min-height: 320px; }
-
-/* ===== Заявка ===== */
-.request { padding-bottom: clamp(64px, 9vw, 112px); }
-
-.request__card {
-  position: relative;
-  border-radius: var(--r-xl);
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.photo--request {
+.badge-spin svg {
   position: absolute;
   inset: 0;
-  border-radius: 0;
-  z-index: -1;
+  width: 100%;
+  height: 100%;
+  animation: spin 18s linear infinite;
 }
 
-.photo--request::after {
+.badge-spin text {
+  font: 700 10px var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: #fff;
+}
+
+.badge-spin__arrow { font-size: 28px; line-height: 1; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* появление первого экрана после загрузки */
+.motion .hero__title .line > span {
+  transform: translateY(108%);
+  transition: transform 1.1s var(--ease);
+}
+
+.motion .hero__title .line:nth-child(2) > span { transition-delay: 0.08s; }
+.motion .hero__title .line:nth-child(3) > span { transition-delay: 0.16s; }
+
+.motion .intro {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 1s ease, transform 1.1s var(--ease);
+  transition-delay: 0.35s;
+}
+
+.motion .hero__visual.intro {
+  transform: translateY(40px) scale(0.97);
+  transition-delay: 0.2s;
+}
+
+.motion.intro-done .hero__title .line > span,
+.motion.intro-done .intro {
+  opacity: 1;
+  transform: none;
+}
+
+/* ===== Бегущая строка ===== */
+.marquee {
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  padding-block: clamp(18px, 2.4vw, 30px);
+}
+
+.marquee__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: marquee 34s linear infinite;
+}
+
+.marquee span {
+  font: 700 clamp(30px, 4.6vw, 68px)/1 var(--font-display);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.marquee .outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(243, 239, 235, 0.55);
+}
+
+.marquee i {
+  font-style: normal;
+  color: var(--accent-warm);
+  font-size: clamp(18px, 2.4vw, 34px);
+  padding-inline: clamp(18px, 2.6vw, 40px);
+}
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ===== О студии ===== */
+.manifesto {
+  max-width: 1120px;
+  margin-bottom: clamp(56px, 7vw, 100px);
+  font-size: clamp(26px, 3.7vw, 54px);
+  line-height: 1.16;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.motion .manifesto .w { opacity: 0.16; transition: opacity 0.4s ease; }
+.motion .manifesto .w.is-lit { opacity: 1; }
+
+.about__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: end;
+}
+
+.about__figure { margin: 0; }
+.photo--about { aspect-ratio: 4 / 3; }
+.about__figure:hover .photo__img { transform: scale(1.04); }
+
+.about__figure figcaption {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.facts { list-style: none; margin: 0; padding: 0; }
+
+.facts li {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 20px;
+  padding-block: 22px;
+  border-top: 1px solid var(--line);
+  font-size: 17px;
+}
+
+.facts li:last-child { border-bottom: 1px solid var(--line); }
+
+.facts__key {
+  padding-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+}
+
+/* ===== Услуги ===== */
+.service-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+
+.service {
+  position: relative;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1.25fr) minmax(0, 1fr) 56px;
+  gap: 24px;
+  align-items: center;
+  padding: clamp(24px, 3vw, 38px) 18px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.service::before {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, var(--accent), var(--accent-warm));
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.6s var(--ease);
+}
+
+.service:hover::before,
+.service:focus-visible::before { transform: scaleY(1); }
+
+.service__num { font-size: 14px; font-weight: 700; color: var(--text-muted); transition: color 0.3s; }
+
+.service__title {
+  font-size: clamp(22px, 2.7vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  transition: transform 0.6s var(--ease);
+}
+
+.service__text { font-size: 15px; color: var(--text-muted); transition: color 0.3s; }
+
+.service__arrow {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  font-size: 18px;
+  transition: transform 0.5s var(--ease), background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.service:hover .service__num,
+.service:hover .service__text { color: rgba(255, 255, 255, 0.92); }
+.service:hover .service__title { transform: translateX(10px); }
+.service:hover .service__arrow { background: #fff; color: var(--accent); border-color: #fff; transform: rotate(-45deg); }
+
+/* ===== Проекты ===== */
+.project-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 40px);
+}
+
+.project { display: flex; flex-direction: column; }
+.project--big { grid-row: span 2; }
+
+.photo--project { aspect-ratio: 4 / 3; cursor: pointer; }
+.project--big .photo--project { aspect-ratio: auto; flex: 1; min-height: 460px; }
+
+.project .photo::after {
+  content: "Смотреть";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  background: var(--text);
+  color: #141114;
+  font-size: 13px;
+  font-weight: 700;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s var(--ease);
+}
+
+.project:hover .photo::after { transform: translate(-50%, -50%) scale(1); }
+.project:hover .photo__img { transform: scale(1.06); }
+
+.project__caption {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 2px 8px;
+  padding-top: 18px;
+}
+
+.project__num { grid-row: span 2; padding-top: 6px; font-size: 13px; font-weight: 700; color: var(--accent-warm); }
+.project__title { font-size: clamp(20px, 1.9vw, 26px); letter-spacing: -0.02em; }
+.project__meta { font-size: 14px; color: var(--text-muted); }
+
+/* ===== Цифры ===== */
+.stats {
+  padding-block: clamp(56px, 7vw, 96px);
+  border-block: 1px solid var(--line);
+  background: radial-gradient(60% 120% at 100% 50%, rgba(226, 55, 44, 0.12), transparent 70%);
+}
+
+.stats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.stat { padding-inline: clamp(12px, 2vw, 32px); }
+.stat:first-child { padding-left: 0; }
+.stat + .stat { border-left: 1px solid var(--line); }
+
+.stat__value {
+  margin-bottom: 10px;
+  font: 700 clamp(40px, 5.2vw, 80px)/1 var(--font-display);
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat__label { max-width: 200px; font-size: 14px; color: var(--text-muted); }
+
+/* ===== Направления ===== */
+.panels {
+  display: flex;
+  gap: 20px;
+  height: clamp(480px, 64vh, 680px);
+}
+
+.panel {
+  position: relative;
+  flex: 1;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  isolation: isolate;
+  text-decoration: none;
+  transition: flex-grow 0.8s var(--ease);
+}
+
+.panels:hover .panel { flex-grow: 0.8; }
+.panels .panel:hover { flex-grow: 1.5; }
+
+.photo--panel { position: absolute; inset: 0; border-radius: 0; }
+.photo--panel .photo__label { top: 20px; bottom: auto; }
+
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 30%, rgba(14, 12, 15, 0.92) 100%);
+  pointer-events: none;
+}
+
+.panel:hover .photo__img { transform: scale(1.05); }
+
+.panel__body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 2;
-  background:
-    radial-gradient(60% 90% at 0% 100%, rgba(226, 55, 44, 0.35), transparent 70%),
-    linear-gradient(90deg, rgba(15, 13, 16, 0.92) 0%, rgba(15, 13, 16, 0.75) 55%, rgba(15, 13, 16, 0.55) 100%);
+  padding: clamp(24px, 3vw, 40px);
 }
 
-.request__inner {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
-  gap: 40px;
-  padding: clamp(28px, 5vw, 56px);
-  align-items: center;
-}
-
-.request__intro .muted { max-width: 380px; }
-
-.form { display: grid; gap: 14px; }
-
-.form__row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.field { display: grid; gap: 6px; }
-
-.field__label {
+.panel__tag {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.panel__title {
+  max-width: 460px;
+  margin-bottom: 12px;
+  font-size: clamp(26px, 2.6vw, 40px);
+  line-height: 1.05;
+}
+
+.panel__text { max-width: 420px; margin-bottom: 18px; color: rgba(243, 239, 235, 0.75); font-size: 15px; }
+
+.panel__more { font-weight: 700; font-size: 14px; color: var(--accent-warm); }
+
+/* ===== Этапы ===== */
+.process__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(40px, 7vw, 120px);
+  align-items: start;
+}
+
+.process__aside { position: sticky; top: 120px; }
+.process__aside .title { margin-bottom: 20px; }
+.process__aside .muted { max-width: 380px; margin-bottom: 32px; }
+
+.steps { list-style: none; margin: 0; padding: 0; }
+
+.step {
+  display: grid;
+  grid-template-columns: clamp(80px, 9vw, 130px) minmax(0, 1fr);
+  gap: 20px;
+  padding-block: 36px;
+  border-top: 1px solid var(--line);
+  transition: opacity 0.5s ease;
+}
+
+.step:last-child { border-bottom: 1px solid var(--line); }
+
+.step__num {
+  font: 800 clamp(44px, 5vw, 72px)/0.9 var(--font-display);
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(243, 239, 235, 0.4);
+  transition: color 0.5s ease, -webkit-text-stroke-color 0.5s ease;
+}
+
+.step h3 { margin-bottom: 8px; font-size: clamp(20px, 2vw, 26px); }
+.step p { margin-bottom: 14px; color: var(--text-muted); max-width: 440px; }
+
+.step__time {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.motion .step { opacity: 0.4; }
+.motion .step.is-active { opacity: 1; }
+.step.is-active .step__num { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
+
+/* ===== Заявка ===== */
+.request { border-top: 1px solid var(--line); }
+
+.request__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+
+.request__intro .title { margin-bottom: 24px; }
+.request__intro .muted { max-width: 420px; font-size: 17px; }
+
+.request__contacts { display: grid; gap: 10px; margin-top: 40px; }
+
+.request__contacts a {
+  justify-self: start;
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.request__contacts a:hover { color: var(--accent-warm); }
+
+.form {
+  display: grid;
+  gap: 26px;
+  padding: clamp(24px, 3.5vw, 44px);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(80% 60% at 100% 0%, rgba(226, 55, 44, 0.14), transparent 70%),
+    var(--surface);
+}
+
+.field { display: grid; gap: 4px; }
+
+.field__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
 .field__input {
   width: 100%;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid var(--line-strong);
-  background: rgba(15, 13, 16, 0.55);
+  padding: 12px 0;
+  border: none;
+  border-bottom: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
   color: var(--text);
-  font: 500 15px var(--font-body);
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  font: 500 18px var(--font-body);
+  transition: border-color 0.3s ease;
 }
 
-.field__input::placeholder { color: rgba(163, 156, 161, 0.7); }
+.field__input::placeholder { color: rgba(158, 151, 156, 0.6); }
+.field__input:focus { outline: none; border-bottom-color: var(--accent-warm); }
+.field__input--area { resize: vertical; min-height: 84px; }
 
-.field__input:focus {
-  outline: none;
-  border-color: var(--accent-warm);
-  background: rgba(15, 13, 16, 0.8);
-}
+.form__footer { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 6px; }
+.form__consent { max-width: 260px; font-size: 12px; color: var(--text-muted); }
 
-.field__input--area { resize: vertical; min-height: 96px; }
-
-.form__footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px 20px;
-}
-
-.form__consent { font-size: 12px; color: var(--text-muted); max-width: 280px; }
-
-.form__result { font-size: 14px; font-weight: 600; min-height: 1px; }
-
+.form__result { font-size: 14px; font-weight: 600; }
 .form__result.is-success,
-.form__result.is-error {
-  padding: 12px 16px;
-  border-radius: 14px;
-}
-
-.form__result.is-success { color: var(--success); background: rgba(76, 175, 125, 0.12); }
+.form__result.is-error { padding: 12px 16px; border-radius: 14px; }
+.form__result.is-success { color: var(--success); background: rgba(95, 212, 147, 0.1); }
 .form__result.is-error { color: var(--error); background: rgba(226, 55, 44, 0.12); }
 
 /* ===== Подвал ===== */
 .footer {
+  padding-block: clamp(64px, 8vw, 110px) calc(28px + env(safe-area-inset-bottom, 0px));
   border-radius: var(--r-xl) var(--r-xl) 0 0;
   background: var(--surface);
-  padding-block: 56px calc(28px + env(safe-area-inset-bottom, 0px));
+  overflow: hidden;
 }
 
 .footer__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
-  gap: 32px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr));
+  gap: 40px;
 }
 
-.logo--footer { font-size: 32px; margin-bottom: 14px; }
+.footer__lead {
+  font-size: clamp(26px, 2.8vw, 42px);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
 
-.footer__brand .muted { max-width: 300px; font-size: 14px; }
-
-.footer__col { display: grid; align-content: start; gap: 10px; font-size: 14px; }
+.footer__col { display: grid; align-content: start; gap: 10px; font-size: 15px; }
 
 .footer__col h3 {
-  font-size: 12px;
+  margin-bottom: 6px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 4px;
 }
 
-.footer__col a { text-decoration: none; }
+.footer__col a { justify-self: start; text-decoration: none; }
 .footer__col a:hover { color: var(--accent-warm); }
 
-.socials { display: flex; gap: 10px; margin-top: 6px; }
-
-.social {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--line-strong);
-}
-
-.social svg {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linejoin: round;
-  stroke-linecap: round;
+.footer__wordmark {
+  margin: clamp(48px, 7vw, 96px) 0 8px;
+  font: 800 min(33vw, 430px)/0.78 var(--font-display);
+  letter-spacing: -0.06em;
+  text-align: center;
+  background: linear-gradient(180deg, var(--text) 10%, rgba(243, 239, 235, 0.06) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  user-select: none;
 }
 
 .footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
   padding-top: 24px;
+  border-top: 1px solid var(--line);
   font-size: 13px;
   color: var(--text-muted);
 }
 
+/* ===== Появление при прокрутке ===== */
+.motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.9s ease, transform 1.1s var(--ease);
+}
+
+.motion [data-reveal].is-in { opacity: 1; transform: none; }
+
 /* ===== Адаптив ===== */
 @media (max-width: 1080px) {
   .nav { display: none; }
-  .service-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .about__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .about__features { grid-column: 1 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .step:nth-child(3)::after { display: none; }
-  .directions__grid { grid-template-columns: 1fr; }
+  .menu-btn { display: block; }
+  .service { grid-template-columns: 48px minmax(0, 1fr) 52px; }
+  .service__text { grid-column: 2; grid-row: 2; }
+  .service__arrow { grid-column: 3; grid-row: 1 / span 2; }
   .footer__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .footer__brand { grid-column: 1 / -1; }
+  .footer__lead { grid-column: 1 / -1; }
 }
 
-@media (max-width: 820px) {
-  .project-grid { grid-template-columns: 1fr; }
-  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .stat:nth-child(3) { border-left: none; }
-  .stat:nth-child(n + 3) { border-top: 1px solid var(--line); }
-  .request__inner { grid-template-columns: 1fr; }
-  .hero__row { flex-direction: column; align-items: flex-start; }
-}
-
-@media (max-width: 640px) {
-  .header { padding-block: 16px; }
-  .header__cta { display: none; }
-  .status-badge { font-size: 12px; padding: 7px 12px; }
-  .hero__inner { padding-top: 124px; }
-  .photo__art { width: 90%; right: 5%; top: 44%; opacity: 0.35; }
-  .service-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 28px; }
-  .service-card { padding: 14px 14px 48px; }
-  .service-card__icon { width: 28px; height: 28px; margin-bottom: 2px; }
-  .service-card h3 { font-size: 14px; }
-  .service-card p { font-size: 12px; }
-  .service-card__arrow { width: 28px; height: 28px; right: 10px; bottom: 10px; }
-  .photo--hero .photo__label { top: 74px; right: auto; left: var(--gutter); font-size: 11px; }
+@media (max-width: 900px) {
+  .hero { padding-top: 112px; }
+  .hero__grid { grid-template-columns: 1fr; }
+  .hero__visual { max-width: 520px; }
+  .photo--hero { max-height: none; }
+  .badge-spin { left: auto; right: -8px; bottom: auto; top: -40px; width: 108px; height: 108px; }
   .about__grid { grid-template-columns: 1fr; }
-  .about__features { grid-template-columns: 1fr; }
-  .photo--about { min-height: 260px; }
-  .steps { grid-template-columns: 1fr; gap: 12px; }
-  .step::after { display: none; }
-  .direction { grid-template-columns: 1fr; }
-  .photo--direction { min-height: 220px; order: -1; }
-  .form__row { grid-template-columns: 1fr; }
-  .stats { grid-template-columns: 1fr; }
-  .stat + .stat { border-left: none; border-top: 1px solid var(--line); }
-  .footer__grid { grid-template-columns: 1fr; }
+  .process__grid { grid-template-columns: 1fr; }
+  .process__aside { position: static; }
+  .request__grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .header__cta { display: none; }
+  .project-grid { grid-template-columns: 1fr; }
+  .project--big { grid-row: auto; }
+  .project--big .photo--project { aspect-ratio: 4 / 5; min-height: 0; }
+  .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
+  .stat:nth-child(3) { border-left: none; padding-left: 0; }
+  .panels { flex-direction: column; height: auto; }
+  .panel { flex: none; height: 440px; }
+  .panels:hover .panel, .panels .panel:hover { flex-grow: 0; }
+}
+
+@media (max-width: 560px) {
+  .status-badge__text { display: none; }
+  .status-badge__short { display: inline; }
+  .hero__meta { grid-template-columns: repeat(2, minmax(0, auto)); gap: 16px 32px; }
+  .hero__meta div:last-child { grid-column: 1 / -1; }
+  .service { gap: 12px 16px; padding-inline: 4px; }
+  .service__num { font-size: 12px; }
+  .service__arrow { width: 44px; height: 44px; }
+  .facts li { grid-template-columns: 1fr; gap: 4px; }
+  .footer__grid { grid-template-columns: 1fr 1fr; }
+  .footer__lead { grid-column: 1 / -1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .pill__arrow, .pill, .service-card { transition: none; }
+  .marquee__track, .badge-spin svg, .status-badge__dot { animation: none; }
+  .photo__img, .service::before, .panel { transition: none; }
 }
 .preview-note {
   margin: 0;
@@ -979,16 +1208,15 @@ p { margin: 0; }
     КАК ЗАМЕНИТЬ ЗАГЛУШКИ
 
     Фото: положите файл с нужным именем в папку img/ — он сам встанет на место.
-      img/hero.jpg          главный экран, горизонтальное, от 1920×1080
+      img/hero.jpg          главный экран, вертикальное, от 1200×1500
       img/about.jpg         блок «О студии», от 1200×900
-      img/project-1.jpg     проект 1, от 1200×900
-      img/project-2.jpg     проект 2
-      img/project-3.jpg     проект 3
-      img/interiors.jpg     направление «Интерьеры», от 1000×1000
-      img/architecture.jpg  направление «Архитектура», от 1000×1000
-      img/request.jpg       фон блока заявки, горизонтальное, от 1920×800
+      img/project-1.jpg     проект 1 (большой), вертикальное, от 1200×1500
+      img/project-2.jpg     проект 2, от 1200×900
+      img/project-3.jpg     проект 3, от 1200×900
+      img/interiors.jpg     направление «Интерьеры», вертикальное, от 1000×1300
+      img/architecture.jpg  направление «Архитектура», вертикальное, от 1000×1300
 
-    Тексты и цифры: всё, что обведено красным пунктиром на странице,
+    Тексты и цифры: всё, что обведено оранжевым пунктиром на странице,
     размечено в коде классом class="ph". Замените текст внутри и удалите class="ph".
   -->
   <script>document.documentElement.classList.add('is-loading');</script>
@@ -1436,6 +1664,8 @@ p { margin: 0; }
     setProgress(1);
     setTimeout(function () {
       root.classList.add('preloader-hide');
+      // сигнал сайту: экран загрузки гаснет, можно запускать анимацию первого экрана
+      document.dispatchEvent(new CustomEvent('preloader:hide'));
       setTimeout(function () {
         finished = true;
         root.classList.remove('is-loading', 'preloader-hide');
@@ -1491,13 +1721,16 @@ p { margin: 0; }
 })();
 </script>
 
-  <header class="header">
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ================= ШАПКА ================= -->
+  <header class="header" id="header">
     <a class="logo" href="#top" aria-label="ONYX — на главную">ONYX</a>
 
     <nav class="nav" aria-label="Разделы сайта">
       <a href="#about">О студии</a>
+      <a href="#services">Услуги</a>
       <a href="#projects">Проекты</a>
-      <a href="#directions">Направления</a>
       <a href="#process">Этапы</a>
       <a href="#contacts">Контакты</a>
     </nav>
@@ -1505,199 +1738,233 @@ p { margin: 0; }
     <div class="header__side">
       <div class="status-badge" id="statusBadge">
         <span class="status-badge__dot"></span>
-        Открыты для новых проектов
+        <span class="status-badge__text">Открыты для новых проектов</span>
+        <span class="status-badge__short">Принимаем заявки</span>
       </div>
       <a class="pill pill--light header__cta" href="#request-form">
         Обсудить проект
         <span class="pill__arrow" aria-hidden="true">→</span>
       </a>
+      <button class="menu-btn" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+        <span></span><span></span>
+      </button>
     </div>
   </header>
+
+  <div class="menu" id="mobileMenu" aria-hidden="true">
+    <nav class="menu__nav" aria-label="Меню">
+      <a href="#about"><span>01</span>О студии</a>
+      <a href="#services"><span>02</span>Услуги</a>
+      <a href="#projects"><span>03</span>Проекты</a>
+      <a href="#process"><span>04</span>Этапы</a>
+      <a href="#request-form"><span>05</span>Заявка</a>
+    </nav>
+    <a class="pill pill--light" href="#request-form">
+      Обсудить проект
+      <span class="pill__arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
 
   <main id="top">
 
     <!-- ================= ГЛАВНЫЙ ЭКРАН ================= -->
     <section class="hero">
-      <div class="photo photo--hero">
-        <img class="photo__img" src="img/hero.jpg" alt="Интерьер, спроектированный студией ONYX">
-        <svg class="photo__art" viewBox="0 0 440 380" aria-hidden="true">
-          <defs>
-            <pattern id="heroGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M20 0 L0 0 0 20" fill="none" class="art-grid"/>
-            </pattern>
-          </defs>
-          <rect width="440" height="380" fill="url(#heroGrid)"/>
-          <rect x="40" y="40" width="360" height="280" class="art-wall"/>
-          <line x1="220" y1="40" x2="220" y2="210" class="art-thin"/>
-          <line x1="40" y1="210" x2="400" y2="210" class="art-thin"/>
-          <line x1="300" y1="210" x2="300" y2="320" class="art-thin"/>
-          <path d="M220 130 A 40 40 0 0 1 260 170" class="art-accent"/>
-          <path d="M300 260 A 30 30 0 0 1 330 290" class="art-accent"/>
-          <line x1="40" y1="20" x2="400" y2="20" class="art-dim"/>
-          <text x="220" y="14" class="art-text" text-anchor="middle">5400</text>
-          <text x="130" y="130" class="art-label">ГОСТИНАЯ</text>
-          <text x="310" y="130" class="art-label">СПАЛЬНЯ</text>
-          <text x="170" y="270" class="art-label">КУХНЯ</text>
-        </svg>
-        <span class="photo__label">Ваше фото · главный экран · 1920×1080</span>
-      </div>
+      <div class="hero__glow" aria-hidden="true"></div>
 
-      <div class="hero__inner">
-        <p class="hero__wordmark" aria-hidden="true">ONYX</p>
+      <div class="container hero__grid">
+        <div class="hero__text">
+          <p class="hero__eyebrow intro">
+            <span class="dash" aria-hidden="true"></span>
+            Бюро интерьеров и архитектуры
+          </p>
 
-        <div class="hero__row">
-          <div class="hero__text">
-            <h1 class="hero__title">Проектируем пространство, в&nbsp;котором хочется жить и&nbsp;работать</h1>
-            <p class="hero__lead">Дизайн интерьеров и архитектура — от первого эскиза до рабочих чертежей и сдачи объекта.</p>
-            <a class="pill pill--light" href="#projects">
-              Смотреть проекты
+          <h1 class="hero__title">
+            <span class="line"><span>Проектируем</span></span>
+            <span class="line"><span><em>пространство</em></span></span>
+            <span class="line"><span>для жизни</span></span>
+          </h1>
+
+          <p class="hero__lead intro">Интерьеры и дома, в которых хочется жить. От первого эскиза до рабочих чертежей и сдачи объекта — один архитектор ведёт проект от начала до конца.</p>
+
+          <div class="hero__actions intro">
+            <a class="pill pill--light" href="#request-form">
+              Обсудить проект
               <span class="pill__arrow" aria-hidden="true">→</span>
             </a>
+            <a class="link-arrow" href="#projects">Смотреть проекты <span aria-hidden="true">↓</span></a>
           </div>
-          <p class="hero__note">
-            <span class="hero__note-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-            </span>
-            <span>Жилые и&nbsp;коммерческие объекты в&nbsp;<span class="ph">Москве и&nbsp;области</span></span>
-          </p>
+
+          <dl class="hero__meta intro">
+            <div><dt>Город</dt><dd><span class="ph">Москва и область</span></dd></div>
+            <div><dt>Работаем с</dt><dd><span class="ph">2016</span> года</dd></div>
+            <div><dt>Формат</dt><dd>Интерьеры · Архитектура</dd></div>
+          </dl>
         </div>
 
-        <div class="service-cards" id="services">
-          <a class="service-card" href="#directions">
-            <svg class="service-card__icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="4" width="24" height="24" rx="1"/><path d="M4 16h11V4M15 11a5 5 0 0 1 5 5M22 28v-7h6"/></svg>
-            <h3>Дизайн-проект интерьера</h3>
-            <p>Планировка, визуализации, подбор материалов и мебели.</p>
-            <span class="service-card__arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="service-card" href="#directions">
-            <svg class="service-card__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 28h26M6 28V14l10-8 10 8v14M12 28v-8h8v8M13 14h6"/></svg>
-            <h3>Архитектура</h3>
-            <p>Частные дома, фасады и объёмно-планировочные решения.</p>
-            <span class="service-card__arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="service-card" href="#process">
-            <svg class="service-card__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 3h12l6 6v20H8zM20 3v6h6M12 15h10M12 19h10M12 23h6"/></svg>
-            <h3>Рабочие чертежи</h3>
-            <p>Полный комплект для строителей: развёртки, инженерия, спецификации.</p>
-            <span class="service-card__arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="service-card" href="#process">
-            <svg class="service-card__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 22c0-7 5-12 11-12s11 5 11 12M3 22h26v3H3zM13 10V6h6v4M16 6v5"/></svg>
-            <h3>Авторский надзор</h3>
-            <p>Выезжаем на объект и следим, чтобы строили по проекту.</p>
-            <span class="service-card__arrow" aria-hidden="true">→</span>
+        <div class="hero__visual intro">
+          <div class="photo photo--hero">
+            <img class="photo__img" src="img/hero.jpg" alt="Интерьер, спроектированный студией ONYX" data-parallax>
+            <svg class="photo__art" viewBox="0 0 440 380" aria-hidden="true">
+              <rect x="40" y="40" width="360" height="280" class="art-wall"/>
+              <line x1="220" y1="40" x2="220" y2="210" class="art-thin"/>
+              <line x1="40" y1="210" x2="400" y2="210" class="art-thin"/>
+              <line x1="300" y1="210" x2="300" y2="320" class="art-thin"/>
+              <path d="M220 130 A 40 40 0 0 1 260 170" class="art-accent"/>
+              <path d="M300 260 A 30 30 0 0 1 330 290" class="art-accent"/>
+              <line x1="40" y1="20" x2="400" y2="20" class="art-dim"/>
+              <text x="220" y="14" class="art-text" text-anchor="middle">5400</text>
+              <text x="130" y="130" class="art-label">ГОСТИНАЯ</text>
+              <text x="310" y="130" class="art-label">СПАЛЬНЯ</text>
+              <text x="170" y="270" class="art-label">КУХНЯ</text>
+            </svg>
+            <span class="photo__label">Ваше фото · главный экран · 1200×1500</span>
+          </div>
+          <p class="hero__caption">
+            <span>Проект</span>
+            <span class="ph">Квартира для семьи, 86 м²</span>
+          </p>
+
+          <a class="badge-spin" href="#request-form" aria-label="Обсудить проект">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <defs><path id="spinPath" d="M60 60 m-46 0 a46 46 0 1 1 92 0 a46 46 0 1 1 -92 0"/></defs>
+              <text><textPath href="#spinPath" textLength="286" lengthAdjust="spacing">Открыты для новых проектов • </textPath></text>
+            </svg>
+            <span class="badge-spin__arrow" aria-hidden="true">↗</span>
           </a>
         </div>
       </div>
     </section>
 
+    <!-- ================= БЕГУЩАЯ СТРОКА ================= -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Дизайн интерьеров</span><i>✦</i><span class="outline">Архитектура</span><i>✦</i>
+        <span>Рабочие чертежи</span><i>✦</i><span class="outline">Авторский надзор</span><i>✦</i>
+        <span>Дизайн интерьеров</span><i>✦</i><span class="outline">Архитектура</span><i>✦</i>
+        <span>Рабочие чертежи</span><i>✦</i><span class="outline">Авторский надзор</span><i>✦</i>
+      </div>
+    </div>
+
     <!-- ================= О СТУДИИ ================= -->
     <section class="section about" id="about">
-      <div class="container about__grid">
-        <div class="about__text">
-          <p class="eyebrow">О студии</p>
-          <h2 class="section-title">Почему выбирают ONYX</h2>
-          <p class="muted">Мы проектируем интерьеры и дома, в которых продумана каждая деталь — от планировки до розетки. Один архитектор ведёт проект от первой встречи до сдачи.</p>
-          <ul class="checklist">
-            <li>Фиксированная стоимость и сроки в договоре</li>
-            <li>Визуализации каждого помещения до начала стройки</li>
-            <li>Чертежи, по которым строят без лишних вопросов</li>
-            <li>Поэтапная оплата — после приёмки каждого этапа</li>
+      <div class="container">
+        <p class="kicker" data-reveal><span>(01)</span> О студии</p>
+
+        <p class="manifesto" data-words>
+          Мы — бюро ONYX. Проектируем интерьеры и дома, в которых <em>каждая деталь</em> работает на вашу жизнь: от планировки и света до розетки у кровати.
+        </p>
+
+        <div class="about__grid">
+          <figure class="about__figure" data-reveal>
+            <div class="photo photo--about">
+              <img class="photo__img" src="img/about.jpg" alt="Студия ONYX за работой">
+              <span class="photo__label">Ваше фото · студия или объект · 1200×900</span>
+            </div>
+            <figcaption>
+              <span class="ph">Анна Смирнова</span>, основатель и главный архитектор ONYX
+            </figcaption>
+          </figure>
+
+          <ul class="facts" data-reveal>
+            <li><span class="facts__key">Под ключ</span><span>Полный цикл — от замера до сдачи объекта.</span></li>
+            <li><span class="facts__key">Цена</span><span>Фиксируем в договоре до начала работ.</span></li>
+            <li><span class="facts__key">Оплата</span><span>Поэтапно — после приёмки каждого этапа.</span></li>
+            <li><span class="facts__key">Сроки</span><span>Дизайн-проект — за <span class="ph">6–10 недель</span>.</span></li>
           </ul>
-          <a class="pill pill--dark" href="#request-form">
-            Обсудить проект
-            <span class="pill__arrow" aria-hidden="true">→</span>
-          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= УСЛУГИ ================= -->
+    <section class="section services" id="services">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="kicker"><span>(02)</span> Услуги</p>
+          <h2 class="title">Берём на себя <em>всё</em> —<br>от идеи до ключей</h2>
         </div>
 
-        <div class="photo photo--about">
-          <img class="photo__img" src="img/about.jpg" alt="Проект студии ONYX">
-          <span class="photo__label">Ваше фото · студия или проект · 1200×900</span>
-        </div>
-
-        <div class="about__features">
-          <div class="feature">
-            <svg class="feature__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 28h24M7 28V12l9-7 9 7v16"/><path d="M12 19l3 3 6-6"/></svg>
-            <div>
-              <h3>Под ключ</h3>
-              <p>Полный цикл — от замера до сдачи объекта.</p>
-            </div>
-          </div>
-          <div class="feature">
-            <svg class="feature__icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="7" width="22" height="18" rx="2"/><path d="M5 12h22M10 18h5"/></svg>
-            <div>
-              <h3>Цена не меняется</h3>
-              <p>Стоимость фиксируем в договоре до начала работ.</p>
-            </div>
-          </div>
-          <div class="feature">
-            <svg class="feature__icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11"/><path d="M16 9v7l5 3"/></svg>
-            <div>
-              <h3>Сроки в графике</h3>
-              <p>Дизайн-проект — за <span class="ph">6–10 недель</span>.</p>
-            </div>
-          </div>
-        </div>
+        <ul class="service-list">
+          <li data-reveal>
+            <a class="service" href="#request-form">
+              <span class="service__num">01</span>
+              <span class="service__title">Дизайн-проект интерьера</span>
+              <span class="service__text">Планировка, визуализации, свет, подбор материалов и мебели.</span>
+              <span class="service__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal>
+            <a class="service" href="#request-form">
+              <span class="service__num">02</span>
+              <span class="service__title">Архитектурное проектирование</span>
+              <span class="service__text">Частные дома, фасады, реконструкция и благоустройство участка.</span>
+              <span class="service__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal>
+            <a class="service" href="#request-form">
+              <span class="service__num">03</span>
+              <span class="service__title">Рабочая документация</span>
+              <span class="service__text">Полный комплект для строителей: развёртки, электрика, сантехника.</span>
+              <span class="service__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal>
+            <a class="service" href="#request-form">
+              <span class="service__num">04</span>
+              <span class="service__title">Авторский надзор</span>
+              <span class="service__text">Выезжаем на объект и следим, чтобы строили по проекту.</span>
+              <span class="service__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </section>
 
     <!-- ================= ПРОЕКТЫ ================= -->
     <section class="section projects" id="projects">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head section-head--row" data-reveal>
           <div>
-            <p class="eyebrow">Портфолио</p>
-            <h2 class="section-title">Проекты, которые уже живут</h2>
+            <p class="kicker"><span>(03)</span> Проекты</p>
+            <h2 class="title">Избранные <em>работы</em></h2>
           </div>
-          <a class="pill pill--outline" href="#request-form">
-            Обсудить свой проект
-            <span class="pill__arrow" aria-hidden="true">→</span>
-          </a>
+          <a class="link-arrow" href="#request-form">Хочу так же <span aria-hidden="true">→</span></a>
         </div>
 
         <div class="project-grid">
-          <article class="project">
+          <article class="project project--big" data-reveal>
             <div class="photo photo--project">
               <img class="photo__img" src="img/project-1.jpg" alt="Проект 1">
-              <span class="photo__label">Ваше фото · проект 1 · 1200×900</span>
+              <span class="photo__label">Ваше фото · проект 1 · 1200×1500</span>
             </div>
-            <div class="project__body">
+            <div class="project__caption">
+              <span class="project__num">01</span>
               <h3 class="project__title"><span class="ph">Квартира для семьи</span></h3>
-              <p class="project__meta">
-                <span>Площадь: <span class="ph">86 м²</span></span>
-                <span>Срок: <span class="ph">4 месяца</span></span>
-              </p>
-              <p class="project__tag"><span class="ph">Жилой интерьер</span></p>
+              <p class="project__meta"><span class="ph">Жилой интерьер · 86 м² · 2024</span></p>
             </div>
           </article>
 
-          <article class="project">
+          <article class="project" data-reveal>
             <div class="photo photo--project">
               <img class="photo__img" src="img/project-2.jpg" alt="Проект 2">
               <span class="photo__label">Ваше фото · проект 2 · 1200×900</span>
             </div>
-            <div class="project__body">
+            <div class="project__caption">
+              <span class="project__num">02</span>
               <h3 class="project__title"><span class="ph">Загородный дом</span></h3>
-              <p class="project__meta">
-                <span>Площадь: <span class="ph">210 м²</span></span>
-                <span>Срок: <span class="ph">7 месяцев</span></span>
-              </p>
-              <p class="project__tag"><span class="ph">Архитектура и интерьер</span></p>
+              <p class="project__meta"><span class="ph">Архитектура · 210 м² · 2023</span></p>
             </div>
           </article>
 
-          <article class="project">
+          <article class="project" data-reveal>
             <div class="photo photo--project">
               <img class="photo__img" src="img/project-3.jpg" alt="Проект 3">
               <span class="photo__label">Ваше фото · проект 3 · 1200×900</span>
             </div>
-            <div class="project__body">
+            <div class="project__caption">
+              <span class="project__num">03</span>
               <h3 class="project__title"><span class="ph">Офис IT-компании</span></h3>
-              <p class="project__meta">
-                <span>Площадь: <span class="ph">340 м²</span></span>
-                <span>Срок: <span class="ph">5 месяцев</span></span>
-              </p>
-              <p class="project__tag"><span class="ph">Коммерческий интерьер</span></p>
+              <p class="project__meta"><span class="ph">Коммерция · 340 м² · 2024</span></p>
             </div>
           </article>
         </div>
@@ -1705,164 +1972,159 @@ p { margin: 0; }
     </section>
 
     <!-- ================= ЦИФРЫ ================= -->
-    <section class="stats-wrap">
+    <section class="stats" aria-label="Студия в цифрах">
+      <div class="container stats__grid">
+        <div class="stat" data-reveal>
+          <p class="stat__value" data-count><span class="ph">120+</span></p>
+          <p class="stat__label">реализованных проектов</p>
+        </div>
+        <div class="stat" data-reveal>
+          <p class="stat__value" data-count><span class="ph">9</span></p>
+          <p class="stat__label">лет в архитектуре</p>
+        </div>
+        <div class="stat" data-reveal>
+          <p class="stat__value" data-count><span class="ph">18 000</span></p>
+          <p class="stat__label">м² спроектировано</p>
+        </div>
+        <div class="stat" data-reveal>
+          <p class="stat__value" data-count><span class="ph">70%</span></p>
+          <p class="stat__label">клиентов приходят по рекомендации</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= НАПРАВЛЕНИЯ ================= -->
+    <section class="section directions" id="directions">
       <div class="container">
-        <div class="stats">
-          <div class="stat">
-            <svg class="stat__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 28h24M7 28V12l9-7 9 7v16M12 28v-7h8v7"/></svg>
-            <div><p class="stat__value"><span class="ph">120+</span></p><p class="stat__label">реализованных проектов</p></div>
-          </div>
-          <div class="stat">
-            <svg class="stat__icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="7" width="22" height="20" rx="2"/><path d="M5 13h22M11 4v6M21 4v6"/></svg>
-            <div><p class="stat__value"><span class="ph">9</span></p><p class="stat__label">лет в архитектуре</p></div>
-          </div>
-          <div class="stat">
-            <svg class="stat__icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="5" width="22" height="22"/><path d="M5 16h22M16 5v22"/></svg>
-            <div><p class="stat__value"><span class="ph">18 000</span></p><p class="stat__label">м² спроектировано</p></div>
-          </div>
-          <div class="stat">
-            <svg class="stat__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 27s-10-6-10-13a6 6 0 0 1 10-4 6 6 0 0 1 10 4c0 7-10 13-10 13z"/></svg>
-            <div><p class="stat__value"><span class="ph">70%</span></p><p class="stat__label">клиентов по рекомендации</p></div>
-          </div>
+        <div class="section-head" data-reveal>
+          <p class="kicker"><span>(04)</span> Направления</p>
+          <h2 class="title">Два направления —<br><em>одна команда</em></h2>
+        </div>
+
+        <div class="panels">
+          <a class="panel" href="#request-form" data-reveal>
+            <div class="photo photo--panel">
+              <img class="photo__img" src="img/interiors.jpg" alt="Интерьер от ONYX">
+              <span class="photo__label">Ваше фото · интерьер · 1000×1300</span>
+            </div>
+            <div class="panel__body">
+              <p class="panel__tag">Интерьеры</p>
+              <h3 class="panel__title">Интерьер, собранный <em>под вашу жизнь</em></h3>
+              <p class="panel__text">Квартиры, дома, офисы и кафе. Продумываем сценарии, свет и хранение до того, как появится первая стена.</p>
+              <span class="panel__more">Обсудить интерьер →</span>
+            </div>
+          </a>
+
+          <a class="panel" href="#request-form" data-reveal>
+            <div class="photo photo--panel">
+              <img class="photo__img" src="img/architecture.jpg" alt="Архитектурный проект ONYX">
+              <span class="photo__label">Ваше фото · архитектура · 1000×1300</span>
+            </div>
+            <div class="panel__body">
+              <p class="panel__tag">Архитектура</p>
+              <h3 class="panel__title">Дом, который <em>вписан в участок</em></h3>
+              <p class="panel__text">Учитываем рельеф, стороны света и виды, чтобы дом работал на вас круглый год.</p>
+              <span class="panel__more">Обсудить дом →</span>
+            </div>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- ================= ЭТАПЫ ================= -->
     <section class="section process" id="process">
-      <div class="container">
-        <p class="eyebrow">Как мы работаем</p>
-        <h2 class="section-title">Простой путь к вашему проекту</h2>
+      <div class="container process__grid">
+        <div class="process__aside">
+          <p class="kicker"><span>(05)</span> Этапы</p>
+          <h2 class="title">Как мы <em>работаем</em></h2>
+          <p class="muted">Пять шагов от первой встречи до сдачи объекта. Каждый заканчивается приёмкой — и только потом вы оплачиваете следующий.</p>
+          <a class="pill pill--dark" href="#request-form">
+            Начать со встречи
+            <span class="pill__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
 
         <ol class="steps">
           <li class="step">
             <span class="step__num">01</span>
-            <svg class="step__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 27l7-7M20 4l8 8-10 10-8-8zM14 10l8 8"/></svg>
-            <h3>Встреча и&nbsp;обмер</h3>
-            <p>Обсуждаем задачу, бюджет и сроки, снимаем размеры.</p>
-            <span class="step__time"><span class="ph">1–3 дня</span></span>
+            <div>
+              <h3>Встреча и обмер</h3>
+              <p>Обсуждаем задачу, бюджет и сроки. Выезжаем на объект и снимаем размеры.</p>
+              <span class="step__time"><span class="ph">1–3 дня</span></span>
+            </div>
           </li>
           <li class="step">
             <span class="step__num">02</span>
-            <svg class="step__icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="4" width="24" height="24"/><path d="M4 15h12V4M16 22h12"/></svg>
-            <h3>Планировка</h3>
-            <p>2–3 варианта расстановки стен и мебели на выбор.</p>
-            <span class="step__time"><span class="ph">1–2 недели</span></span>
+            <div>
+              <h3>Планировка</h3>
+              <p>Предлагаем 2–3 варианта расстановки стен и мебели, дорабатываем выбранный.</p>
+              <span class="step__time"><span class="ph">1–2 недели</span></span>
+            </div>
           </li>
           <li class="step">
             <span class="step__num">03</span>
-            <svg class="step__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4l11 6v12l-11 6-11-6V10zM5 10l11 6 11-6M16 16v12"/></svg>
-            <h3>Концепция и&nbsp;3D</h3>
-            <p>Стиль, материалы и визуализации каждого помещения.</p>
-            <span class="step__time"><span class="ph">2–4 недели</span></span>
+            <div>
+              <h3>Концепция и 3D</h3>
+              <p>Стиль, материалы и визуализации каждого помещения — вы видите результат до стройки.</p>
+              <span class="step__time"><span class="ph">2–4 недели</span></span>
+            </div>
           </li>
           <li class="step">
             <span class="step__num">04</span>
-            <svg class="step__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 3h12l6 6v20H8zM20 3v6h6M12 15h10M12 19h10M12 23h6"/></svg>
-            <h3>Рабочие чертежи</h3>
-            <p>Полный комплект документации для строителей.</p>
-            <span class="step__time"><span class="ph">2–3 недели</span></span>
+            <div>
+              <h3>Рабочие чертежи</h3>
+              <p>Полный комплект документации, по которому строят без лишних вопросов.</p>
+              <span class="step__time"><span class="ph">2–3 недели</span></span>
+            </div>
           </li>
           <li class="step">
             <span class="step__num">05</span>
-            <svg class="step__icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 22c0-7 5-12 11-12s11 5 11 12M3 22h26v3H3zM13 10V6h6v4"/></svg>
-            <h3>Авторский надзор</h3>
-            <p>Контролируем стройку до сдачи объекта.</p>
-            <span class="step__time">до сдачи</span>
+            <div>
+              <h3>Авторский надзор</h3>
+              <p>Выезжаем на объект и контролируем стройку до сдачи ключей.</p>
+              <span class="step__time">до сдачи</span>
+            </div>
           </li>
         </ol>
       </div>
     </section>
 
-    <!-- ================= НАПРАВЛЕНИЯ ================= -->
-    <section class="section directions" id="directions">
-      <div class="container directions__grid">
-        <article class="direction">
-          <div class="direction__text">
-            <p class="eyebrow">Интерьеры</p>
-            <h2 class="direction__title">Интерьер, собранный под вашу жизнь</h2>
-            <p class="muted">Квартиры, дома и коммерческие пространства. Продумываем сценарии, свет и хранение до того, как появится первая стена.</p>
-            <ul class="checklist checklist--compact">
-              <li>Квартиры и апартаменты</li>
-              <li>Загородные дома</li>
-              <li>Офисы, кафе, шоурумы</li>
-            </ul>
-            <a class="pill pill--dark" href="#request-form">
-              Обсудить интерьер
-              <span class="pill__arrow" aria-hidden="true">→</span>
-            </a>
-          </div>
-          <div class="photo photo--direction">
-            <img class="photo__img" src="img/interiors.jpg" alt="Интерьер от ONYX">
-            <span class="photo__label">Ваше фото · интерьер · 1000×1000</span>
-          </div>
-        </article>
-
-        <article class="direction">
-          <div class="direction__text">
-            <p class="eyebrow">Архитектура</p>
-            <h2 class="direction__title">Дом, который вписан в участок</h2>
-            <p class="muted">Частные дома и фасады: учитываем рельеф, стороны света и виды, чтобы дом работал на вас круглый год.</p>
-            <ul class="checklist checklist--compact">
-              <li>Эскизный и рабочий проект</li>
-              <li>Фасады и реконструкция</li>
-              <li>Благоустройство участка</li>
-            </ul>
-            <a class="pill pill--dark" href="#request-form">
-              Обсудить дом
-              <span class="pill__arrow" aria-hidden="true">→</span>
-            </a>
-          </div>
-          <div class="photo photo--direction">
-            <img class="photo__img" src="img/architecture.jpg" alt="Архитектурный проект ONYX">
-            <span class="photo__label">Ваше фото · архитектура · 1000×1000</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
     <!-- ================= ЗАЯВКА ================= -->
-    <section class="request" id="request-form">
-      <div class="container">
-        <div class="request__card">
-          <div class="photo photo--request">
-            <img class="photo__img" src="img/request.jpg" alt="">
-            <span class="photo__label">Ваше фото · фон заявки · 1920×800</span>
-          </div>
-
-          <div class="request__inner">
-            <div class="request__intro">
-              <h2 class="section-title">Получите консультацию и&nbsp;расчёт стоимости</h2>
-              <p class="muted">Оставьте заявку — архитектор свяжется с вами в течение рабочего дня.</p>
-            </div>
-
-            <form class="form" id="requestForm" novalidate>
-              <div class="form__row">
-                <label class="field">
-                  <span class="field__label">Имя</span>
-                  <input type="text" id="name" name="name" class="field__input" placeholder="Как к вам обращаться" required>
-                </label>
-                <label class="field">
-                  <span class="field__label">Телефон</span>
-                  <input type="tel" id="phone" name="phone" class="field__input" placeholder="+7 (___) ___-__-__" required>
-                </label>
-              </div>
-              <label class="field">
-                <span class="field__label">Сообщение</span>
-                <textarea id="message" name="message" class="field__input field__input--area" placeholder="Расскажите о вашем проекте: тип объекта, площадь, сроки" rows="3"></textarea>
-              </label>
-              <div class="form__footer">
-                <button type="submit" class="pill pill--light form__submit" id="submitBtn">
-                  <span class="btn__text">Отправить заявку</span>
-                  <span class="pill__arrow" aria-hidden="true">→</span>
-                </button>
-                <p class="form__consent">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
-              </div>
-              <p class="form__result" id="formResult" role="status" aria-live="polite"></p>
-            <p class="preview-note">Это предпросмотр дизайна. Песочница предпросмотра блокирует запросы к внешним сайтам, поэтому отправка формы здесь не пройдёт. На реальном хостинге заявка уходит в Google-таблицу.</p>
-</form>
+    <section class="section request" id="request-form">
+      <div class="container request__grid">
+        <div class="request__intro" data-reveal>
+          <p class="kicker"><span>(06)</span> Заявка</p>
+          <h2 class="title title--xl">Давайте обсудим <em>ваш проект</em></h2>
+          <p class="muted">Оставьте заявку — архитектор свяжется с вами в течение рабочего дня и расскажет, с чего начать.</p>
+          <div class="request__contacts">
+            <a href="tel:+70000000000"><span class="ph">+7 (000) 000-00-00</span></a>
+            <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
           </div>
         </div>
+
+        <form class="form" id="requestForm" novalidate data-reveal>
+          <label class="field">
+            <span class="field__label">Имя</span>
+            <input type="text" id="name" name="name" class="field__input" placeholder="Как к вам обращаться" required>
+          </label>
+          <label class="field">
+            <span class="field__label">Телефон</span>
+            <input type="tel" id="phone" name="phone" class="field__input" placeholder="+7 (___) ___-__-__" required>
+          </label>
+          <label class="field">
+            <span class="field__label">Сообщение</span>
+            <textarea id="message" name="message" class="field__input field__input--area" placeholder="Тип объекта, площадь, сроки" rows="3"></textarea>
+          </label>
+          <div class="form__footer">
+            <button type="submit" class="pill pill--accent form__submit" id="submitBtn">
+              <span class="btn__text">Отправить заявку</span>
+              <span class="pill__arrow" aria-hidden="true">→</span>
+            </button>
+            <p class="form__consent">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+          </div>
+          <p class="form__result" id="formResult" role="status" aria-live="polite"></p>
+        <p class="preview-note">Это предпросмотр дизайна. Песочница предпросмотра блокирует запросы к внешним сайтам, поэтому отправка формы здесь не пройдёт. На реальном хостинге заявка уходит в Google-таблицу.</p>
+</form>
       </div>
     </section>
   </main>
@@ -1871,23 +2133,14 @@ p { margin: 0; }
   <footer class="footer" id="contacts">
     <div class="container">
       <div class="footer__grid">
-        <div class="footer__brand">
-          <p class="logo logo--footer">ONYX</p>
-          <p class="muted">Бюро дизайна интерьеров и архитектуры. Проектируем, сопровождаем стройку, сдаём под ключ.</p>
-        </div>
+        <p class="footer__lead">Есть идея или участок?<br><em>Напишите нам</em> — ответим в тот же день.</p>
 
-        <nav class="footer__col" aria-label="Студия">
-          <h3>Студия</h3>
+        <nav class="footer__col" aria-label="Разделы">
+          <h3>Разделы</h3>
           <a href="#about">О студии</a>
+          <a href="#services">Услуги</a>
           <a href="#projects">Проекты</a>
-          <a href="#process">Этапы работы</a>
-        </nav>
-
-        <nav class="footer__col" aria-label="Услуги">
-          <h3>Услуги</h3>
-          <a href="#directions">Дизайн интерьеров</a>
-          <a href="#directions">Архитектура</a>
-          <a href="#process">Авторский надзор</a>
+          <a href="#process">Этапы</a>
         </nav>
 
         <div class="footer__col">
@@ -1895,25 +2148,38 @@ p { margin: 0; }
           <a href="tel:+70000000000"><span class="ph">+7 (000) 000-00-00</span></a>
           <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
           <p><span class="ph">г. Москва, ул. Примерная, 1</span></p>
-          <div class="socials">
-            <a class="social" href="#" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"/></svg></a>
-            <a class="social" href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9c0 3 3 6 6 6"/></svg></a>
-            <a class="social" href="#" aria-label="VK"><svg viewBox="0 0 24 24"><path d="M3 7c1 6 4 10 9 10h1v-3c2 0 3 1 4 3h3c-1-3-3-5-5-6 2-1 3-3 4-5h-3c-1 2-2 4-4 4V7h-3v7c-2-1-3-4-4-7z"/></svg></a>
-          </div>
+        </div>
+
+        <div class="footer__col">
+          <h3>Соцсети</h3>
+          <!-- ВАШИ ДАННЫЕ: замените «#» на свои ссылки -->
+          <a href="#">Telegram</a>
+          <a href="#">WhatsApp</a>
+          <a href="#">ВКонтакте</a>
         </div>
       </div>
 
+      <p class="footer__wordmark" aria-hidden="true">ONYX</p>
+
       <div class="footer__bottom">
         <p>&copy; <span id="year"></span> ONYX. Все права защищены.</p>
-        <!-- ВАШИ ДАННЫЕ: замените «#» у иконок соцсетей на свои ссылки -->
+        <a class="link-arrow" href="#top">Наверх <span aria-hidden="true">↑</span></a>
       </div>
     </div>
   </footer>
 
   <script>
-// Места под фото: если файл из img/ есть — показываем его и прячем заглушку,
-// если файла нет — убираем картинку, чтобы не было значка «битого» фото.
 (function () {
+  const root = document.documentElement;
+  const reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Анимации включаем только если человек не просил «уменьшить движение».
+  // Без JavaScript класса .motion нет — и всё видно сразу.
+  if (!reduceMotion) root.classList.add('motion');
+
+  // ---------- Места под фото ----------
+  // Есть файл в img/ — показываем его и прячем заглушку; нет — убираем картинку.
   document.querySelectorAll('.photo__img').forEach(function (img) {
     const slot = img.closest('.photo');
     const ok = function () { if (slot) slot.classList.add('has-img'); };
@@ -1925,14 +2191,190 @@ p { margin: 0; }
       img.addEventListener('error', fail);
     }
   });
-})();
 
-document.addEventListener('DOMContentLoaded', function () {
-  const yearEl = document.getElementById('year');
-  if (yearEl) {
-    yearEl.textContent = new Date().getFullYear();
+  // ---------- Появление первого экрана ----------
+  // Ждём, пока погаснет экран загрузки, чтобы анимация была видна.
+  let introDone = false;
+  function intro() {
+    if (introDone) return;
+    introDone = true;
+    root.classList.add('intro-done');
+  }
+  if (root.classList.contains('is-loading')) {
+    document.addEventListener('preloader:hide', intro);
+    setTimeout(intro, 13000);
+  } else {
+    requestAnimationFrame(function () { requestAnimationFrame(intro); });
   }
 
+  // ---------- Манифест: слова проявляются по мере прокрутки ----------
+  const manifesto = document.querySelector('[data-words]');
+  let words = [];
+  if (manifesto) {
+    const split = function (node) {
+      Array.from(node.childNodes).forEach(function (child) {
+        if (child.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          child.textContent.split(/(\s+)/).forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) {
+              frag.appendChild(document.createTextNode(part));
+            } else {
+              const span = document.createElement('span');
+              span.className = 'w';
+              span.textContent = part;
+              frag.appendChild(span);
+            }
+          });
+          child.replaceWith(frag);
+        } else if (child.nodeType === 1) {
+          split(child);
+        }
+      });
+    };
+    split(manifesto);
+    words = Array.from(manifesto.querySelectorAll('.w'));
+  }
+
+  function updateManifesto() {
+    if (!words.length) return;
+    const rect = manifesto.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const progress = Math.min(1, Math.max(0, (vh * 0.85 - rect.top) / (rect.height + vh * 0.3)));
+    const lit = Math.round(progress * words.length);
+    words.forEach(function (w, i) { w.classList.toggle('is-lit', i < lit); });
+  }
+
+  // ---------- Параллакс фото на первом экране ----------
+  const parallax = Array.from(document.querySelectorAll('[data-parallax]'));
+  function updateParallax() {
+    const vh = window.innerHeight;
+    parallax.forEach(function (img) {
+      if (!img.isConnected) return;
+      const rect = img.parentElement.getBoundingClientRect();
+      const shift = (rect.top + rect.height / 2 - vh / 2) * -0.08;
+      img.style.transform = 'translateY(' + shift.toFixed(1) + 'px) scale(1.12)';
+    });
+  }
+
+  // ---------- Шапка при прокрутке ----------
+  const header = document.getElementById('header');
+  function updateHeader() {
+    if (header) header.classList.toggle('is-scrolled', window.scrollY > 30);
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      updateHeader();
+      if (!reduceMotion) {
+        updateManifesto();
+        updateParallax();
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  // ---------- Счётчики ----------
+  function countUp(el) {
+    const target = el.querySelector('.ph') || el;
+    const text = target.textContent;
+    const m = text.match(/^(\D*)([\d\s ]+)(.*)$/);
+    if (!m) return;
+    const end = parseInt(m[2].replace(/\D/g, ''), 10);
+    const grouped = /[\s ]/.test(m[2].trim());
+    const fmt = function (n) {
+      const s = String(n);
+      return grouped ? s.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : s;
+    };
+    const start = performance.now();
+    const dur = 1600;
+    const step = function (now) {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      target.textContent = m[1] + fmt(Math.round(end * eased)) + m[3];
+      if (t < 1) requestAnimationFrame(step);
+      else target.textContent = text;
+    };
+    requestAnimationFrame(step);
+  }
+
+  // ---------- Появление блоков при прокрутке ----------
+  const revealables = Array.from(document.querySelectorAll('[data-reveal]'));
+  // соседние элементы появляются лесенкой
+  revealables.forEach(function (el) {
+    const siblings = Array.from(el.parentElement.children).filter(function (s) {
+      return s.hasAttribute('data-reveal');
+    });
+    const i = siblings.indexOf(el);
+    if (i > 0) el.style.transitionDelay = Math.min(i, 5) * 90 + 'ms';
+  });
+
+  function reveal(el) {
+    el.classList.add('is-in');
+    const counter = el.querySelector('[data-count]');
+    if (counter && !reduceMotion) countUp(counter);
+  }
+
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          reveal(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    revealables.forEach(function (el) { io.observe(el); });
+
+    // активный этап — тот, что посередине экрана
+    const steps = Array.from(document.querySelectorAll('.step'));
+    const stepIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          steps.forEach(function (s) { s.classList.toggle('is-active', s === entry.target); });
+        }
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    steps.forEach(function (s) { stepIo.observe(s); });
+    if (steps[0]) steps[0].classList.add('is-active');
+  } else {
+    revealables.forEach(function (el) { el.classList.add('is-in'); });
+  }
+
+  // ---------- Мобильное меню ----------
+  const menuBtn = document.querySelector('.menu-btn');
+  const menu = document.getElementById('mobileMenu');
+  function setMenu(open) {
+    root.classList.toggle('menu-open', open);
+    if (menuBtn) {
+      menuBtn.setAttribute('aria-expanded', String(open));
+      menuBtn.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    }
+    if (menu) menu.setAttribute('aria-hidden', String(!open));
+  }
+  if (menuBtn && menu) {
+    menuBtn.addEventListener('click', function () {
+      setMenu(!root.classList.contains('menu-open'));
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setMenu(false); });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setMenu(false);
+    });
+  }
+
+  // ---------- Год в подвале ----------
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // ---------- Форма заявки ----------
   const form = document.getElementById('requestForm');
   const submitBtn = document.getElementById('submitBtn');
   const resultEl = document.getElementById('formResult');
@@ -1994,5 +2436,5 @@ document.addEventListener('DOMContentLoaded', function () {
     resultEl.textContent = '';
     resultEl.classList.remove('is-success', 'is-error');
   }
-});
+})();
 </script>
