@@ -64,6 +64,102 @@ h1, h2, h3 {
   color: var(--accent);
 }
 
+/* ===== Preloader ===== */
+/* Показывается, только если скрипт в начале <body> поставил .is-loading,
+   поэтому без JavaScript сайт открывается сразу. */
+.preloader {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.is-loading .preloader {
+  display: flex;
+}
+
+.is-loading body {
+  overflow: hidden;
+}
+
+.preloader-hide .preloader {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.preloader__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  perspective: 400px;
+}
+
+.preloader__helmet {
+  display: block;
+  animation: helmet-spin 1.8s linear infinite;
+}
+
+.helmet-dome {
+  fill: var(--text);
+}
+
+.helmet-brim {
+  fill: #d6cfcb;
+}
+
+.helmet-rib {
+  fill: none;
+  stroke: #aaa2a6;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+
+.helmet-mark {
+  fill: var(--accent);
+}
+
+/* Тень сужается, когда каска повёрнута ребром: полпериода вращения. */
+.preloader__shadow {
+  width: 46px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(226, 55, 44, 0.45) 0%, transparent 70%);
+  animation: helmet-shadow 0.45s ease-in-out infinite alternate;
+}
+
+.preloader__label {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  padding-left: 0.32em;
+  color: var(--text-muted);
+}
+
+@keyframes helmet-spin {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+@keyframes helmet-shadow {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0.45); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader__helmet,
+  .preloader__shadow {
+    animation: none;
+  }
+}
+
 /* ===== Header ===== */
 .header {
   position: sticky;
@@ -792,7 +888,23 @@ h1, h2, h3 {
   color: var(--text-muted);
 }
 </style>
-<header class="header">
+<script>document.documentElement.classList.add('is-loading');</script>
+
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader__stage">
+      <svg class="preloader__helmet" viewBox="0 0 64 44" width="56" height="39">
+        <path d="M10 33 C10 16 20 5 32 5 C44 5 54 16 54 33 Z" class="helmet-dome"/>
+        <path d="M27.5 5.6 C26.6 14 26.4 24 26.6 33 M36.5 5.6 C37.4 14 37.6 24 37.4 33" class="helmet-rib"/>
+        <path d="M18 10.5 C14.8 17 13.8 25 14 33 M46 10.5 C49.2 17 50.2 25 50 33" class="helmet-rib"/>
+        <path d="M3 34.5 C3 31.8 7 30.5 12 30.5 L52 30.5 C57 30.5 61 31.8 61 34.5 C61 37.2 57 38.5 52 38.5 L12 38.5 C7 38.5 3 37.2 3 34.5 Z" class="helmet-brim"/>
+        <rect x="29" y="13" width="6" height="2.4" class="helmet-mark"/>
+      </svg>
+      <span class="preloader__shadow"></span>
+    </div>
+    <span class="preloader__label">ONYX</span>
+  </div>
+
+  <header class="header">
     <div class="container header__inner">
       <div class="brand">
         <svg class="brand__mark" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
@@ -1127,6 +1239,38 @@ h1, h2, h3 {
     </div>
   </footer>
 <script>
+// Прелоадер: держим каску минимум MIN_VISIBLE_MS, чтобы экран не мигал,
+// и снимаем не позже MAX_WAIT_MS, даже если какой-то ресурс завис.
+(function () {
+  const root = document.documentElement;
+  if (!root.classList.contains('is-loading')) return;
+
+  const MIN_VISIBLE_MS = 900;
+  const MAX_WAIT_MS = 4000;
+  const FADE_MS = 450;
+  let hidden = false;
+
+  function hide() {
+    if (hidden) return;
+    hidden = true;
+    root.classList.add('preloader-hide');
+    setTimeout(function () {
+      root.classList.remove('is-loading', 'preloader-hide');
+    }, FADE_MS);
+  }
+
+  function onLoad() {
+    setTimeout(hide, Math.max(0, MIN_VISIBLE_MS - performance.now()));
+  }
+
+  if (document.readyState === 'complete') {
+    onLoad();
+  } else {
+    window.addEventListener('load', onLoad);
+  }
+  setTimeout(hide, MAX_WAIT_MS);
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
   const yearEl = document.getElementById('year');
   if (yearEl) {
