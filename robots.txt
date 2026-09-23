@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /artifact-preview.html
+Disallow: /scripts/
+
+Sitemap: https://YOUR-DOMAIN.ru/sitemap.xml

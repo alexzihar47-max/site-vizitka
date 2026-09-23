@@ -1167,6 +1167,74 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 .motion .step.is-active { opacity: 1; }
 .step.is-active .step__num { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
 
+/* ===== Вопросы ===== */
+.faq__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(40px, 7vw, 120px);
+  align-items: start;
+}
+
+.faq__aside { position: sticky; top: 120px; }
+.faq__aside .title { margin-bottom: 20px; }
+.faq__aside .muted { max-width: 380px; }
+.faq__aside a { color: var(--text); font-weight: 600; }
+
+.faq__list { border-top: 1px solid var(--line); }
+.faq__item { border-bottom: 1px solid var(--line); }
+
+.faq__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 26px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq__item summary::-webkit-details-marker { display: none; }
+
+.faq__q {
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  transition: color 0.3s;
+}
+
+.faq__item summary:hover .faq__q { color: var(--accent-warm); }
+
+.faq__icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  font-size: 20px;
+  line-height: 1;
+  transition: transform 0.4s var(--ease), background-color 0.3s, border-color 0.3s;
+}
+
+.faq__item[open] .faq__icon { transform: rotate(45deg); background: var(--accent); border-color: var(--accent); }
+
+.faq__a {
+  max-width: 640px;
+  padding: 0 64px 28px 0;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.section-head__text {
+  max-width: 620px;
+  margin-top: 20px;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+address.footer__col { font-style: normal; }
+
 /* ===== Заявка ===== */
 .request { border-top: 1px solid var(--line); }
 
@@ -1329,6 +1397,9 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   .process__aside { position: static; }
   .process__figure { max-width: 520px; }
   .request__grid { grid-template-columns: 1fr; }
+  .faq__grid { grid-template-columns: 1fr; }
+  .faq__aside { position: static; }
+  .faq__a { padding-right: 0; }
 }
 
 @media (max-width: 760px) {

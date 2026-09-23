@@ -1172,6 +1172,74 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 .motion .step.is-active { opacity: 1; }
 .step.is-active .step__num { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
 
+/* ===== Вопросы ===== */
+.faq__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(40px, 7vw, 120px);
+  align-items: start;
+}
+
+.faq__aside { position: sticky; top: 120px; }
+.faq__aside .title { margin-bottom: 20px; }
+.faq__aside .muted { max-width: 380px; }
+.faq__aside a { color: var(--text); font-weight: 600; }
+
+.faq__list { border-top: 1px solid var(--line); }
+.faq__item { border-bottom: 1px solid var(--line); }
+
+.faq__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 26px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq__item summary::-webkit-details-marker { display: none; }
+
+.faq__q {
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  transition: color 0.3s;
+}
+
+.faq__item summary:hover .faq__q { color: var(--accent-warm); }
+
+.faq__icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  font-size: 20px;
+  line-height: 1;
+  transition: transform 0.4s var(--ease), background-color 0.3s, border-color 0.3s;
+}
+
+.faq__item[open] .faq__icon { transform: rotate(45deg); background: var(--accent); border-color: var(--accent); }
+
+.faq__a {
+  max-width: 640px;
+  padding: 0 64px 28px 0;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.section-head__text {
+  max-width: 620px;
+  margin-top: 20px;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+address.footer__col { font-style: normal; }
+
 /* ===== Заявка ===== */
 .request { border-top: 1px solid var(--line); }
 
@@ -1334,6 +1402,9 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   .process__aside { position: static; }
   .process__figure { max-width: 520px; }
   .request__grid { grid-template-columns: 1fr; }
+  .faq__grid { grid-template-columns: 1fr; }
+  .faq__aside { position: static; }
+  .faq__a { padding-right: 0; }
 }
 
 @media (max-width: 760px) {
@@ -2077,14 +2148,14 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 
         <div class="hero__word-wrap">
           <h1 class="hero__word">
-            <span class="visually-hidden">ONYX — бюро дизайна интерьеров и архитектуры</span>
+            <span class="visually-hidden">ONYX — дизайн интерьера и архитектурное проектирование в Москве</span>
             <span class="hero__letters" aria-hidden="true"><span class="wm"><span>O</span></span><span class="wm"><span>N</span></span><span class="wm"><span>Y</span></span><span class="wm"><span>X</span></span></span>
           </h1>
           <p class="hero__word hero__word--outline" aria-hidden="true">ONYX</p>
         </div>
 
         <div class="hero__object" aria-hidden="true">
-          <img class="hero__helmet-img" src="img/helmet.webp" alt="" width="1200" height="1200">
+          <img class="hero__helmet-img" src="img/helmet.webp" alt="" width="1000" height="1000" fetchpriority="high">
           <canvas class="hero__helmet" id="heroHelmet" width="600" height="600"></canvas>
           <div class="hero__floor"></div>
         </div>
@@ -2154,7 +2225,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 
         <div class="lead__visual" data-reveal>
           <div class="photo photo--lead">
-            <img class="photo__img" src="img/hero.jpg" alt="Интерьер, спроектированный студией ONYX">
+            <img class="photo__img" src="img/hero.jpg" alt="Жилой дом на стадии строительства" width="1200" height="1787" loading="lazy" decoding="async">
             <svg class="photo__art" viewBox="0 0 440 380" aria-hidden="true">
               <rect x="40" y="40" width="360" height="280" class="art-wall"/>
               <line x1="220" y1="40" x2="220" y2="210" class="art-thin"/>
@@ -2189,7 +2260,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
     <!-- ================= О СТУДИИ ================= -->
     <section class="section about" id="about">
       <div class="container">
-        <p class="kicker" data-reveal><span>(01)</span> О студии</p>
+        <h2 class="kicker" data-reveal><span>(01)</span> О студии</h2>
 
         <p class="manifesto" data-words>
           Мы — бюро ONYX. Проектируем интерьеры и дома, в которых <em>каждая деталь</em> работает на вашу жизнь: от планировки и света до розетки у кровати.
@@ -2198,7 +2269,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
         <div class="about__grid">
           <figure class="about__figure" data-reveal>
             <div class="photo photo--about">
-              <img class="photo__img" src="img/about.jpg" alt="Студия ONYX за работой">
+              <img class="photo__img" src="img/about.jpg" alt="План квартиры с расстановкой мебели — чертёж бюро ONYX" width="1800" height="1350" loading="lazy" decoding="async">
               <span class="photo__label">Ваше фото · студия или объект · 1200×900</span>
             </div>
             <figcaption>
@@ -2222,29 +2293,30 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
         <div class="section-head" data-reveal>
           <p class="kicker"><span>(02)</span> Услуги</p>
           <h2 class="title">Берём на себя <em>всё</em> —<br>от идеи до ключей</h2>
+          <p class="section-head__text">Дизайн интерьера квартир, домов и коммерческих помещений, архитектурное проектирование частных домов, рабочая документация и авторский надзор — в <span class="ph">Москве и Московской области</span>.</p>
         </div>
 
         <ul class="service-list">
           <li data-reveal>
             <a class="service" href="#request-form">
               <span class="service__num">01</span>
-              <span class="service__title">Дизайн-проект интерьера</span>
-              <span class="service__text">Планировка, визуализации, свет, подбор материалов и мебели.</span>
+              <h3 class="service__title">Дизайн-проект интерьера</h3>
+              <span class="service__text">Дизайн квартир и домов: планировка, 3D-визуализации, свет, подбор материалов и мебели.</span>
               <span class="service__arrow" aria-hidden="true">→</span>
             </a>
           </li>
           <li data-reveal>
             <a class="service" href="#request-form">
               <span class="service__num">02</span>
-              <span class="service__title">Архитектурное проектирование</span>
-              <span class="service__text">Частные дома, фасады, реконструкция и благоустройство участка.</span>
+              <h3 class="service__title">Архитектурное проектирование</h3>
+              <span class="service__text">Проекты частных домов: фасады, реконструкция и благоустройство участка.</span>
               <span class="service__arrow" aria-hidden="true">→</span>
             </a>
           </li>
           <li data-reveal>
             <a class="service" href="#request-form">
               <span class="service__num">03</span>
-              <span class="service__title">Рабочая документация</span>
+              <h3 class="service__title">Рабочая документация</h3>
               <span class="service__text">Полный комплект для строителей: развёртки, электрика, сантехника.</span>
               <span class="service__arrow" aria-hidden="true">→</span>
             </a>
@@ -2252,7 +2324,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
           <li data-reveal>
             <a class="service" href="#request-form">
               <span class="service__num">04</span>
-              <span class="service__title">Авторский надзор</span>
+              <h3 class="service__title">Авторский надзор</h3>
               <span class="service__text">Выезжаем на объект и следим, чтобы строили по проекту.</span>
               <span class="service__arrow" aria-hidden="true">→</span>
             </a>
@@ -2275,7 +2347,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
         <div class="project-grid">
           <article class="project project--big" data-reveal>
             <div class="photo photo--project">
-              <img class="photo__img" src="img/project-1.jpg" alt="Проект 1">
+              <img class="photo__img" src="img/project-1.jpg" alt="Дизайн интерьера квартиры для семьи — проект ONYX" loading="lazy" decoding="async">
               <span class="photo__label">Ваше фото · проект 1 · 1200×1500</span>
             </div>
             <div class="project__caption">
@@ -2287,7 +2359,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 
           <article class="project" data-reveal>
             <div class="photo photo--project">
-              <img class="photo__img" src="img/project-2.jpg" alt="Проект 2">
+              <img class="photo__img" src="img/project-2.jpg" alt="Архитектурный проект загородного дома — ONYX" loading="lazy" decoding="async">
               <span class="photo__label">Ваше фото · проект 2 · 1200×900</span>
             </div>
             <div class="project__caption">
@@ -2299,7 +2371,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 
           <article class="project" data-reveal>
             <div class="photo photo--project">
-              <img class="photo__img" src="img/project-3.jpg" alt="Проект 3">
+              <img class="photo__img" src="img/project-3.jpg" alt="Дизайн интерьера офиса IT-компании — ONYX" loading="lazy" decoding="async">
               <span class="photo__label">Ваше фото · проект 3 · 1200×900</span>
             </div>
             <div class="project__caption">
@@ -2345,7 +2417,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
         <div class="panels">
           <a class="panel" href="#request-form" data-reveal>
             <div class="photo photo--panel">
-              <img class="photo__img" src="img/interiors.jpg" alt="Интерьер от ONYX">
+              <img class="photo__img" src="img/interiors.jpg" alt="Дизайн интерьера квартиры от бюро ONYX" loading="lazy" decoding="async">
               <span class="photo__label">Ваше фото · интерьер · 1000×1300</span>
             </div>
             <div class="panel__body">
@@ -2358,7 +2430,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 
           <a class="panel" href="#request-form" data-reveal>
             <div class="photo photo--panel">
-              <img class="photo__img" src="img/architecture.jpg" alt="Архитектурный проект ONYX">
+              <img class="photo__img" src="img/architecture.jpg" alt="Проект частного дома от бюро ONYX" loading="lazy" decoding="async">
               <span class="photo__label">Ваше фото · архитектура · 1000×1300</span>
             </div>
             <div class="panel__body">
@@ -2386,7 +2458,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 
           <figure class="process__figure">
             <div class="photo photo--process">
-              <img class="photo__img" src="img/process.jpg" alt="Работа на строительном объекте">
+              <img class="photo__img" src="img/process.jpg" alt="Строительные работы на объекте — авторский надзор архитектора" width="931" height="1400" loading="lazy" decoding="async">
               <span class="photo__label">Ваше фото · на объекте · 1000×800</span>
             </div>
             <figcaption>Авторский надзор — на объекте, а не по телефону</figcaption>
@@ -2438,11 +2510,49 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
       </div>
     </section>
 
+    <!-- ================= ВОПРОСЫ ================= -->
+    <!-- Меняете ответы — поправьте их и в микроразметке FAQPage в <head>. -->
+    <section class="section faq" id="faq">
+      <div class="container faq__grid">
+        <div class="faq__aside" data-reveal>
+          <p class="kicker"><span>(06)</span> Вопросы</p>
+          <h2 class="title">Частые <em>вопросы</em></h2>
+          <p class="muted">Не нашли ответ? Позвоните <a href="tel:+79253760375">+7 925 376-03-75</a> или оставьте заявку — архитектор ответит в течение рабочего дня.</p>
+        </div>
+        <div class="faq__list" data-reveal>
+          <details class="faq__item">
+            <summary><h3 class="faq__q">Сколько стоит дизайн-проект интерьера?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a">Стоимость зависит от площади и состава проекта и считается за квадратный метр — от <span class="ph">2 500 ₽/м²</span>. Итоговую сумму фиксируем в договоре до начала работ, и она не меняется.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q">Сколько времени занимает дизайн-проект квартиры?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a">В среднем <span class="ph">6–10 недель</span>: обмер, планировка, концепция с 3D-визуализациями и рабочие чертежи. Сроки каждого этапа прописываем в договоре.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q">Что входит в дизайн-проект?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a">Обмерный план, планировочные решения, 3D-визуализации всех помещений, рабочие чертежи — планы стен, электрики, сантехники, потолков и полов, развёртки стен — и спецификация материалов и мебели.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q">Проектируете ли вы частные дома?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a">Да. Делаем архитектурный проект частного дома: эскиз, планировки, фасады, рабочую документацию и благоустройство участка. Можем вести и архитектуру, и интерьер одного объекта.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q">Зачем нужен авторский надзор?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a">Чтобы стройка шла строго по проекту. Архитектор выезжает на объект, отвечает на вопросы строителей, проверяет узлы и материалы и вносит корректировки. Это защищает от ошибок, которые дорого исправлять.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q">В каких городах вы работаете?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a">В <span class="ph">Москве и Московской области</span>. Для других городов возможен дистанционный формат с выездами архитектора на ключевые этапы.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= ЗАЯВКА ================= -->
     <section class="section request" id="request-form">
       <div class="container request__grid">
         <div class="request__intro" data-reveal>
-          <p class="kicker"><span>(06)</span> Заявка</p>
+          <p class="kicker"><span>(07)</span> Заявка</p>
           <h2 class="title title--xl">Давайте обсудим <em>ваш проект</em></h2>
           <p class="muted">Оставьте заявку — архитектор свяжется с вами в течение рабочего дня и расскажет, с чего начать.</p>
           <div class="request__contacts">
@@ -2490,14 +2600,15 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
           <a href="#services">Услуги</a>
           <a href="#projects">Проекты</a>
           <a href="#process">Этапы</a>
+          <a href="#faq">Вопросы</a>
         </nav>
 
-        <div class="footer__col">
+        <address class="footer__col">
           <h3>Контакты</h3>
           <a href="tel:+79253760375">+7 925 376-03-75</a>
           <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
           <p><span class="ph">г. Москва, ул. Примерная, 1</span></p>
-        </div>
+        </address>
 
         <div class="footer__col">
           <h3>Соцсети</h3>
@@ -2511,7 +2622,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
       <p class="footer__wordmark" aria-hidden="true">ONYX</p>
 
       <div class="footer__bottom">
-        <p>&copy; <span id="year"></span> ONYX. Все права защищены.</p>
+        <p>&copy; <span id="year"></span> ONYX — дизайн интерьера и архитектурное проектирование в Москве и Московской области.</p>
         <a class="link-arrow" href="#top">Наверх <span aria-hidden="true">↑</span></a>
       </div>
     </div>
