@@ -7,7 +7,7 @@
   <meta name="description" content="ПрофСервис — быстрый выезд специалиста. Оставьте заявку, и мы свяжемся с вами в ближайшее время.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,7 +15,11 @@
   <header class="header">
     <div class="container header__inner">
       <div class="brand">
-        <span class="brand__logo">ПС</span>
+        <svg class="brand__mark" width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+          <rect x="3" y="16" width="6" height="9" transform="skewX(-14)" fill="var(--accent)"/>
+          <rect x="11" y="10" width="6" height="15" transform="skewX(-14)" fill="var(--accent)" opacity="0.72"/>
+          <rect x="19" y="3" width="6" height="22" transform="skewX(-14)" fill="var(--accent)" opacity="0.42"/>
+        </svg>
         <span class="brand__name">ПрофСервис</span>
       </div>
       <div class="status-badge" id="statusBadge">
@@ -27,70 +31,78 @@
 
   <main>
     <section class="hero">
+      <div class="hero__glow" aria-hidden="true"></div>
       <div class="container hero__inner">
-        <h1 class="hero__title">Профессиональные услуги для вашего дома и бизнеса</h1>
+        <p class="eyebrow">Наша специализация</p>
+        <h1 class="hero__title">Профессиональный сервис для дома и бизнеса</h1>
         <p class="hero__subtitle">Работаем быстро, честно и без лишних вопросов. Оставьте заявку — перезвоним и согласуем удобное время.</p>
-        <a href="#request-form" class="btn btn--primary hero__cta">Оставить заявку</a>
+        <a href="#request-form" class="btn-arrow hero__cta">
+          <span class="btn-arrow__circle">→</span>
+          Оставить заявку
+        </a>
       </div>
     </section>
 
     <section class="services" id="services">
       <div class="container">
+        <p class="eyebrow">Что мы делаем</p>
         <h2 class="section-title">Наши услуги</h2>
-        <div class="services__grid">
-          <div class="service-card">
-            <div class="service-card__icon" aria-hidden="true">🛠️</div>
-            <h3 class="service-card__title">Ремонт и обслуживание</h3>
-            <p class="service-card__text">Быстрое устранение неисправностей и плановое обслуживание техники и оборудования.</p>
+
+        <div class="service-list">
+          <div class="service-row">
+            <span class="service-row__index">01</span>
+            <h3 class="service-row__title">Ремонт и обслуживание</h3>
+            <p class="service-row__text">Быстрое устранение неисправностей и плановое обслуживание техники и оборудования.</p>
           </div>
-          <div class="service-card">
-            <div class="service-card__icon" aria-hidden="true">🚚</div>
-            <h3 class="service-card__title">Выезд специалиста</h3>
-            <p class="service-card__text">Приезжаем в удобное для вас время в пределах города и ближайших районов.</p>
+          <div class="service-row">
+            <span class="service-row__index">02</span>
+            <h3 class="service-row__title">Выезд специалиста</h3>
+            <p class="service-row__text">Приезжаем в удобное для вас время в пределах города и ближайших районов.</p>
           </div>
-          <div class="service-card">
-            <div class="service-card__icon" aria-hidden="true">💬</div>
-            <h3 class="service-card__title">Консультация</h3>
-            <p class="service-card__text">Бесплатно проконсультируем и поможем подобрать оптимальное решение под вашу задачу.</p>
+          <div class="service-row">
+            <span class="service-row__index">03</span>
+            <h3 class="service-row__title">Консультация</h3>
+            <p class="service-row__text">Бесплатно проконсультируем и поможем подобрать оптимальное решение под вашу задачу.</p>
           </div>
-          <div class="service-card">
-            <div class="service-card__icon" aria-hidden="true">✅</div>
-            <h3 class="service-card__title">Гарантия качества</h3>
-            <p class="service-card__text">Даём гарантию на все виды выполненных работ и используемые материалы.</p>
+          <div class="service-row">
+            <span class="service-row__index">04</span>
+            <h3 class="service-row__title">Гарантия качества</h3>
+            <p class="service-row__text">Даём гарантию на все виды выполненных работ и используемые материалы.</p>
           </div>
         </div>
       </div>
     </section>
 
     <section class="request" id="request-form">
-      <div class="container">
-        <div class="request__card">
+      <div class="container request__inner">
+        <div class="request__intro">
+          <p class="eyebrow">Заявка</p>
           <h2 class="section-title">Оставить заявку</h2>
           <p class="request__subtitle">Заполните форму, и мы свяжемся с вами в течение рабочего дня.</p>
-
-          <form class="form" id="requestForm" novalidate>
-            <div class="form__group">
-              <label for="name" class="form__label">Имя</label>
-              <input type="text" id="name" name="name" class="form__input" placeholder="Ваше имя" required>
-            </div>
-
-            <div class="form__group">
-              <label for="phone" class="form__label">Телефон</label>
-              <input type="tel" id="phone" name="phone" class="form__input" placeholder="+7 (___) ___-__-__" required>
-            </div>
-
-            <div class="form__group">
-              <label for="message" class="form__label">Сообщение</label>
-              <textarea id="message" name="message" class="form__input form__textarea" placeholder="Опишите вашу задачу" rows="4"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn--primary form__submit" id="submitBtn">
-              <span class="btn__text">Отправить заявку</span>
-            </button>
-
-            <p class="form__result" id="formResult" role="status" aria-live="polite"></p>
-          </form>
         </div>
+
+        <form class="form" id="requestForm" novalidate>
+          <div class="form__group">
+            <label for="name" class="form__label">Имя</label>
+            <input type="text" id="name" name="name" class="form__input" placeholder="Ваше имя" required>
+          </div>
+
+          <div class="form__group">
+            <label for="phone" class="form__label">Телефон</label>
+            <input type="tel" id="phone" name="phone" class="form__input" placeholder="+7 (___) ___-__-__" required>
+          </div>
+
+          <div class="form__group">
+            <label for="message" class="form__label">Сообщение</label>
+            <textarea id="message" name="message" class="form__input form__textarea" placeholder="Опишите вашу задачу" rows="4"></textarea>
+          </div>
+
+          <button type="submit" class="btn form__submit" id="submitBtn">
+            <span class="btn__text">Отправить заявку</span>
+          </button>
+
+          <p class="form__result" id="formResult" role="status" aria-live="polite"></p>
+        </form>
       </div>
     </section>
   </main>
