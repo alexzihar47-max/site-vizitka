@@ -484,111 +484,247 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 
 .menu .pill { align-self: flex-start; }
 
-/* ===== Главный экран ===== */
+/* ===== Главный экран: буквы, каска поверх, чертежи на фоне ===== */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .hero {
   /* размер огромного ONYX: слово занимает всю ширину контейнера
      (в Unbounded 800 слово шириной ≈ 3.55 кегля) */
   --wm: calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 3.62);
   position: relative;
-  padding-block: 104px clamp(56px, 7vw, 96px);
+  min-height: clamp(700px, 100svh, 1040px);
+  display: flex;
+  padding-block: 104px 28px;
   overflow: hidden;
+  isolation: isolate;
 }
+
+.hero__bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 
 .hero__glow {
   position: absolute;
-  width: 70vw;
-  height: 70vw;
-  max-width: 1100px;
-  max-height: 1100px;
-  right: -18vw;
-  top: -30vw;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 106, 43, 0.28), rgba(226, 55, 44, 0.1) 40%, transparent 68%);
-  pointer-events: none;
+  inset: 0;
+  background:
+    radial-gradient(42% 46% at 50% 62%, rgba(226, 55, 44, 0.55), rgba(226, 55, 44, 0.16) 55%, transparent 80%),
+    radial-gradient(120% 80% at 50% 110%, rgba(14, 12, 15, 0) 40%, var(--bg) 85%);
 }
 
-.hero__grid {
+.hero__drawings { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.9; }
+
+.bp-grid { fill: none; stroke: rgba(255, 255, 255, 0.035); stroke-width: 1; }
+.bp-line { fill: none; stroke: rgba(243, 239, 235, 0.2); stroke-width: 1.4; }
+.bp-thin { fill: none; stroke: rgba(243, 239, 235, 0.12); stroke-width: 1; }
+.bp-accent { fill: none; stroke: rgba(255, 106, 43, 0.5); stroke-width: 1.2; }
+path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); }
+.bp-dash { stroke-dasharray: 8 8; }
+.bp-text { font: 500 13px var(--font-body); fill: rgba(243, 239, 235, 0.3); letter-spacing: 0.04em; }
+.bp-label { font: 700 13px var(--font-body); fill: rgba(243, 239, 235, 0.38); letter-spacing: 0.12em; }
+
+.hero__stage {
   position: relative;
   width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  grid-template-areas:
-    "mark mark"
-    "text visual";
-  column-gap: clamp(40px, 6vw, 96px);
-  align-items: start;
-}
-
-.hero__wordmark {
-  grid-area: mark;
-  position: relative;
-  z-index: 1;
-  margin: 0 0 0 -0.035em;
-  font: 800 var(--wm)/0.8 var(--font-display);
-  letter-spacing: -0.06em;
-  white-space: nowrap;
-  user-select: none;
-}
-
-/* каждая буква выезжает снизу из-под невидимой кромки */
-.hero__wordmark .wm {
-  display: inline-block;
-  clip-path: inset(-50% -50% 0 -50%);
-}
-
-.hero__wordmark .wm > span { display: inline-block; }
-
-.hero__text {
-  grid-area: text;
-  padding-top: clamp(32px, 3.5vw, 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero__eyebrow {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 28px;
+  margin-bottom: 10px;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(243, 239, 235, 0.72);
 }
 
-.dash { width: 44px; height: 1px; background: var(--accent-warm); }
+.dash { width: 40px; height: 1px; background: var(--accent-warm); }
 
-.hero__title {
-  font-size: clamp(40px, 5.2vw, 84px);
-  line-height: 0.96;
-  letter-spacing: -0.045em;
-  margin-bottom: 32px;
+.hero__word-wrap { position: relative; }
+
+.hero__word {
+  margin: 0;
+  font: 800 var(--wm)/0.8 var(--font-display);
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+  text-align: center;
+  user-select: none;
 }
 
-.hero__title .line {
-  display: block;
-  overflow: hidden;
-  padding-bottom: 0.06em;
-  margin-bottom: -0.06em;
+.hero__letters { position: relative; z-index: 1; display: inline-block; }
+
+/* контур букв поверх каски: будто каска стоит внутри слова */
+.hero__word--outline {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(243, 239, 235, 0.55);
+  pointer-events: none;
 }
 
-.hero__title .line > span { display: inline-block; }
-
-.hero__lead {
-  max-width: 440px;
-  margin-bottom: 32px;
-  font-size: 17px;
-  color: var(--text-muted);
+.hero__letters .wm {
+  display: inline-block;
+  clip-path: inset(-50% -50% 0 -50%);
 }
 
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
+.hero__letters .wm > span { display: inline-block; }
+
+.hero__object {
+  --obj: min(52vw, 680px);
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  /* купол каски заходит на нижнюю половину букв */
+  top: calc(var(--wm) * 0.55 - var(--obj) * 0.33);
+  width: var(--obj);
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+}
+
+.hero__helmet,
+.hero__helmet-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero__helmet { opacity: 0; transition: opacity 0.6s ease; }
+.hero__helmet.is-ready { opacity: 1; }
+.hero__helmet.is-ready + .hero__floor { opacity: 1; }
+.hero__object:has(.hero__helmet.is-ready) .hero__helmet-img { opacity: 0; }
+.hero__helmet-img { transition: opacity 0.6s ease; }
+
+.hero__floor {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 13%;
+  height: 9%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.6), transparent);
+}
+
+.hero__chip {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  gap: 2px;
+  max-width: 190px;
+}
+
+.hero__chip strong {
+  font: 700 clamp(28px, 3vw, 44px)/1 var(--font-display);
+  letter-spacing: -0.04em;
+}
+
+.hero__chip span:last-child { font-size: 13px; color: rgba(243, 239, 235, 0.72); }
+
+.hero__chip--left { left: var(--gutter); top: calc(var(--wm) * 1.05); }
+.hero__chip--right { right: var(--gutter); top: calc(var(--wm) * 0.98); text-align: right; justify-items: end; }
+
+.hero__tag {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
   align-items: center;
-  gap: 16px 28px;
-  margin-bottom: 56px;
+  gap: 8px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: rgba(14, 12, 15, 0.55);
+  backdrop-filter: blur(10px);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.hero__meta {
+.hero__tag i {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--accent);
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hero__tag--1 { left: calc(50% - min(26vw, 340px)); top: calc(var(--wm) * 1.35); }
+.hero__tag--2 { right: calc(50% - min(28vw, 360px)); top: calc(var(--wm) * 1.7); }
+
+.hero__bottom {
+  position: relative;
+  z-index: 4;
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.hero__contact { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(243, 239, 235, 0.72); }
+.hero__contact span { margin-right: 4px; }
+
+.round-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  transition: transform 0.3s var(--ease), background-color 0.3s;
+}
+
+.round-btn:hover { transform: scale(1.08); background: #f0463a; }
+.round-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+
+.hero__scroll {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(243, 239, 235, 0.6);
+}
+
+@keyframes float { 50% { transform: translateX(-50%) translateY(-12px); } }
+.motion.intro-done .hero__object { animation: float 7s ease-in-out infinite; }
+
+/* ===== Интро под главным экраном ===== */
+.lead__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(40px, 7vw, 110px);
+  align-items: center;
+}
+
+.lead__title {
+  margin-bottom: 28px;
+  font-size: clamp(40px, 5.6vw, 88px);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.lead__lead { max-width: 460px; margin-bottom: 32px; font-size: 17px; color: var(--text-muted); }
+
+.lead__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-bottom: 48px; }
+
+.lead__meta {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, auto));
   justify-content: start;
@@ -598,35 +734,23 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
   border-top: 1px solid var(--line);
 }
 
-.hero__meta dt {
+.lead__meta dt {
+  margin-bottom: 4px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 4px;
 }
 
-.hero__meta dd { margin: 0; font-size: 14px; font-weight: 600; }
+.lead__meta dd { margin: 0; font-size: 14px; font-weight: 600; }
 
-.hero__visual {
-  grid-area: visual;
-  position: relative;
-  z-index: 2;
-  /* фото заезжает на нижнюю часть букв */
-  margin-top: calc(var(--wm) * -0.4);
-}
+.lead__visual { position: relative; }
+.photo--lead { aspect-ratio: 4 / 5; border-radius: var(--r-xl); }
+.photo--lead .photo__img { object-position: 50% 30%; }
+.lead__visual:hover .photo__img { transform: scale(1.04); }
 
-.photo--hero {
-  aspect-ratio: 4 / 5;
-  max-height: 72svh;
-  width: 100%;
-  border-radius: var(--r-xl);
-}
-
-.photo--hero .photo__img { transform: scale(1.12); transition: none; object-position: 50% 30%; }
-
-.hero__caption {
+.lead__caption {
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -635,11 +759,11 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
   color: var(--text-muted);
 }
 
-.hero__caption span:first-child {
+.lead__caption span:first-child {
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: 11px;
 }
 
 .badge-spin {
@@ -681,42 +805,37 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* появление первого экрана после загрузки */
-.motion .hero__wordmark .wm > span {
+.motion .hero__letters .wm > span {
   transform: translateY(102%);
   transition: transform 1.3s var(--ease);
 }
 
-.motion .hero__wordmark .wm:nth-child(2) > span { transition-delay: 0.07s; }
-.motion .hero__wordmark .wm:nth-child(3) > span { transition-delay: 0.14s; }
-.motion .hero__wordmark .wm:nth-child(4) > span { transition-delay: 0.21s; }
+.motion .hero__letters .wm:nth-child(2) > span { transition-delay: 0.07s; }
+.motion .hero__letters .wm:nth-child(3) > span { transition-delay: 0.14s; }
+.motion .hero__letters .wm:nth-child(4) > span { transition-delay: 0.21s; }
 
-.motion .hero__title .line > span {
-  transform: translateY(108%);
-  transition: transform 1.1s var(--ease);
-  transition-delay: 0.3s;
+.motion .hero__word--outline { opacity: 0; transition: opacity 1.2s ease 0.9s; }
+
+.motion .hero__object {
+  opacity: 0;
+  transform: translateX(-50%) translateY(80px) scale(0.92);
+  transition: opacity 1.1s ease 0.35s, transform 1.4s var(--ease) 0.35s;
 }
-
-.motion .hero__title .line:nth-child(2) > span { transition-delay: 0.38s; }
-.motion .hero__title .line:nth-child(3) > span { transition-delay: 0.46s; }
 
 .motion .intro {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 1s ease, transform 1.1s var(--ease);
-  transition-delay: 0.6s;
+  transform: translateY(20px);
+  transition: opacity 1s ease 0.8s, transform 1.1s var(--ease) 0.8s;
 }
 
-.motion .hero__visual.intro {
-  transform: translateY(60px);
-  transition-delay: 0.35s;
-}
-
-.motion.intro-done .hero__wordmark .wm > span,
-.motion.intro-done .hero__title .line > span,
+.motion.intro-done .hero__letters .wm > span,
+.motion.intro-done .hero__word--outline,
 .motion.intro-done .intro {
   opacity: 1;
   transform: none;
 }
+
+.motion.intro-done .hero__object { opacity: 1; transform: translateX(-50%); }
 
 /* ===== Бегущая строка ===== */
 .marquee {
@@ -1203,14 +1322,13 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 }
 
 @media (max-width: 900px) {
-  .hero { padding-top: 96px; }
-  .hero__grid {
-    grid-template-columns: 1fr;
-    grid-template-areas: "mark" "text" "visual";
-  }
-  .hero__visual { max-width: 520px; margin-top: 48px; }
-  .photo--hero { max-height: none; }
+  .lead__grid { grid-template-columns: 1fr; }
+  .lead__visual { max-width: 520px; }
   .badge-spin { left: auto; right: -8px; bottom: auto; top: -40px; width: 108px; height: 108px; }
+  .hero__tag { display: none; }
+  .hero__object { --obj: min(78vw, 560px); }
+  .hero__chip--left { top: auto; bottom: 96px; }
+  .hero__chip--right { top: auto; bottom: 96px; }
   .about__grid { grid-template-columns: 1fr; }
   .process__grid { grid-template-columns: 1fr; }
   .process__aside { position: static; }
@@ -1233,8 +1351,18 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 @media (max-width: 560px) {
   .status-badge__text { display: none; }
   .status-badge__short { display: inline; }
-  .hero__meta { grid-template-columns: repeat(2, minmax(0, auto)); gap: 16px 32px; }
-  .hero__meta div:last-child { grid-column: 1 / -1; }
+  .lead__meta { grid-template-columns: repeat(2, minmax(0, auto)); gap: 16px 32px; }
+  .lead__meta div:last-child { grid-column: 1 / -1; }
+  .hero { min-height: 640px; padding-top: 92px; }
+  .hero__eyebrow { font-size: 11px; letter-spacing: 0.12em; }
+  .hero__eyebrow .dash { width: 20px; }
+  .hero__object { --obj: 96vw; top: calc(var(--wm) * 0.8 - var(--obj) * 0.3); }
+  .hero { min-height: 600px; }
+  .hero__chip strong { font-size: 26px; }
+  .hero__chip span:last-child { font-size: 12px; }
+  .hero__chip--left, .hero__chip--right { bottom: 84px; max-width: 150px; }
+  .hero__scroll { display: none; }
+  .hero__contact span { display: none; }
   .service { gap: 12px 16px; padding-inline: 4px; }
   .service__num { font-size: 12px; }
   .service__arrow { width: 44px; height: 44px; }
@@ -1247,6 +1375,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
   html { scroll-behavior: auto; }
   .marquee__track, .badge-spin svg, .status-badge__dot { animation: none; }
   .photo__img, .service::before, .panel { transition: none; }
+  .hero__object { animation: none !important; }
 }
 .preview-note {
   margin: 0;
@@ -1261,7 +1390,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
     КАК ЗАМЕНИТЬ ЗАГЛУШКИ
 
     Фото: положите файл с нужным именем в папку img/ — он сам встанет на место.
-      img/hero.jpg          главный экран, вертикальное, от 1200×1500
+      img/hero.jpg          фото объекта под главным экраном, вертикальное, от 1200×1500
       img/about.jpg         блок «О студии», от 1200×900
       img/project-1.jpg     проект 1 (большой), вертикальное, от 1200×1500
       img/project-2.jpg     проект 2, от 1200×900
@@ -1286,53 +1415,11 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
     </div>
   </div>
   <script>
-// Экран загрузки: реалистичная 3D-каска (three.js) + прогресс загрузки.
-//
-// Корпус — одна непрерывная поверхность, как в 3D-редакторе: купол плавно
-// переходит в козырёк, край завальцован, у пластика есть толщина и
-// внутренняя сторона. Рельеф и бобышки слотов под наушники — часть формы.
-// Материал — глянцевый ABS с лаковым слоем, свет — студийные софтбоксы
-// в отражениях и красный контровой свет.
-//
-// Вращение неравномерное: лицом к зрителю каска почти замирает,
-// остальную часть оборота проходит быстро.
+// 3D-каска ONYX на three.js: общая модель для экрана загрузки и главного экрана.
+// OnyxHelmet.build(THREE, canvas) → { render(yaw, tilt), resize() }
 (function () {
-  const root = document.documentElement;
-  if (!root.classList.contains('is-loading')) return;
-
-  const MIN_MS = 3000;  // минимум, если 3D недоступно
-  const MAX_MS = 12000; // и снимается не позже, даже если что-то зависло
-  const TURNS = 2;      // сколько полных оборотов каска делает до конца загрузки
-  const FADE_MS = 500;
-  const TURN_MS = 2300; // один оборот каски
-  const EASE = 0.8;     // 0 — равномерно, ближе к 1 — дольше смотрит на зрителя
-
-  const canvas = document.getElementById('helmetCanvas');
-  const bar = document.getElementById('preloaderBar');
-  const pctEl = document.getElementById('preloaderPct');
-  const reduceMotion = window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   const TAU = Math.PI * 2;
   const HALF = Math.PI / 2;
-
-  let render = null;               // появится, когда сцена готова
-  let sceneSettled = !canvas || !canvas.dataset.three;
-
-  if (!sceneSettled) {
-    // путь без «./» браузер счёл бы именем пакета, поэтому делаем полный адрес
-    const src = new URL(canvas.dataset.three, document.baseURI).href;
-    import(src).then(function (THREE) {
-      render = buildHelmet(THREE, canvas);
-      canvas.classList.add('is-ready');
-    }).catch(function () {
-      canvas.style.display = 'none'; // без 3D показываем только прогресс
-    }).then(function () {
-      sceneSettled = true;
-    });
-  } else if (canvas) {
-    canvas.style.display = 'none';
-  }
 
   // ======================================================================
   // Модель
@@ -1497,7 +1584,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 
   // Наклейка, повторяющая поверхность купола: логотип и вентиляция.
   function surfacePatch(THREE, uc, du, thc, dth, flipU) {
-    const nx = 24, ny = 8;
+    const nx = 64, ny = 20;
     const pos = [], uv = [], idx = [];
     const e = 1e-3;
     for (let iy = 0; iy <= ny; iy++) {
@@ -1514,7 +1601,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
         const l = Math.hypot(n[0], n[1], n[2]) || 1;
         n = [n[0] / l, n[1] / l, n[2] / l];
         if (n[0] * p[0] + n[2] * p[2] < 0) n = [-n[0], -n[1], -n[2]];
-        pos.push(p[0] + n[0] * 0.003, p[1] + n[1] * 0.003, p[2] + n[2] * 0.003);
+        pos.push(p[0] + n[0] * 0.006, p[1] + n[1] * 0.006, p[2] + n[2] * 0.006);
         uv.push(s, 1 - iy / ny);
       }
     }
@@ -1569,10 +1656,11 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
     return tex;
   }
 
-  function buildHelmet(THREE, canvas) {
-    const size = canvas.clientWidth || 170;
+  function buildHelmet(THREE, canvas, opts) {
+    opts = opts || {};
+    let size = canvas.clientWidth || 170;
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, opts.maxDpr || 2));
     renderer.setSize(size, size, false);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
@@ -1610,15 +1698,26 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
       });
     };
 
-    // логотип ONYX на лбу
-    const logo = canvasTexture(THREE, 512, 160, function (ctx, w, h) {
+    // логотип ONYX на лбу — крупный, шрифтом сайта; когда Unbounded
+    // загрузится, текстура перерисуется
+    const paintLogo = function (ctx, w, h) {
+      ctx.clearRect(0, 0, w, h);
       ctx.fillStyle = '#e2372c';
-      ctx.font = '700 132px Oswald, "Arial Narrow", Arial, sans-serif';
+      ctx.font = '800 220px Unbounded, "Arial Black", Arial, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('ONYX', w / 2, h / 2 + 6);
-    });
-    helmet.add(new THREE.Mesh(surfacePatch(THREE, HALF, 0.13, 0.95, 0.039, true), decal(logo)));
+      ctx.fillText('ONYX', w / 2, h / 2 + 10, w - 60);
+    };
+    const logo = canvasTexture(THREE, 1024, 256, paintLogo);
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, HALF, 0.6, 1.0, 0.16, true), decal(logo)));
+    const repaintLogo = function () {
+      paintLogo(logo.image.getContext('2d'), logo.image.width, logo.image.height);
+      logo.needsUpdate = true;
+    };
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('800 220px Unbounded').then(repaintLogo).catch(function () {});
+      document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', repaintLogo);
+    }
 
     // вентиляционные прорези по бокам
     const vents = canvasTexture(THREE, 512, 64, function (ctx, w, h) {
@@ -1675,11 +1774,69 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
     knob.position.set(0, -0.17, -(0.93 * ELONG * 0.96 + 0.05));
     helmet.add(knob);
 
-    return function (yaw, tilt) {
-      helmet.rotation.y = yaw;
-      helmet.rotation.x = tilt;
-      renderer.render(scene, camera);
+    return {
+      render: function (yaw, tilt) {
+        helmet.rotation.y = yaw;
+        helmet.rotation.x = tilt;
+        renderer.render(scene, camera);
+      },
+      resize: function () {
+        size = canvas.clientWidth || size;
+        renderer.setSize(size, size, false);
+      }
     };
+  }
+
+  window.OnyxHelmet = { build: buildHelmet };
+})();
+</script>
+  <script>
+// Экран загрузки: реалистичная 3D-каска (three.js) + прогресс загрузки.
+//
+// Корпус — одна непрерывная поверхность, как в 3D-редакторе: купол плавно
+// переходит в козырёк, край завальцован, у пластика есть толщина и
+// внутренняя сторона. Рельеф и бобышки слотов под наушники — часть формы.
+// Материал — глянцевый ABS с лаковым слоем, свет — студийные софтбоксы
+// в отражениях и красный контровой свет.
+//
+// Вращение неравномерное: лицом к зрителю каска почти замирает,
+// остальную часть оборота проходит быстро.
+(function () {
+  const root = document.documentElement;
+  if (!root.classList.contains('is-loading')) return;
+
+  const MIN_MS = 3000;  // минимум, если 3D недоступно
+  const MAX_MS = 12000; // и снимается не позже, даже если что-то зависло
+  const TURNS = 2;      // сколько полных оборотов каска делает до конца загрузки
+  const FADE_MS = 500;
+  const TURN_MS = 2300; // один оборот каски
+  const EASE = 0.8;     // 0 — равномерно, ближе к 1 — дольше смотрит на зрителя
+
+  const canvas = document.getElementById('helmetCanvas');
+  const bar = document.getElementById('preloaderBar');
+  const pctEl = document.getElementById('preloaderPct');
+  const reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const TAU = Math.PI * 2;
+  const HALF = Math.PI / 2;
+
+  let render = null;               // появится, когда сцена готова
+  let sceneSettled = !canvas || !canvas.dataset.three;
+
+  if (!sceneSettled) {
+    // путь без «./» браузер счёл бы именем пакета, поэтому делаем полный адрес
+    const src = new URL(canvas.dataset.three, document.baseURI).href;
+    import(src).then(function (THREE) {
+      render = window.OnyxHelmet.build(THREE, canvas).render;
+      canvas.classList.add('is-ready');
+    }).catch(function () {
+      canvas.style.display = 'none'; // без 3D показываем только прогресс
+    }).then(function () {
+      sceneSettled = true;
+    });
+  } else if (canvas) {
+    canvas.style.display = 'none';
   }
 
   // ======================================================================
@@ -1823,69 +1980,141 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 
     <!-- ================= ГЛАВНЫЙ ЭКРАН ================= -->
     <section class="hero">
-      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__glow"></div>
+        <svg class="hero__drawings" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="bpGrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" class="bp-grid"/></pattern>
+          </defs>
+          <rect width="1600" height="1000" fill="url(#bpGrid)"/>
 
-      <div class="container hero__grid">
-        <p class="hero__wordmark" aria-hidden="true"><span class="wm"><span>O</span></span><span class="wm"><span>N</span></span><span class="wm"><span>Y</span></span><span class="wm"><span>X</span></span></p>
+          <!-- направляющие окружности за каской -->
+          <circle cx="800" cy="600" r="330" class="bp-accent bp-dash"/>
+          <circle cx="800" cy="600" r="420" class="bp-thin"/>
+          <line x1="800" y1="160" x2="800" y2="1000" class="bp-thin bp-dash"/>
+          <line x1="300" y1="600" x2="1300" y2="600" class="bp-thin bp-dash"/>
 
-        <div class="hero__text">
-          <p class="hero__eyebrow intro">
-            <span class="dash" aria-hidden="true"></span>
-            Бюро интерьеров и архитектуры
-          </p>
+          <!-- план слева -->
+          <g transform="translate(70 170) rotate(-6)">
+            <rect x="0" y="0" width="420" height="300" class="bp-line"/>
+            <rect x="8" y="8" width="404" height="284" class="bp-thin"/>
+            <line x1="170" y1="0" x2="170" y2="150" class="bp-line"/>
+            <line x1="0" y1="150" x2="260" y2="150" class="bp-line"/>
+            <line x1="260" y1="150" x2="260" y2="300" class="bp-line"/>
+            <path d="M170 110 A40 40 0 0 1 210 150" class="bp-accent"/>
+            <path d="M260 250 A34 34 0 0 0 226 284" class="bp-accent"/>
+            <rect x="30" y="200" width="120" height="44" rx="6" class="bp-thin"/>
+            <circle cx="90" cy="80" r="26" class="bp-thin"/>
+            <rect x="300" y="190" width="90" height="80" class="bp-thin"/>
+            <line x1="0" y1="-30" x2="420" y2="-30" class="bp-thin"/>
+            <line x1="0" y1="-38" x2="0" y2="-22" class="bp-thin"/><line x1="170" y1="-38" x2="170" y2="-22" class="bp-thin"/><line x1="420" y1="-38" x2="420" y2="-22" class="bp-thin"/>
+            <text x="85" y="-38" class="bp-text" text-anchor="middle">3200</text>
+            <text x="295" y="-38" class="bp-text" text-anchor="middle">4400</text>
+            <text x="60" y="120" class="bp-label">ГОСТИНАЯ</text>
+            <text x="200" y="60" class="bp-label">КУХНЯ</text>
+            <text x="290" y="180" class="bp-label">СПАЛЬНЯ</text>
+            <circle cx="0" cy="340" r="14" class="bp-thin"/><text x="0" y="345" class="bp-text" text-anchor="middle">1</text>
+            <circle cx="170" cy="340" r="14" class="bp-thin"/><text x="170" y="345" class="bp-text" text-anchor="middle">2</text>
+            <circle cx="420" cy="340" r="14" class="bp-thin"/><text x="420" y="345" class="bp-text" text-anchor="middle">3</text>
+          </g>
 
-          <h1 class="hero__title">
-            <span class="line"><span>Проектируем</span></span>
-            <span class="line"><span><em>пространство</em></span></span>
-            <span class="line"><span>для жизни</span></span>
+          <!-- фасад справа -->
+          <g transform="translate(1110 250)">
+            <line x1="-40" y1="380" x2="460" y2="380" class="bp-line"/>
+            <rect x="20" y="170" width="380" height="210" class="bp-line"/>
+            <path d="M0 180 L210 40 L420 180" class="bp-line"/>
+            <rect x="60" y="220" width="70" height="90" class="bp-thin"/><line x1="95" y1="220" x2="95" y2="310" class="bp-thin"/>
+            <rect x="170" y="220" width="80" height="160" class="bp-thin"/>
+            <rect x="290" y="220" width="70" height="90" class="bp-thin"/><line x1="325" y1="220" x2="325" y2="310" class="bp-thin"/>
+            <circle cx="210" cy="120" r="22" class="bp-thin"/>
+            <line x1="440" y1="40" x2="440" y2="380" class="bp-thin"/>
+            <line x1="432" y1="40" x2="448" y2="40" class="bp-thin"/><line x1="432" y1="380" x2="448" y2="380" class="bp-thin"/>
+            <text x="458" y="215" class="bp-text" transform="rotate(-90 458 215)" text-anchor="middle">7800</text>
+            <path d="M-40 380 l10 -12 h-20 z" class="bp-accent"/><text x="-60" y="372" class="bp-text" text-anchor="end">±0.000</text>
+            <path d="M-40 170 l10 -12 h-20 z" class="bp-accent"/><text x="-60" y="162" class="bp-text" text-anchor="end">+3.300</text>
+            <path d="M-40 40 l10 -12 h-20 z" class="bp-accent"/><text x="-60" y="32" class="bp-text" text-anchor="end">+6.600</text>
+            <text x="210" y="420" class="bp-label" text-anchor="middle">ФАСАД 1–3</text>
+          </g>
+
+          <!-- эскиз каски -->
+          <g transform="translate(1180 80) scale(.9)">
+            <path d="M20 80 C20 30 60 5 110 5 C165 5 200 35 205 80" class="bp-line"/>
+            <path d="M5 84 H220 C230 84 236 90 230 96 H0 C-6 90 -2 84 5 84 Z" class="bp-line"/>
+            <path d="M95 6 C92 30 92 60 94 84 M125 6 C128 30 128 60 126 84" class="bp-thin"/>
+            <line x1="240" y1="50" x2="300" y2="30" class="bp-thin"/>
+            <text x="306" y="34" class="bp-text">СИЗ · каска</text>
+          </g>
+
+          <!-- разрез и надписи внизу -->
+          <g transform="translate(120 820)">
+            <line x1="0" y1="0" x2="360" y2="0" class="bp-accent bp-dash"/>
+            <path d="M0 0 v-22 M0 -22 l-8 10 M0 -22 l8 10" class="bp-accent"/>
+            <path d="M360 0 v-22 M360 -22 l-8 10 M360 -22 l8 10" class="bp-accent"/>
+            <text x="-6" y="30" class="bp-label">А</text><text x="354" y="30" class="bp-label">А</text>
+            <text x="120" y="30" class="bp-text">РАЗРЕЗ А–А · М 1:50</text>
+          </g>
+          <g transform="translate(1250 860)">
+            <rect width="260" height="64" class="bp-thin"/><line x1="0" y1="32" x2="260" y2="32" class="bp-thin"/><line x1="180" y1="0" x2="180" y2="64" class="bp-thin"/>
+            <text x="12" y="22" class="bp-label">ONYX</text><text x="12" y="54" class="bp-text">Лист АР-01 · Эскиз</text>
+            <text x="192" y="54" class="bp-text">2026</text>
+          </g>
+
+          <!-- стрелка севера -->
+          <g transform="translate(90 90)">
+            <circle r="26" class="bp-thin"/>
+            <path d="M0 -22 L8 10 L0 4 L-8 10 Z" class="bp-accent"/>
+            <text y="46" class="bp-text" text-anchor="middle">С</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="container hero__stage">
+        <p class="hero__eyebrow intro">
+          <span class="dash" aria-hidden="true"></span>
+          Бюро интерьеров и архитектуры
+          <span class="dash" aria-hidden="true"></span>
+        </p>
+
+        <div class="hero__word-wrap">
+          <h1 class="hero__word">
+            <span class="visually-hidden">ONYX — бюро дизайна интерьеров и архитектуры</span>
+            <span class="hero__letters" aria-hidden="true"><span class="wm"><span>O</span></span><span class="wm"><span>N</span></span><span class="wm"><span>Y</span></span><span class="wm"><span>X</span></span></span>
           </h1>
-
-          <p class="hero__lead intro">Интерьеры и дома, в которых хочется жить. От первого эскиза до рабочих чертежей и сдачи объекта — один архитектор ведёт проект от начала до конца.</p>
-
-          <div class="hero__actions intro">
-            <a class="pill pill--light" href="#request-form">
-              Обсудить проект
-              <span class="pill__arrow" aria-hidden="true">→</span>
-            </a>
-            <a class="link-arrow" href="#projects">Смотреть проекты <span aria-hidden="true">↓</span></a>
-          </div>
-
-          <dl class="hero__meta intro">
-            <div><dt>Город</dt><dd><span class="ph">Москва и область</span></dd></div>
-            <div><dt>Работаем с</dt><dd><span class="ph">2016</span> года</dd></div>
-            <div><dt>Формат</dt><dd>Интерьеры · Архитектура</dd></div>
-          </dl>
+          <p class="hero__word hero__word--outline" aria-hidden="true">ONYX</p>
         </div>
 
-        <div class="hero__visual intro">
-          <div class="photo photo--hero">
-            <img class="photo__img" src="img/hero.jpg" alt="Интерьер, спроектированный студией ONYX" data-parallax>
-            <svg class="photo__art" viewBox="0 0 440 380" aria-hidden="true">
-              <rect x="40" y="40" width="360" height="280" class="art-wall"/>
-              <line x1="220" y1="40" x2="220" y2="210" class="art-thin"/>
-              <line x1="40" y1="210" x2="400" y2="210" class="art-thin"/>
-              <line x1="300" y1="210" x2="300" y2="320" class="art-thin"/>
-              <path d="M220 130 A 40 40 0 0 1 260 170" class="art-accent"/>
-              <path d="M300 260 A 30 30 0 0 1 330 290" class="art-accent"/>
-              <line x1="40" y1="20" x2="400" y2="20" class="art-dim"/>
-              <text x="220" y="14" class="art-text" text-anchor="middle">5400</text>
-              <text x="130" y="130" class="art-label">ГОСТИНАЯ</text>
-              <text x="310" y="130" class="art-label">СПАЛЬНЯ</text>
-              <text x="170" y="270" class="art-label">КУХНЯ</text>
-            </svg>
-            <span class="photo__label">Ваше фото · главный экран · 1200×1500</span>
-          </div>
-          <p class="hero__caption">
-            <span>Проект</span>
-            <span class="ph">Название объекта</span>
-          </p>
+        <div class="hero__object" aria-hidden="true">
+          <img class="hero__helmet-img" src="img/helmet.webp" alt="" width="1200" height="1200">
+          <canvas class="hero__helmet" id="heroHelmet" width="600" height="600"></canvas>
+          <div class="hero__floor"></div>
+        </div>
 
-          <a class="badge-spin" href="#request-form" aria-label="Обсудить проект">
-            <svg viewBox="0 0 120 120" aria-hidden="true">
-              <defs><path id="spinPath" d="M60 60 m-46 0 a46 46 0 1 1 92 0 a46 46 0 1 1 -92 0"/></defs>
-              <text><textPath href="#spinPath" textLength="286" lengthAdjust="spacing">Открыты для новых проектов • </textPath></text>
-            </svg>
-            <span class="badge-spin__arrow" aria-hidden="true">↗</span>
+        <div class="hero__chip hero__chip--left intro">
+          <strong><span class="ph">120+</span></strong>
+          <span>реализованных проектов</span>
+        </div>
+        <div class="hero__chip hero__chip--right intro">
+          <strong><span class="ph">9 лет</span></strong>
+          <span>в архитектуре и&nbsp;интерьерах</span>
+        </div>
+
+        <span class="hero__tag hero__tag--1 intro"><i aria-hidden="true">✓</i> Свои рабочие чертежи</span>
+        <span class="hero__tag hero__tag--2 intro"><i aria-hidden="true">✓</i> Авторский надзор</span>
+
+        <div class="hero__bottom intro">
+          <div class="hero__contact">
+            <span>Связаться</span>
+            <a class="round-btn" href="tel:+79253760375" aria-label="Позвонить: +7 925 376-03-75">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+            </a>
+            <a class="round-btn" href="#request-form" aria-label="Оставить заявку">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>
+            </a>
+          </div>
+          <a class="hero__scroll" href="#lead">Листайте <span aria-hidden="true">↓</span></a>
+          <a class="pill pill--light" href="#request-form">
+            Обсудить проект
+            <span class="pill__arrow" aria-hidden="true">→</span>
           </a>
         </div>
       </div>
@@ -1900,6 +2129,62 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
         <span>Рабочие чертежи</span><i>✦</i><span class="outline">Авторский надзор</span><i>✦</i>
       </div>
     </div>
+
+    <!-- ================= ИНТРО ================= -->
+    <section class="section lead" id="lead">
+      <div class="container lead__grid">
+        <div class="lead__text" data-reveal>
+          <h2 class="lead__title">Проектируем <em>пространство</em> для жизни</h2>
+          <p class="lead__lead">Интерьеры и дома, в которых хочется жить. От первого эскиза до рабочих чертежей и сдачи объекта — один архитектор ведёт проект от начала до конца.</p>
+
+          <div class="lead__actions">
+            <a class="pill pill--light" href="#request-form">
+              Обсудить проект
+              <span class="pill__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="link-arrow" href="#projects">Смотреть проекты <span aria-hidden="true">↓</span></a>
+          </div>
+
+          <dl class="lead__meta">
+            <div><dt>Город</dt><dd><span class="ph">Москва и область</span></dd></div>
+            <div><dt>Работаем с</dt><dd><span class="ph">2016</span> года</dd></div>
+            <div><dt>Формат</dt><dd>Интерьеры · Архитектура</dd></div>
+          </dl>
+        </div>
+
+        <div class="lead__visual" data-reveal>
+          <div class="photo photo--lead">
+            <img class="photo__img" src="img/hero.jpg" alt="Интерьер, спроектированный студией ONYX">
+            <svg class="photo__art" viewBox="0 0 440 380" aria-hidden="true">
+              <rect x="40" y="40" width="360" height="280" class="art-wall"/>
+              <line x1="220" y1="40" x2="220" y2="210" class="art-thin"/>
+              <line x1="40" y1="210" x2="400" y2="210" class="art-thin"/>
+              <line x1="300" y1="210" x2="300" y2="320" class="art-thin"/>
+              <path d="M220 130 A 40 40 0 0 1 260 170" class="art-accent"/>
+              <path d="M300 260 A 30 30 0 0 1 330 290" class="art-accent"/>
+              <line x1="40" y1="20" x2="400" y2="20" class="art-dim"/>
+              <text x="220" y="14" class="art-text" text-anchor="middle">5400</text>
+              <text x="130" y="130" class="art-label">ГОСТИНАЯ</text>
+              <text x="310" y="130" class="art-label">СПАЛЬНЯ</text>
+              <text x="170" y="270" class="art-label">КУХНЯ</text>
+            </svg>
+            <span class="photo__label">Ваше фото · объект · 1200×1500</span>
+          </div>
+          <p class="lead__caption">
+            <span>Проект</span>
+            <span class="ph">Название объекта</span>
+          </p>
+
+          <a class="badge-spin" href="#request-form" aria-label="Обсудить проект">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <defs><path id="spinPath" d="M60 60 m-46 0 a46 46 0 1 1 92 0 a46 46 0 1 1 -92 0"/></defs>
+              <text><textPath href="#spinPath" textLength="286" lengthAdjust="spacing">Открыты для новых проектов • </textPath></text>
+            </svg>
+            <span class="badge-spin__arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
     <!-- ================= О СТУДИИ ================= -->
     <section class="section about" id="about">
@@ -1917,7 +2202,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
               <span class="photo__label">Ваше фото · студия или объект · 1200×900</span>
             </div>
             <figcaption>
-              <span class="ph">Анна Смирнова</span>, основатель и главный архитектор ONYX
+              Жихарев Александр Алексеевич, основатель ONYX
             </figcaption>
           </figure>
 
@@ -2161,7 +2446,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
           <h2 class="title title--xl">Давайте обсудим <em>ваш проект</em></h2>
           <p class="muted">Оставьте заявку — архитектор свяжется с вами в течение рабочего дня и расскажет, с чего начать.</p>
           <div class="request__contacts">
-            <a href="tel:+70000000000"><span class="ph">+7 (000) 000-00-00</span></a>
+            <a href="tel:+79253760375">+7 925 376-03-75</a>
             <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
           </div>
         </div>
@@ -2209,7 +2494,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 
         <div class="footer__col">
           <h3>Контакты</h3>
-          <a href="tel:+70000000000"><span class="ph">+7 (000) 000-00-00</span></a>
+          <a href="tel:+79253760375">+7 925 376-03-75</a>
           <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
           <p><span class="ph">г. Москва, ул. Примерная, 1</span></p>
         </div>
@@ -2409,6 +2694,57 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
     if (steps[0]) steps[0].classList.add('is-active');
   } else {
     revealables.forEach(function (el) { el.classList.add('is-in'); });
+  }
+
+  // ---------- 3D-каска на главном экране ----------
+  // Та же модель, что на экране загрузки (helmet.js). three.js уже загружен
+  // экраном загрузки, поэтому повторный import берётся из кэша.
+  const heroCanvas = document.getElementById('heroHelmet');
+  const threeHolder = document.querySelector('[data-three]');
+  if (heroCanvas && window.OnyxHelmet && threeHolder) {
+    const src = new URL(threeHolder.dataset.three, document.baseURI).href;
+    import(src).then(function (THREE) {
+      const helmet = window.OnyxHelmet.build(THREE, heroCanvas, { maxDpr: 1.5 });
+      const BASE_YAW = -0.55;   // три четверти: видно и логотип, и козырёк
+      let targetX = 0, targetY = 0, curX = 0, curY = 0;
+      let visible = true;
+      let running = false;
+
+      window.addEventListener('pointermove', function (e) {
+        targetX = e.clientX / window.innerWidth - 0.5;
+        targetY = e.clientY / window.innerHeight - 0.5;
+      }, { passive: true });
+
+      const hero = heroCanvas.closest('.hero');
+      if ('IntersectionObserver' in window && hero) {
+        new IntersectionObserver(function (entries) {
+          visible = entries[0].isIntersecting;
+          if (visible) start();
+        }).observe(hero);
+      }
+
+      window.addEventListener('resize', function () { helmet.resize(); });
+
+      function frame(now) {
+        if (!visible) { running = false; return; }
+        curX += (targetX - curX) * 0.06;
+        curY += (targetY - curY) * 0.06;
+        const idle = reduceMotion ? 0 : Math.sin(now / 2600) * 0.12;
+        const scrolled = Math.min(1, window.scrollY / window.innerHeight);
+        helmet.render(BASE_YAW + curX * 0.9 + idle + scrolled * 0.9, 0.05 + curY * 0.22);
+        requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (running) return;
+        running = true;
+        requestAnimationFrame(frame);
+      }
+
+      helmet.render(BASE_YAW, 0.05);
+      heroCanvas.classList.add('is-ready');
+      if (!reduceMotion) start();
+    }).catch(function () { /* остаётся картинка-заглушка */ });
   }
 
   // ---------- Мобильное меню ----------

@@ -176,6 +176,57 @@
     revealables.forEach(function (el) { el.classList.add('is-in'); });
   }
 
+  // ---------- 3D-каска на главном экране ----------
+  // Та же модель, что на экране загрузки (helmet.js). three.js уже загружен
+  // экраном загрузки, поэтому повторный import берётся из кэша.
+  const heroCanvas = document.getElementById('heroHelmet');
+  const threeHolder = document.querySelector('[data-three]');
+  if (heroCanvas && window.OnyxHelmet && threeHolder) {
+    const src = new URL(threeHolder.dataset.three, document.baseURI).href;
+    import(src).then(function (THREE) {
+      const helmet = window.OnyxHelmet.build(THREE, heroCanvas, { maxDpr: 1.5 });
+      const BASE_YAW = -0.55;   // три четверти: видно и логотип, и козырёк
+      let targetX = 0, targetY = 0, curX = 0, curY = 0;
+      let visible = true;
+      let running = false;
+
+      window.addEventListener('pointermove', function (e) {
+        targetX = e.clientX / window.innerWidth - 0.5;
+        targetY = e.clientY / window.innerHeight - 0.5;
+      }, { passive: true });
+
+      const hero = heroCanvas.closest('.hero');
+      if ('IntersectionObserver' in window && hero) {
+        new IntersectionObserver(function (entries) {
+          visible = entries[0].isIntersecting;
+          if (visible) start();
+        }).observe(hero);
+      }
+
+      window.addEventListener('resize', function () { helmet.resize(); });
+
+      function frame(now) {
+        if (!visible) { running = false; return; }
+        curX += (targetX - curX) * 0.06;
+        curY += (targetY - curY) * 0.06;
+        const idle = reduceMotion ? 0 : Math.sin(now / 2600) * 0.12;
+        const scrolled = Math.min(1, window.scrollY / window.innerHeight);
+        helmet.render(BASE_YAW + curX * 0.9 + idle + scrolled * 0.9, 0.05 + curY * 0.22);
+        requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (running) return;
+        running = true;
+        requestAnimationFrame(frame);
+      }
+
+      helmet.render(BASE_YAW, 0.05);
+      heroCanvas.classList.add('is-ready');
+      if (!reduceMotion) start();
+    }).catch(function () { /* остаётся картинка-заглушка */ });
+  }
+
   // ---------- Мобильное меню ----------
   const menuBtn = document.querySelector('.menu-btn');
   const menu = document.getElementById('mobileMenu');

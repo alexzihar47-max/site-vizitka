@@ -15,7 +15,7 @@
     КАК ЗАМЕНИТЬ ЗАГЛУШКИ
 
     Фото: положите файл с нужным именем в папку img/ — он сам встанет на место.
-      img/hero.jpg          главный экран, вертикальное, от 1200×1500
+      img/hero.jpg          фото объекта под главным экраном, вертикальное, от 1200×1500
       img/about.jpg         блок «О студии», от 1200×900
       img/project-1.jpg     проект 1 (большой), вертикальное, от 1200×1500
       img/project-2.jpg     проект 2, от 1200×900
@@ -39,6 +39,7 @@
       <div class="preloader__track"><div class="preloader__bar" id="preloaderBar"></div></div>
     </div>
   </div>
+  <script src="helmet.js"></script>
   <script src="preloader.js"></script>
 
   <div class="grain" aria-hidden="true"></div>
@@ -89,69 +90,141 @@
 
     <!-- ================= ГЛАВНЫЙ ЭКРАН ================= -->
     <section class="hero">
-      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__glow"></div>
+        <svg class="hero__drawings" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="bpGrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" class="bp-grid"/></pattern>
+          </defs>
+          <rect width="1600" height="1000" fill="url(#bpGrid)"/>
 
-      <div class="container hero__grid">
-        <p class="hero__wordmark" aria-hidden="true"><span class="wm"><span>O</span></span><span class="wm"><span>N</span></span><span class="wm"><span>Y</span></span><span class="wm"><span>X</span></span></p>
+          <!-- направляющие окружности за каской -->
+          <circle cx="800" cy="600" r="330" class="bp-accent bp-dash"/>
+          <circle cx="800" cy="600" r="420" class="bp-thin"/>
+          <line x1="800" y1="160" x2="800" y2="1000" class="bp-thin bp-dash"/>
+          <line x1="300" y1="600" x2="1300" y2="600" class="bp-thin bp-dash"/>
 
-        <div class="hero__text">
-          <p class="hero__eyebrow intro">
-            <span class="dash" aria-hidden="true"></span>
-            Бюро интерьеров и архитектуры
-          </p>
+          <!-- план слева -->
+          <g transform="translate(70 170) rotate(-6)">
+            <rect x="0" y="0" width="420" height="300" class="bp-line"/>
+            <rect x="8" y="8" width="404" height="284" class="bp-thin"/>
+            <line x1="170" y1="0" x2="170" y2="150" class="bp-line"/>
+            <line x1="0" y1="150" x2="260" y2="150" class="bp-line"/>
+            <line x1="260" y1="150" x2="260" y2="300" class="bp-line"/>
+            <path d="M170 110 A40 40 0 0 1 210 150" class="bp-accent"/>
+            <path d="M260 250 A34 34 0 0 0 226 284" class="bp-accent"/>
+            <rect x="30" y="200" width="120" height="44" rx="6" class="bp-thin"/>
+            <circle cx="90" cy="80" r="26" class="bp-thin"/>
+            <rect x="300" y="190" width="90" height="80" class="bp-thin"/>
+            <line x1="0" y1="-30" x2="420" y2="-30" class="bp-thin"/>
+            <line x1="0" y1="-38" x2="0" y2="-22" class="bp-thin"/><line x1="170" y1="-38" x2="170" y2="-22" class="bp-thin"/><line x1="420" y1="-38" x2="420" y2="-22" class="bp-thin"/>
+            <text x="85" y="-38" class="bp-text" text-anchor="middle">3200</text>
+            <text x="295" y="-38" class="bp-text" text-anchor="middle">4400</text>
+            <text x="60" y="120" class="bp-label">ГОСТИНАЯ</text>
+            <text x="200" y="60" class="bp-label">КУХНЯ</text>
+            <text x="290" y="180" class="bp-label">СПАЛЬНЯ</text>
+            <circle cx="0" cy="340" r="14" class="bp-thin"/><text x="0" y="345" class="bp-text" text-anchor="middle">1</text>
+            <circle cx="170" cy="340" r="14" class="bp-thin"/><text x="170" y="345" class="bp-text" text-anchor="middle">2</text>
+            <circle cx="420" cy="340" r="14" class="bp-thin"/><text x="420" y="345" class="bp-text" text-anchor="middle">3</text>
+          </g>
 
-          <h1 class="hero__title">
-            <span class="line"><span>Проектируем</span></span>
-            <span class="line"><span><em>пространство</em></span></span>
-            <span class="line"><span>для жизни</span></span>
+          <!-- фасад справа -->
+          <g transform="translate(1110 250)">
+            <line x1="-40" y1="380" x2="460" y2="380" class="bp-line"/>
+            <rect x="20" y="170" width="380" height="210" class="bp-line"/>
+            <path d="M0 180 L210 40 L420 180" class="bp-line"/>
+            <rect x="60" y="220" width="70" height="90" class="bp-thin"/><line x1="95" y1="220" x2="95" y2="310" class="bp-thin"/>
+            <rect x="170" y="220" width="80" height="160" class="bp-thin"/>
+            <rect x="290" y="220" width="70" height="90" class="bp-thin"/><line x1="325" y1="220" x2="325" y2="310" class="bp-thin"/>
+            <circle cx="210" cy="120" r="22" class="bp-thin"/>
+            <line x1="440" y1="40" x2="440" y2="380" class="bp-thin"/>
+            <line x1="432" y1="40" x2="448" y2="40" class="bp-thin"/><line x1="432" y1="380" x2="448" y2="380" class="bp-thin"/>
+            <text x="458" y="215" class="bp-text" transform="rotate(-90 458 215)" text-anchor="middle">7800</text>
+            <path d="M-40 380 l10 -12 h-20 z" class="bp-accent"/><text x="-60" y="372" class="bp-text" text-anchor="end">±0.000</text>
+            <path d="M-40 170 l10 -12 h-20 z" class="bp-accent"/><text x="-60" y="162" class="bp-text" text-anchor="end">+3.300</text>
+            <path d="M-40 40 l10 -12 h-20 z" class="bp-accent"/><text x="-60" y="32" class="bp-text" text-anchor="end">+6.600</text>
+            <text x="210" y="420" class="bp-label" text-anchor="middle">ФАСАД 1–3</text>
+          </g>
+
+          <!-- эскиз каски -->
+          <g transform="translate(1180 80) scale(.9)">
+            <path d="M20 80 C20 30 60 5 110 5 C165 5 200 35 205 80" class="bp-line"/>
+            <path d="M5 84 H220 C230 84 236 90 230 96 H0 C-6 90 -2 84 5 84 Z" class="bp-line"/>
+            <path d="M95 6 C92 30 92 60 94 84 M125 6 C128 30 128 60 126 84" class="bp-thin"/>
+            <line x1="240" y1="50" x2="300" y2="30" class="bp-thin"/>
+            <text x="306" y="34" class="bp-text">СИЗ · каска</text>
+          </g>
+
+          <!-- разрез и надписи внизу -->
+          <g transform="translate(120 820)">
+            <line x1="0" y1="0" x2="360" y2="0" class="bp-accent bp-dash"/>
+            <path d="M0 0 v-22 M0 -22 l-8 10 M0 -22 l8 10" class="bp-accent"/>
+            <path d="M360 0 v-22 M360 -22 l-8 10 M360 -22 l8 10" class="bp-accent"/>
+            <text x="-6" y="30" class="bp-label">А</text><text x="354" y="30" class="bp-label">А</text>
+            <text x="120" y="30" class="bp-text">РАЗРЕЗ А–А · М 1:50</text>
+          </g>
+          <g transform="translate(1250 860)">
+            <rect width="260" height="64" class="bp-thin"/><line x1="0" y1="32" x2="260" y2="32" class="bp-thin"/><line x1="180" y1="0" x2="180" y2="64" class="bp-thin"/>
+            <text x="12" y="22" class="bp-label">ONYX</text><text x="12" y="54" class="bp-text">Лист АР-01 · Эскиз</text>
+            <text x="192" y="54" class="bp-text">2026</text>
+          </g>
+
+          <!-- стрелка севера -->
+          <g transform="translate(90 90)">
+            <circle r="26" class="bp-thin"/>
+            <path d="M0 -22 L8 10 L0 4 L-8 10 Z" class="bp-accent"/>
+            <text y="46" class="bp-text" text-anchor="middle">С</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="container hero__stage">
+        <p class="hero__eyebrow intro">
+          <span class="dash" aria-hidden="true"></span>
+          Бюро интерьеров и архитектуры
+          <span class="dash" aria-hidden="true"></span>
+        </p>
+
+        <div class="hero__word-wrap">
+          <h1 class="hero__word">
+            <span class="visually-hidden">ONYX — бюро дизайна интерьеров и архитектуры</span>
+            <span class="hero__letters" aria-hidden="true"><span class="wm"><span>O</span></span><span class="wm"><span>N</span></span><span class="wm"><span>Y</span></span><span class="wm"><span>X</span></span></span>
           </h1>
-
-          <p class="hero__lead intro">Интерьеры и дома, в которых хочется жить. От первого эскиза до рабочих чертежей и сдачи объекта — один архитектор ведёт проект от начала до конца.</p>
-
-          <div class="hero__actions intro">
-            <a class="pill pill--light" href="#request-form">
-              Обсудить проект
-              <span class="pill__arrow" aria-hidden="true">→</span>
-            </a>
-            <a class="link-arrow" href="#projects">Смотреть проекты <span aria-hidden="true">↓</span></a>
-          </div>
-
-          <dl class="hero__meta intro">
-            <div><dt>Город</dt><dd><span class="ph">Москва и область</span></dd></div>
-            <div><dt>Работаем с</dt><dd><span class="ph">2016</span> года</dd></div>
-            <div><dt>Формат</dt><dd>Интерьеры · Архитектура</dd></div>
-          </dl>
+          <p class="hero__word hero__word--outline" aria-hidden="true">ONYX</p>
         </div>
 
-        <div class="hero__visual intro">
-          <div class="photo photo--hero">
-            <img class="photo__img" src="img/hero.jpg" alt="Интерьер, спроектированный студией ONYX" data-parallax>
-            <svg class="photo__art" viewBox="0 0 440 380" aria-hidden="true">
-              <rect x="40" y="40" width="360" height="280" class="art-wall"/>
-              <line x1="220" y1="40" x2="220" y2="210" class="art-thin"/>
-              <line x1="40" y1="210" x2="400" y2="210" class="art-thin"/>
-              <line x1="300" y1="210" x2="300" y2="320" class="art-thin"/>
-              <path d="M220 130 A 40 40 0 0 1 260 170" class="art-accent"/>
-              <path d="M300 260 A 30 30 0 0 1 330 290" class="art-accent"/>
-              <line x1="40" y1="20" x2="400" y2="20" class="art-dim"/>
-              <text x="220" y="14" class="art-text" text-anchor="middle">5400</text>
-              <text x="130" y="130" class="art-label">ГОСТИНАЯ</text>
-              <text x="310" y="130" class="art-label">СПАЛЬНЯ</text>
-              <text x="170" y="270" class="art-label">КУХНЯ</text>
-            </svg>
-            <span class="photo__label">Ваше фото · главный экран · 1200×1500</span>
-          </div>
-          <p class="hero__caption">
-            <span>Проект</span>
-            <span class="ph">Название объекта</span>
-          </p>
+        <div class="hero__object" aria-hidden="true">
+          <img class="hero__helmet-img" src="img/helmet.webp" alt="" width="1200" height="1200">
+          <canvas class="hero__helmet" id="heroHelmet" width="600" height="600"></canvas>
+          <div class="hero__floor"></div>
+        </div>
 
-          <a class="badge-spin" href="#request-form" aria-label="Обсудить проект">
-            <svg viewBox="0 0 120 120" aria-hidden="true">
-              <defs><path id="spinPath" d="M60 60 m-46 0 a46 46 0 1 1 92 0 a46 46 0 1 1 -92 0"/></defs>
-              <text><textPath href="#spinPath" textLength="286" lengthAdjust="spacing">Открыты для новых проектов • </textPath></text>
-            </svg>
-            <span class="badge-spin__arrow" aria-hidden="true">↗</span>
+        <div class="hero__chip hero__chip--left intro">
+          <strong><span class="ph">120+</span></strong>
+          <span>реализованных проектов</span>
+        </div>
+        <div class="hero__chip hero__chip--right intro">
+          <strong><span class="ph">9 лет</span></strong>
+          <span>в архитектуре и&nbsp;интерьерах</span>
+        </div>
+
+        <span class="hero__tag hero__tag--1 intro"><i aria-hidden="true">✓</i> Свои рабочие чертежи</span>
+        <span class="hero__tag hero__tag--2 intro"><i aria-hidden="true">✓</i> Авторский надзор</span>
+
+        <div class="hero__bottom intro">
+          <div class="hero__contact">
+            <span>Связаться</span>
+            <a class="round-btn" href="tel:+79253760375" aria-label="Позвонить: +7 925 376-03-75">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+            </a>
+            <a class="round-btn" href="#request-form" aria-label="Оставить заявку">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>
+            </a>
+          </div>
+          <a class="hero__scroll" href="#lead">Листайте <span aria-hidden="true">↓</span></a>
+          <a class="pill pill--light" href="#request-form">
+            Обсудить проект
+            <span class="pill__arrow" aria-hidden="true">→</span>
           </a>
         </div>
       </div>
@@ -166,6 +239,62 @@
         <span>Рабочие чертежи</span><i>✦</i><span class="outline">Авторский надзор</span><i>✦</i>
       </div>
     </div>
+
+    <!-- ================= ИНТРО ================= -->
+    <section class="section lead" id="lead">
+      <div class="container lead__grid">
+        <div class="lead__text" data-reveal>
+          <h2 class="lead__title">Проектируем <em>пространство</em> для жизни</h2>
+          <p class="lead__lead">Интерьеры и дома, в которых хочется жить. От первого эскиза до рабочих чертежей и сдачи объекта — один архитектор ведёт проект от начала до конца.</p>
+
+          <div class="lead__actions">
+            <a class="pill pill--light" href="#request-form">
+              Обсудить проект
+              <span class="pill__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="link-arrow" href="#projects">Смотреть проекты <span aria-hidden="true">↓</span></a>
+          </div>
+
+          <dl class="lead__meta">
+            <div><dt>Город</dt><dd><span class="ph">Москва и область</span></dd></div>
+            <div><dt>Работаем с</dt><dd><span class="ph">2016</span> года</dd></div>
+            <div><dt>Формат</dt><dd>Интерьеры · Архитектура</dd></div>
+          </dl>
+        </div>
+
+        <div class="lead__visual" data-reveal>
+          <div class="photo photo--lead">
+            <img class="photo__img" src="img/hero.jpg" alt="Интерьер, спроектированный студией ONYX">
+            <svg class="photo__art" viewBox="0 0 440 380" aria-hidden="true">
+              <rect x="40" y="40" width="360" height="280" class="art-wall"/>
+              <line x1="220" y1="40" x2="220" y2="210" class="art-thin"/>
+              <line x1="40" y1="210" x2="400" y2="210" class="art-thin"/>
+              <line x1="300" y1="210" x2="300" y2="320" class="art-thin"/>
+              <path d="M220 130 A 40 40 0 0 1 260 170" class="art-accent"/>
+              <path d="M300 260 A 30 30 0 0 1 330 290" class="art-accent"/>
+              <line x1="40" y1="20" x2="400" y2="20" class="art-dim"/>
+              <text x="220" y="14" class="art-text" text-anchor="middle">5400</text>
+              <text x="130" y="130" class="art-label">ГОСТИНАЯ</text>
+              <text x="310" y="130" class="art-label">СПАЛЬНЯ</text>
+              <text x="170" y="270" class="art-label">КУХНЯ</text>
+            </svg>
+            <span class="photo__label">Ваше фото · объект · 1200×1500</span>
+          </div>
+          <p class="lead__caption">
+            <span>Проект</span>
+            <span class="ph">Название объекта</span>
+          </p>
+
+          <a class="badge-spin" href="#request-form" aria-label="Обсудить проект">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <defs><path id="spinPath" d="M60 60 m-46 0 a46 46 0 1 1 92 0 a46 46 0 1 1 -92 0"/></defs>
+              <text><textPath href="#spinPath" textLength="286" lengthAdjust="spacing">Открыты для новых проектов • </textPath></text>
+            </svg>
+            <span class="badge-spin__arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
 
     <!-- ================= О СТУДИИ ================= -->
     <section class="section about" id="about">
@@ -183,7 +312,7 @@
               <span class="photo__label">Ваше фото · студия или объект · 1200×900</span>
             </div>
             <figcaption>
-              <span class="ph">Анна Смирнова</span>, основатель и главный архитектор ONYX
+              Жихарев Александр Алексеевич, основатель ONYX
             </figcaption>
           </figure>
 
@@ -427,7 +556,7 @@
           <h2 class="title title--xl">Давайте обсудим <em>ваш проект</em></h2>
           <p class="muted">Оставьте заявку — архитектор свяжется с вами в течение рабочего дня и расскажет, с чего начать.</p>
           <div class="request__contacts">
-            <a href="tel:+70000000000"><span class="ph">+7 (000) 000-00-00</span></a>
+            <a href="tel:+79253760375">+7 925 376-03-75</a>
             <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
           </div>
         </div>
@@ -474,7 +603,7 @@
 
         <div class="footer__col">
           <h3>Контакты</h3>
-          <a href="tel:+70000000000"><span class="ph">+7 (000) 000-00-00</span></a>
+          <a href="tel:+79253760375">+7 925 376-03-75</a>
           <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
           <p><span class="ph">г. Москва, ул. Примерная, 1</span></p>
         </div>
