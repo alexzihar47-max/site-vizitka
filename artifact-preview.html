@@ -1,4 +1,4 @@
-<title>ПрофСервис</title>
+<title>Чертёж</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -58,7 +58,7 @@
     display: flex; align-items: center; justify-content: space-between;
     gap: 16px; padding-block: 18px; flex-wrap: wrap;
   }
-  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
   .brand__name {
     font-family: var(--font-display); font-weight: 600; font-size: 18px;
     text-transform: uppercase; letter-spacing: 0.04em;
@@ -79,7 +79,7 @@
 
   /* Hero */
   .hero {
-    position: relative; padding-block: 88px 68px; overflow: hidden;
+    position: relative; padding-block: 72px 60px; overflow: hidden;
     border-bottom: 1px solid var(--border);
   }
   .hero__glow {
@@ -88,12 +88,27 @@
     background: radial-gradient(circle, var(--accent-glow) 0%, rgba(226,55,44,0.08) 45%, transparent 72%);
     pointer-events: none;
   }
-  .hero__inner { max-width: 640px; position: relative; }
-  .hero__title { font-size: clamp(30px, 5vw, 48px); line-height: 1.08; margin-bottom: 20px; }
-  .hero__subtitle {
-    font-size: 16.5px; color: var(--text-muted); margin: 0 0 30px;
-    max-width: 500px; text-transform: none; font-family: var(--font-body);
+  .hero__inner {
+    display: grid; grid-template-columns: minmax(0,1fr) minmax(0,360px);
+    align-items: center; gap: 40px; position: relative;
   }
+  .hero__title { font-size: clamp(26px, 4.6vw, 42px); line-height: 1.1; margin-bottom: 18px; }
+  .hero__subtitle {
+    font-size: 16px; color: var(--text-muted); margin: 0 0 28px;
+    max-width: 460px; text-transform: none; font-family: var(--font-body);
+  }
+
+  .plan-svg { width: 100%; height: auto; display: block; }
+  .plan-grid-line { stroke: var(--border); stroke-width: 1; }
+  .plan-wall { fill: none; stroke: var(--text-muted); stroke-width: 3; }
+  .plan-wall-thin { stroke: var(--border-strong); stroke-width: 2; }
+  .plan-door, .plan-door-leaf { fill: none; stroke: var(--accent); stroke-width: 1.3; opacity: 0.85; }
+  .plan-label { font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; fill: var(--text); }
+  .plan-label-sub { font-family: var(--font-body); font-size: 9.5px; fill: var(--text-muted); }
+  .plan-dim { stroke: var(--text-muted); stroke-width: 1; }
+  .plan-dim-text { font-family: var(--font-body); font-size: 10px; fill: var(--text-muted); letter-spacing: 0.04em; }
+  .plan-north { stroke: var(--accent); stroke-width: 1.3; }
+  .plan-north-fill { fill: var(--accent); }
 
   .btn-arrow {
     display: inline-flex; align-items: center; gap: 16px;
@@ -121,7 +136,7 @@
   .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
   /* Services */
-  .services { padding-block: 64px 68px; border-bottom: 1px solid var(--border); }
+  .services { padding-block: 60px 64px; border-bottom: 1px solid var(--border); }
   .section-title { font-size: clamp(22px, 3.4vw, 30px); margin-bottom: 34px; }
   .service-list { border-top: 1px solid var(--border); }
   .service-row {
@@ -130,14 +145,15 @@
     border-bottom: 1px solid var(--border);
   }
   .service-row__index { font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--accent); }
-  .service-row__title { font-size: 17px; font-weight: 500; margin: 0; }
+  .service-row__title { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 500; margin: 0; }
+  .service-row__icon { color: var(--accent); flex-shrink: 0; }
   .service-row__text {
     font-size: 14px; color: var(--text-muted); margin: 0;
     text-transform: none; font-family: var(--font-body); max-width: 460px;
   }
 
   /* Form */
-  .request { padding-block: 68px 72px; }
+  .request { padding-block: 64px 68px; }
   .request__note {
     font-size: 12.5px; color: var(--text-muted); margin: 16px 0 0;
     border: 1px solid var(--border); padding: 12px 14px;
@@ -173,6 +189,8 @@
   }
 
   @media (max-width: 860px) {
+    .hero__inner { grid-template-columns: 1fr; }
+    .hero__plan { max-width: 360px; margin: 0 auto; order: -1; }
     .service-row {
       grid-template-columns: 36px 1fr;
       grid-template-areas: "index title" "text text";
@@ -183,10 +201,10 @@
     .service-row__text { grid-area: text; }
   }
   @media (max-width: 560px) {
-    .hero { padding-block: 60px 44px; }
+    .hero { padding-block: 52px 40px; }
     .hero__glow { width: 380px; height: 380px; top: -150px; right: -130px; }
-    .services { padding-block: 44px 48px; }
-    .request { padding-block: 48px 56px; }
+    .services { padding-block: 40px 44px; }
+    .request { padding-block: 44px 52px; }
     .form { padding: 24px 20px; }
   }
 </style>
@@ -194,16 +212,15 @@
 <div class="header">
   <div class="header__inner">
     <div class="brand">
-      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
-        <rect x="3" y="16" width="6" height="9" transform="skewX(-14)" fill="#e2372c"/>
-        <rect x="11" y="10" width="6" height="15" transform="skewX(-14)" fill="#e2372c" opacity="0.72"/>
-        <rect x="19" y="3" width="6" height="22" transform="skewX(-14)" fill="#e2372c" opacity="0.42"/>
+      <svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true">
+        <path d="M3 23 L23 23 L3 3 Z" fill="none" stroke="#e2372c" stroke-width="2"/>
+        <circle cx="8.4" cy="17.6" r="1.3" fill="#e2372c"/>
       </svg>
-      <span class="brand__name">ПрофСервис</span>
+      <span class="brand__name">Чертёж</span>
     </div>
     <div class="badge">
       <span class="badge__dot"></span>
-      Принимаем заявки
+      Открыты для новых проектов
     </div>
   </div>
 </div>
@@ -212,13 +229,54 @@
   <section class="hero">
     <div class="hero__glow"></div>
     <div class="hero__inner">
-      <p class="eyebrow">Наша специализация</p>
-      <h1 class="hero__title">Профессиональный сервис для дома и бизнеса</h1>
-      <p class="hero__subtitle">Работаем быстро, честно и без лишних вопросов. Оставьте заявку — перезвоним и согласуем удобное время.</p>
-      <a href="#request-form" class="btn-arrow">
-        <span class="btn-arrow__circle">→</span>
-        Оставить заявку
-      </a>
+      <div>
+        <p class="eyebrow">Бюро интерьеров и архитектуры</p>
+        <h1 class="hero__title">Проектируем пространство, в котором хочется жить и работать</h1>
+        <p class="hero__subtitle">Дизайн-проект, архитектурная концепция и рабочая документация — ведём объект от эскиза до сдачи в эксплуатацию.</p>
+        <a href="#request-form" class="btn-arrow">
+          <span class="btn-arrow__circle">→</span>
+          Обсудить проект
+        </a>
+      </div>
+
+      <div class="hero__plan">
+        <svg viewBox="0 0 440 380" class="plan-svg">
+          <defs>
+            <pattern id="planGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M20 0 L0 0 0 20" fill="none" class="plan-grid-line"/>
+            </pattern>
+          </defs>
+          <rect x="0" y="0" width="440" height="380" fill="url(#planGrid)"/>
+          <rect x="40" y="40" width="360" height="280" class="plan-wall"/>
+          <line x1="220" y1="40" x2="220" y2="210" class="plan-wall-thin"/>
+          <line x1="40" y1="210" x2="400" y2="210" class="plan-wall-thin"/>
+          <line x1="300" y1="210" x2="300" y2="320" class="plan-wall-thin"/>
+          <path d="M220 130 A 40 40 0 0 1 260 170" class="plan-door"/>
+          <line x1="220" y1="130" x2="220" y2="90" class="plan-door-leaf"/>
+          <path d="M300 260 A 30 30 0 0 1 330 290" class="plan-door"/>
+          <line x1="300" y1="260" x2="300" y2="232" class="plan-door-leaf"/>
+          <text x="130" y="130" class="plan-label">ГОСТИНАЯ</text>
+          <text x="130" y="146" class="plan-label-sub">24,6 м²</text>
+          <text x="310" y="130" class="plan-label">СПАЛЬНЯ</text>
+          <text x="310" y="146" class="plan-label-sub">15,2 м²</text>
+          <text x="170" y="270" class="plan-label">КУХНЯ</text>
+          <text x="170" y="286" class="plan-label-sub">11,8 м²</text>
+          <text x="350" y="270" class="plan-label">С/У</text>
+          <line x1="40" y1="20" x2="400" y2="20" class="plan-dim"/>
+          <line x1="40" y1="16" x2="40" y2="24" class="plan-dim"/>
+          <line x1="400" y1="16" x2="400" y2="24" class="plan-dim"/>
+          <text x="220" y="14" class="plan-dim-text" text-anchor="middle">5400</text>
+          <line x1="20" y1="40" x2="20" y2="320" class="plan-dim"/>
+          <line x1="16" y1="40" x2="24" y2="40" class="plan-dim"/>
+          <line x1="16" y1="320" x2="24" y2="320" class="plan-dim"/>
+          <text x="20" y="184" class="plan-dim-text" text-anchor="middle" transform="rotate(-90 20 184)">4600</text>
+          <g transform="translate(400,350)">
+            <line x1="0" y1="14" x2="0" y2="-10" class="plan-north"/>
+            <path d="M0 -10 L-5 2 L5 2 Z" class="plan-north-fill"/>
+            <text x="0" y="26" class="plan-dim-text" text-anchor="middle">С</text>
+          </g>
+        </svg>
+      </div>
     </div>
   </section>
 
@@ -228,23 +286,29 @@
     <div class="service-list">
       <div class="service-row">
         <span class="service-row__index">01</span>
-        <h3 class="service-row__title">Ремонт и обслуживание</h3>
-        <p class="service-row__text">Устранение неисправностей и плановое обслуживание техники и оборудования.</p>
+        <h3 class="service-row__title">Дизайн-проект интерьера</h3>
+        <p class="service-row__text">Планировочные решения, визуализация и авторский стиль пространства.</p>
       </div>
       <div class="service-row">
         <span class="service-row__index">02</span>
-        <h3 class="service-row__title">Выезд специалиста</h3>
-        <p class="service-row__text">Приезжаем в удобное время в пределах города и ближайших районов.</p>
+        <h3 class="service-row__title">Архитектурная концепция</h3>
+        <p class="service-row__text">Объёмно-пространственные решения, фасады и разрешительная документация.</p>
       </div>
       <div class="service-row">
         <span class="service-row__index">03</span>
-        <h3 class="service-row__title">Консультация</h3>
-        <p class="service-row__text">Бесплатно подскажем оптимальное решение под вашу задачу.</p>
+        <h3 class="service-row__title">Рабочие чертежи</h3>
+        <p class="service-row__text">Полный комплект документации для стройки: конструктив, инженерия, спецификации.</p>
       </div>
       <div class="service-row">
         <span class="service-row__index">04</span>
-        <h3 class="service-row__title">Гарантия качества</h3>
-        <p class="service-row__text">Даём гарантию на все виды выполненных работ и материалы.</p>
+        <h3 class="service-row__title">
+          <svg class="service-row__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 1.5c-2.8 0-5 2.1-5 5v2.3c0 .5-.2 1-.6 1.4L1 11.5h14l-1.4-1.3c-.4-.4-.6-.9-.6-1.4V6.5c0-2.9-2.2-5-5-5Z" fill="none" stroke="currentColor" stroke-width="1.1"/>
+            <path d="M5.3 11.8a2.7 2.7 0 0 0 5.4 0" fill="none" stroke="currentColor" stroke-width="1.1"/>
+          </svg>
+          Авторский надзор
+        </h3>
+        <p class="service-row__text">Контролируем соответствие объекта проекту на каждом этапе стройки.</p>
       </div>
     </div>
   </section>
@@ -277,7 +341,7 @@
 </div>
 
 <footer>
-  <div class="wrap">© <span id="year"></span> ПрофСервис. Все права защищены.</div>
+  <div class="wrap">© <span id="year"></span> Чертёж. Все права защищены.</div>
 </footer>
 
 <script>

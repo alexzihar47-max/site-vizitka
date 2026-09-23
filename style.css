@@ -138,22 +138,95 @@ h1, h2, h3 {
 }
 
 .hero__inner {
-  max-width: 680px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+  align-items: center;
+  gap: 48px;
 }
 
 .hero__title {
-  font-size: clamp(32px, 5vw, 52px);
-  line-height: 1.08;
+  font-size: clamp(30px, 4.4vw, 46px);
+  line-height: 1.1;
   margin-bottom: 20px;
 }
 
 .hero__subtitle {
-  font-size: 17px;
+  font-size: 16.5px;
   color: var(--text-muted);
   margin: 0 0 34px;
-  max-width: 520px;
+  max-width: 480px;
   font-family: var(--font-body);
   text-transform: none;
+}
+
+/* ===== Hero blueprint illustration ===== */
+.hero__plan {
+  width: 100%;
+}
+
+.plan-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.plan-grid-line {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.plan-wall {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 3;
+}
+
+.plan-wall-thin {
+  stroke: var(--border-strong);
+  stroke-width: 2;
+}
+
+.plan-door,
+.plan-door-leaf {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.3;
+  opacity: 0.85;
+}
+
+.plan-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  fill: var(--text);
+}
+
+.plan-label-sub {
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  fill: var(--text-muted);
+}
+
+.plan-dim {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+}
+
+.plan-dim-text {
+  font-family: var(--font-body);
+  font-size: 10px;
+  fill: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.plan-north {
+  stroke: var(--accent);
+  stroke-width: 1.3;
+}
+
+.plan-north-fill {
+  fill: var(--accent);
 }
 
 /* ===== Buttons ===== */
@@ -252,9 +325,17 @@ h1, h2, h3 {
 }
 
 .service-row__title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
   font-size: 18px;
   font-weight: 500;
   margin: 0;
+}
+
+.service-row__icon {
+  color: var(--accent);
+  flex-shrink: 0;
 }
 
 .service-row__text {
@@ -389,6 +470,16 @@ h1, h2, h3 {
 @media (max-width: 860px) {
   .request__inner {
     grid-template-columns: 1fr;
+  }
+
+  .hero__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__plan {
+    max-width: 380px;
+    margin: 0 auto;
+    order: -1;
   }
 
   .service-row {
