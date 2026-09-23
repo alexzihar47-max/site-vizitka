@@ -1,3 +1,19 @@
+// Места под фото: если файл из img/ есть — показываем его и прячем заглушку,
+// если файла нет — убираем картинку, чтобы не было значка «битого» фото.
+(function () {
+  document.querySelectorAll('.photo__img').forEach(function (img) {
+    const slot = img.closest('.photo');
+    const ok = function () { if (slot) slot.classList.add('has-img'); };
+    const fail = function () { img.remove(); };
+    if (img.complete) {
+      if (img.naturalWidth > 0) ok(); else fail();
+    } else {
+      img.addEventListener('load', ok);
+      img.addEventListener('error', fail);
+    }
+  });
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
   const yearEl = document.getElementById('year');
   if (yearEl) {

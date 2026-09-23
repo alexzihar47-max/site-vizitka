@@ -18,9 +18,10 @@ PREVIEW_NOTE = (
 
 PREVIEW_CSS = """
 .preview-note {
-  margin: 16px 0 0;
+  margin: 0;
   padding: 12px 14px;
-  border: 1px dashed var(--border-strong);
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
   font-size: 12.5px;
   color: var(--text-muted);
 }
@@ -53,7 +54,7 @@ def main() -> None:
     )
     if "</form>" not in body:
         raise SystemExit("index.html: не найдена форма заявки")
-    body = body.replace("</form>", "</form>\n" + PREVIEW_NOTE, 1)
+    body = body.replace("</form>", PREVIEW_NOTE + "\n</form>", 1)
 
     out = "\n".join(
         [
