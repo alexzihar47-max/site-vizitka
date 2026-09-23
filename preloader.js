@@ -68,8 +68,8 @@
   }
 
   // Оси: y — вверх, +z — перёд (козырёк), x — вбок.
-  const ELONG = 1.16;   // вытянута вперёд-назад
-  const H = 1.1;        // высота купола над краем
+  const ELONG = 1.2;    // вытянута вперёд-назад (длина к ширине ≈ 1.2)
+  const H = 1.45;       // высота купола над краем (≈ 0.7 ширины, как у настоящей каски)
   const FIL = 0.07;     // высота скругления между куполом и козырьком
   const R0 = 1.04;      // радиус купола у края
   const THICK = 0.035;  // толщина пластика
@@ -105,7 +105,7 @@
     const t = th / HALF;
     // подъём края затухает к макушке, иначе сечения сходились бы в ней на разной высоте
     const cy = FIL + rimY(u) * Math.pow(t, 3);
-    const r = Math.pow(Math.sin(th), 0.72) * (1 + 0.04 * Math.pow(t, 8));
+    const r = Math.pow(Math.sin(th), 0.8) * (1 + 0.04 * Math.pow(t, 8));
     const y = cy + (H - FIL) * Math.cos(th);
     const k = 1 + relief(u, t, r * Math.cos(u));
     return [r * k * Math.cos(u), cy + (y - cy) * k, r * k * Math.sin(u) * ELONG];
@@ -152,7 +152,7 @@
     for (let j = ND - 1; j >= 0; j--) {
       const th = HALF * j / ND;
       const t = th / HALF;
-      const r = inner * Math.pow(Math.sin(th), 0.72) * (1 + 0.04 * Math.pow(t, 8));
+      const r = inner * Math.pow(Math.sin(th), 0.8) * (1 + 0.04 * Math.pow(t, 8));
       pts.push(to3([r, FIL + yb * Math.pow(t, 3) + (H - THICK - FIL) * Math.cos(th)]));
     }
     return pts;
@@ -293,8 +293,8 @@
     scene.environment = studioEnvironment(THREE, renderer);
 
     const camera = new THREE.PerspectiveCamera(27, 1, 0.1, 50);
-    camera.position.set(0, 1.35, 6.4);
-    camera.lookAt(0, 0.43, 0);
+    camera.position.set(0, 1.6, 7.2);
+    camera.lookAt(0, 0.58, 0);
 
     const rimLight = new THREE.DirectionalLight(0xff3b2e, 2.4);
     rimLight.position.set(3.5, 1.5, -3);
@@ -329,7 +329,7 @@
       ctx.textBaseline = 'middle';
       ctx.fillText('ONYX', w / 2, h / 2 + 6);
     });
-    helmet.add(new THREE.Mesh(surfacePatch(THREE, HALF, 0.13, 0.9, 0.045, true), decal(logo)));
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, HALF, 0.13, 1.0, 0.034, true), decal(logo)));
 
     // вентиляционные прорези по бокам
     const vents = canvasTexture(THREE, 512, 64, function (ctx, w, h) {
@@ -345,8 +345,8 @@
         ctx.fill();
       }
     });
-    helmet.add(new THREE.Mesh(surfacePatch(THREE, 0.12, 0.2, 0.62, 0.02, false), decal(vents)));
-    helmet.add(new THREE.Mesh(surfacePatch(THREE, Math.PI - 0.12, 0.2, 0.62, 0.02, false), decal(vents)));
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, 0.12, 0.2, 0.7, 0.015, false), decal(vents)));
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, Math.PI - 0.12, 0.2, 0.7, 0.015, false), decal(vents)));
 
     // оголовье: чёрная лента, сзади свисает ниже, и рифлёный регулятор
     const rubber = new THREE.MeshStandardMaterial({ color: 0x151414, roughness: 0.55, side: THREE.DoubleSide });
