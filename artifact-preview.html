@@ -931,34 +931,38 @@ h1, h2, h3 {
 
   // ---------- форма каски ----------
   // Оси: y — вверх, +z — перёд каски (козырёк), x — вбок.
-  const ELONG = 1.12; // вытянута вперёд-назад
+  const ELONG = 1.16; // вытянута вперёд-назад
 
   // Край каски поднимается от козырька к бокам и чуть опускается сзади.
   function rimRise(u) {
     const s = Math.sin(u);
-    return 0.09 * (1 - Math.max(0, s)) - 0.035 * Math.pow(Math.max(0, -s), 2);
+    return 0.06 * (1 - Math.max(0, s)) - 0.02 * Math.pow(Math.max(0, -s), 2);
   }
 
   function domePoint(u, v) {
     const t = v / HALF;
-    const s = Math.sin(v) * (1 + 0.05 * Math.pow(t, 6)); // у края слегка расширяется
+    // бока ближе к вертикали, у края купол слегка расширяется
+    const s = Math.pow(Math.sin(v), 0.72) * (1 + 0.04 * Math.pow(t, 8));
     const x = s * Math.cos(u);
-    const y = Math.cos(v) * 1.02;
+    const y = Math.cos(v) * 1.1;
     const z = s * Math.sin(u) * ELONG;
     // широкая центральная полоса и два боковых ребра; к краю сходят на нет
     const ax = Math.abs(x);
-    const relief = 0.045 * (1 - smoothstep(0.11, 0.21, ax)) +
-      0.028 * Math.exp(-Math.pow((ax - 0.44) / 0.065, 2));
+    const relief = 0.028 * (1 - smoothstep(0.11, 0.22, ax)) +
+      0.016 * Math.exp(-Math.pow((ax - 0.44) / 0.07, 2));
     const k = 1 + relief * (1 - Math.pow(t, 4));
     return [x * k, y * k + rimRise(u) * Math.pow(t, 3), z * k];
   }
 
+  const BRIM_THICK = 0.04;
+
   function brimPoint(u, t, bottom) {
     const front = Math.max(0, Math.sin(u));
-    const outer = 1.07 + 0.46 * Math.pow(front, 2.5); // спереди козырёк, по бокам бортик
+    // короткий козырёк спереди, по бокам и сзади узкий бортик
+    const outer = 1.075 + 0.2 * Math.pow(front, 3);
     const r = 1 + (outer - 1) * t;
-    let y = 0.01 + rimRise(u) - 0.05 * Math.pow(t, 1.5) - 0.12 * t * front * front;
-    if (bottom) y -= 0.045;
+    let y = 0.005 + rimRise(u) - 0.03 * t * t - 0.09 * t * t * front * front;
+    if (bottom) y -= BRIM_THICK;
     return [r * Math.cos(u), y, r * Math.sin(u) * ELONG];
   }
 
@@ -1033,15 +1037,21 @@ h1, h2, h3 {
     function () { return [0, 1, 0]; }, WHITE);
   addSurface(function (a, b) { return brimPoint(TAU_A(a), b, true); }, SEG, 4,
     function () { return [0, -1, 0]; }, WHITE);
+  // скруглённый торец козырька
   addSurface(function (a, b) {
-    const top = brimPoint(TAU_A(a), 1, false);
-    const bottom = brimPoint(TAU_A(a), 1, true);
-    return [top[0], top[1] + (bottom[1] - top[1]) * b, top[2]];
-  }, SEG, 1, function (p) { return [p[0], 0, p[2]]; }, WHITE);
+    const u = TAU_A(a);
+    const top = brimPoint(u, 1, false);
+    const out = norm([Math.cos(u), 0, Math.sin(u) * ELONG]);
+    const phi = HALF - b * Math.PI;
+    const half = BRIM_THICK / 2;
+    const bulge = half * Math.cos(phi);
+    return [top[0] + out[0] * bulge, top[1] - half + half * Math.sin(phi), top[2] + out[2] * bulge];
+  }, SEG, 6, function (p) { return [p[0], 0, p[2]]; }, WHITE);
 
   // чёрное оголовье внутри: лента, видна снизу по бокам и сзади
   function bandPoint(u, b, r) {
-    return [r * Math.cos(u), 0.08 - 0.34 * b, r * Math.sin(u) * ELONG * 0.96];
+    const depth = 0.1 + 0.2 * Math.max(0, -Math.sin(u)); // сзади свисает ниже
+    return [r * Math.cos(u), 0.06 - (0.06 + depth) * b, r * Math.sin(u) * ELONG * 0.96];
   }
   addSurface(function (a, b) { return bandPoint(TAU_A(a), b, 0.86); }, 64, 2,
     function (p) { return [p[0], 0, p[2]]; }, BLACK);
@@ -1049,7 +1059,7 @@ h1, h2, h3 {
     function (p) { return [-p[0], 0, -p[2]]; }, BLACK);
 
   // регулятор-«колёсико» сзади
-  const KNOB = [0, -0.17, -0.86 * ELONG * 0.96];
+  const KNOB = [0, -0.16, -0.86 * ELONG * 0.96];
   addSurface(function (a, b) {
     const u = TAU_A(a);
     return [KNOB[0] + 0.12 * Math.cos(u), KNOB[1] + 0.12 * Math.sin(u), KNOB[2] - 0.09 * b];
@@ -1061,10 +1071,10 @@ h1, h2, h3 {
 
   // слоты под наушники: по два на каждом боку, у края купола
   [0.55, -0.55, Math.PI + 0.55, Math.PI - 0.55].forEach(function (u) {
-    const base = domePoint(u, HALF * 0.86);
+    const base = domePoint(u, HALF * 0.9);
     const out = norm([Math.cos(u), 0, Math.sin(u) * ELONG]);
     const along = norm([-Math.sin(u) * ELONG, 0, Math.cos(u)]);
-    addBox(add(base, scale(out, 0.02)), along, [0, 1, 0], out, 0.1, 0.07, 0.04, WHITE);
+    addBox(add(base, scale(out, 0.01)), along, [0, 1, 0], out, 0.085, 0.055, 0.03, WHITE);
   });
 
   // ---------- WebGL ----------
@@ -1089,11 +1099,11 @@ h1, h2, h3 {
       'void main() {',
       '  vObj = aPos;',
       '  vCol = aCol;',
-      '  vec3 p = uRot * (aPos - vec3(0.0, 0.34, 0.0));',
+      '  vec3 p = uRot * (aPos - vec3(0.0, 0.42, 0.0));',
       '  vN = uRot * aNor;',
       '  vP = p;',
       '  float w = uCam - p.z;',
-      '  gl_Position = vec4(p.x * uF, p.y * uF + 0.06 * w, -p.z / 3.0 * w, w);',
+      '  gl_Position = vec4(p.x * uF, p.y * uF + 0.02 * w, -p.z / 3.0 * w, w);',
       '}'
     ].join('\n');
 
@@ -1162,7 +1172,7 @@ h1, h2, h3 {
       upload(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices));
 
       const uRot = gl.getUniformLocation(prog, 'uRot');
-      gl.uniform1f(gl.getUniformLocation(prog, 'uF'), 2.8);
+      gl.uniform1f(gl.getUniformLocation(prog, 'uF'), 2.9);
       gl.uniform1f(gl.getUniformLocation(prog, 'uCam'), 6.0);
       gl.uniform3fv(gl.getUniformLocation(prog, 'uKey'), norm([-0.55, 0.75, 0.6]));
       gl.uniform3fv(gl.getUniformLocation(prog, 'uRim'), norm([0.8, 0.15, -0.7]));
@@ -1244,9 +1254,9 @@ h1, h2, h3 {
 
     if (draw) {
       if (!reduceMotion) {
-        draw(yawAt(now), 0.3 + 0.03 * Math.sin(now / 900));
+        draw(yawAt(now), 0.2 + 0.03 * Math.sin(now / 900));
       } else if (!drewStatic) {
-        draw(0.45, 0.3);
+        draw(0.45, 0.2);
         drewStatic = true;
       }
     }
