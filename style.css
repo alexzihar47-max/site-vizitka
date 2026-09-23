@@ -619,7 +619,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
   border-radius: var(--r-xl);
 }
 
-.photo--hero .photo__img { transform: scale(1.12); transition: none; }
+.photo--hero .photo__img { transform: scale(1.12); transition: none; object-position: 50% 30%; }
 
 .hero__caption {
   display: flex;
@@ -1006,6 +1006,11 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 .process__aside .title { margin-bottom: 20px; }
 .process__aside .muted { max-width: 380px; margin-bottom: 32px; }
 
+.process__figure { margin: 40px 0 0; max-width: 440px; }
+.photo--process { aspect-ratio: 5 / 4; }
+.photo--process .photo__img { object-position: 50% 62%; }
+.process__figure figcaption { margin-top: 12px; font-size: 13px; color: var(--text-muted); }
+
 .steps { list-style: none; margin: 0; padding: 0; }
 
 .step {
@@ -1204,6 +1209,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
   .about__grid { grid-template-columns: 1fr; }
   .process__grid { grid-template-columns: 1fr; }
   .process__aside { position: static; }
+  .process__figure { max-width: 520px; }
   .request__grid { grid-template-columns: 1fr; }
 }
 
