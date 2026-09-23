@@ -885,9 +885,14 @@ h1, h2, h3 {
   </div>
   <script>
 // Экран загрузки: 3D-каска (WebGL, без библиотек) + прогресс загрузки.
-// Каска — процедурная модель: высокий купол с центральным гребнем и боковыми
-// рёбрами, козырёк спереди, узкий бортик по кругу, красная наклейка сбоку.
-// Освещение: белый ключевой свет, красный контровой и блик.
+//
+// Модель повторяет обычную строительную каску: высокий купол с широкой
+// центральной полосой и боковыми рёбрами, козырёк спереди, край поднимается
+// к бокам, слоты под наушники, вентиляционные прорези, чёрное оголовье
+// с регулятором сзади и красный логотип на лбу.
+//
+// Вращение неравномерное: лицом к зрителю каска почти замирает,
+// а остальную часть оборота проходит быстро.
 (function () {
   const root = document.documentElement;
   if (!root.classList.contains('is-loading')) return;
@@ -895,7 +900,8 @@ h1, h2, h3 {
   const MIN_MS = 3000;  // экран держится минимум столько
   const MAX_MS = 9000;  // и снимается не позже, даже если что-то зависло
   const FADE_MS = 500;
-  const SPIN_MS = 3600; // один оборот каски
+  const TURN_MS = 2800; // один оборот каски
+  const EASE = 0.8;     // 0 — равномерно, ближе к 1 — дольше смотрит на зрителя
 
   const canvas = document.getElementById('helmetCanvas');
   const bar = document.getElementById('preloaderBar');
@@ -903,19 +909,34 @@ h1, h2, h3 {
   const reduceMotion = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ---------- модель ----------
+  // ---------- математика ----------
   const TAU = Math.PI * 2;
   const HALF = Math.PI / 2;
-  const ELONG = 1.12; // каска чуть вытянута вперёд-назад
 
   function norm(a) {
     const l = Math.hypot(a[0], a[1], a[2]) || 1;
     return [a[0] / l, a[1] / l, a[2] / l];
   }
   function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+  function add(a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; }
   function sub(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
+  function scale(a, k) { return [a[0] * k, a[1] * k, a[2] * k]; }
   function cross(a, b) {
     return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  }
+  function smoothstep(a, b, x) {
+    const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+  }
+
+  // ---------- форма каски ----------
+  // Оси: y — вверх, +z — перёд каски (козырёк), x — вбок.
+  const ELONG = 1.12; // вытянута вперёд-назад
+
+  // Край каски поднимается от козырька к бокам и чуть опускается сзади.
+  function rimRise(u) {
+    const s = Math.sin(u);
+    return 0.09 * (1 - Math.max(0, s)) - 0.035 * Math.pow(Math.max(0, -s), 2);
   }
 
   function domePoint(u, v) {
@@ -924,30 +945,41 @@ h1, h2, h3 {
     const x = s * Math.cos(u);
     const y = Math.cos(v) * 1.02;
     const z = s * Math.sin(u) * ELONG;
-    // гребень по центру и два боковых ребра, к краю купола сходят на нет
-    const fade = 1 - Math.pow(t, 4);
-    const ridge = 0.05 * Math.exp(-Math.pow(x / 0.12, 2)) +
-      0.028 * Math.exp(-Math.pow((Math.abs(x) - 0.48) / 0.07, 2));
-    const k = 1 + ridge * fade;
-    return [x * k, y * k, z * k];
+    // широкая центральная полоса и два боковых ребра; к краю сходят на нет
+    const ax = Math.abs(x);
+    const relief = 0.045 * (1 - smoothstep(0.11, 0.21, ax)) +
+      0.028 * Math.exp(-Math.pow((ax - 0.44) / 0.065, 2));
+    const k = 1 + relief * (1 - Math.pow(t, 4));
+    return [x * k, y * k + rimRise(u) * Math.pow(t, 3), z * k];
   }
 
   function brimPoint(u, t, bottom) {
     const front = Math.max(0, Math.sin(u));
     const outer = 1.07 + 0.46 * Math.pow(front, 2.5); // спереди козырёк, по бокам бортик
     const r = 1 + (outer - 1) * t;
-    let y = 0.01 - 0.05 * Math.pow(t, 1.5) - 0.12 * t * front * front;
+    let y = 0.01 + rimRise(u) - 0.05 * Math.pow(t, 1.5) - 0.12 * t * front * front;
     if (bottom) y -= 0.045;
     return [r * Math.cos(u), y, r * Math.sin(u) * ELONG];
   }
 
+  // ---------- сборка сетки ----------
+  const WHITE = [0.93, 0.91, 0.895];
+  const BLACK = [0.07, 0.07, 0.075];
   const positions = [];
   const normals = [];
+  const colors = [];
   const indices = [];
 
-  // Сетка по параметрам (a, b) из [0,1]; нормали по конечным разностям,
-  // направление задаёт hint (наружу от поверхности).
-  function addSurface(fn, nu, nv, hint) {
+  function vertex(p, n, c) {
+    positions.push(p[0], p[1], p[2]);
+    normals.push(n[0], n[1], n[2]);
+    colors.push(c[0], c[1], c[2]);
+    return positions.length / 3 - 1;
+  }
+
+  // Сетка по параметрам (a, b) из [0,1]; гладкие нормали по конечным
+  // разностям, направление задаёт hint (наружу от поверхности).
+  function addSurface(fn, nu, nv, hint, color) {
     const base = positions.length / 3;
     const e = 1e-3;
     for (let j = 0; j <= nv; j++) {
@@ -960,9 +992,8 @@ h1, h2, h3 {
         let n = cross(du, dv);
         if (Math.hypot(n[0], n[1], n[2]) < 1e-9) n = [0, 1, 0];
         n = norm(n);
-        if (dot(n, hint(p)) < 0) n = [-n[0], -n[1], -n[2]];
-        positions.push(p[0], p[1], p[2]);
-        normals.push(n[0], n[1], n[2]);
+        if (dot(n, hint(p)) < 0) n = scale(n, -1);
+        vertex(p, n, color);
       }
     }
     const row = nu + 1;
@@ -974,18 +1005,67 @@ h1, h2, h3 {
     }
   }
 
-  const SEGMENTS = 96;
-  addSurface(function (a, b) { return domePoint(a * TAU, b * HALF); }, SEGMENTS, 32,
-    function (p) { return p; });
-  addSurface(function (a, b) { return brimPoint(a * TAU, b, false); }, SEGMENTS, 4,
-    function () { return [0, 1, 0]; });
-  addSurface(function (a, b) { return brimPoint(a * TAU, b, true); }, SEGMENTS, 4,
-    function () { return [0, -1, 0]; });
+  // Прямоугольный выступ на поверхности: центр, три оси, полуразмеры.
+  function addBox(center, ax, ay, az, hx, hy, hz, color) {
+    const faces = [
+      [az, ax, ay, hz, hx, hy], [scale(az, -1), ax, ay, hz, hx, hy],
+      [ax, ay, az, hx, hy, hz], [scale(ax, -1), ay, az, hx, hy, hz],
+      [ay, az, ax, hy, hz, hx], [scale(ay, -1), az, ax, hy, hz, hx]
+    ];
+    faces.forEach(function (f) {
+      const n = f[0], s1 = f[1], s2 = f[2];
+      const c = add(center, scale(n, f[3]));
+      const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(function (q) {
+        return vertex(add(c, add(scale(s1, q[0] * f[4]), scale(s2, q[1] * f[5]))), n, color);
+      });
+      indices.push(corners[0], corners[1], corners[2], corners[0], corners[2], corners[3]);
+    });
+  }
+
+  const SEG = 144;
+  const TAU_A = function (a) { return a * TAU; };
+
+  // купол
+  addSurface(function (a, b) { return domePoint(TAU_A(a), b * HALF); }, SEG, 32,
+    function (p) { return p; }, WHITE);
+  // козырёк и бортик: верх, низ, торец
+  addSurface(function (a, b) { return brimPoint(TAU_A(a), b, false); }, SEG, 4,
+    function () { return [0, 1, 0]; }, WHITE);
+  addSurface(function (a, b) { return brimPoint(TAU_A(a), b, true); }, SEG, 4,
+    function () { return [0, -1, 0]; }, WHITE);
   addSurface(function (a, b) {
-    const top = brimPoint(a * TAU, 1, false);
-    const bottom = brimPoint(a * TAU, 1, true);
+    const top = brimPoint(TAU_A(a), 1, false);
+    const bottom = brimPoint(TAU_A(a), 1, true);
     return [top[0], top[1] + (bottom[1] - top[1]) * b, top[2]];
-  }, SEGMENTS, 1, function (p) { return [p[0], 0, p[2]]; });
+  }, SEG, 1, function (p) { return [p[0], 0, p[2]]; }, WHITE);
+
+  // чёрное оголовье внутри: лента, видна снизу по бокам и сзади
+  function bandPoint(u, b, r) {
+    return [r * Math.cos(u), 0.08 - 0.34 * b, r * Math.sin(u) * ELONG * 0.96];
+  }
+  addSurface(function (a, b) { return bandPoint(TAU_A(a), b, 0.86); }, 64, 2,
+    function (p) { return [p[0], 0, p[2]]; }, BLACK);
+  addSurface(function (a, b) { return bandPoint(TAU_A(a), b, 0.84); }, 64, 2,
+    function (p) { return [-p[0], 0, -p[2]]; }, BLACK);
+
+  // регулятор-«колёсико» сзади
+  const KNOB = [0, -0.17, -0.86 * ELONG * 0.96];
+  addSurface(function (a, b) {
+    const u = TAU_A(a);
+    return [KNOB[0] + 0.12 * Math.cos(u), KNOB[1] + 0.12 * Math.sin(u), KNOB[2] - 0.09 * b];
+  }, 32, 1, function (p) { return [p[0] - KNOB[0], p[1] - KNOB[1], 0]; }, BLACK);
+  addSurface(function (a, b) {
+    const u = TAU_A(a);
+    return [KNOB[0] + 0.12 * b * Math.cos(u), KNOB[1] + 0.12 * b * Math.sin(u), KNOB[2] - 0.09];
+  }, 32, 1, function () { return [0, 0, -1]; }, BLACK);
+
+  // слоты под наушники: по два на каждом боку, у края купола
+  [0.55, -0.55, Math.PI + 0.55, Math.PI - 0.55].forEach(function (u) {
+    const base = domePoint(u, HALF * 0.86);
+    const out = norm([Math.cos(u), 0, Math.sin(u) * ELONG]);
+    const along = norm([-Math.sin(u) * ELONG, 0, Math.cos(u)]);
+    addBox(add(base, scale(out, 0.02)), along, [0, 1, 0], out, 0.1, 0.07, 0.04, WHITE);
+  });
 
   // ---------- WebGL ----------
   let draw = null;
@@ -998,19 +1078,22 @@ h1, h2, h3 {
     const vs = [
       'attribute vec3 aPos;',
       'attribute vec3 aNor;',
+      'attribute vec3 aCol;',
       'uniform mat3 uRot;',
       'uniform float uF;',
       'uniform mediump float uCam;', // точность должна совпадать с фрагментным шейдером
       'varying vec3 vN;',
       'varying vec3 vP;',
       'varying vec3 vObj;',
+      'varying vec3 vCol;',
       'void main() {',
       '  vObj = aPos;',
-      '  vec3 p = uRot * (aPos - vec3(0.0, 0.36, 0.0));',
+      '  vCol = aCol;',
+      '  vec3 p = uRot * (aPos - vec3(0.0, 0.34, 0.0));',
       '  vN = uRot * aNor;',
       '  vP = p;',
       '  float w = uCam - p.z;',
-      '  gl_Position = vec4(p.x * uF, p.y * uF - 0.04 * w, -p.z / 3.0 * w, w);',
+      '  gl_Position = vec4(p.x * uF, p.y * uF + 0.06 * w, -p.z / 3.0 * w, w);',
       '}'
     ].join('\n');
 
@@ -1019,6 +1102,7 @@ h1, h2, h3 {
       'varying vec3 vN;',
       'varying vec3 vP;',
       'varying vec3 vObj;',
+      'varying vec3 vCol;',
       'uniform vec3 uKey;',
       'uniform vec3 uRim;',
       'uniform float uCam;',
@@ -1026,16 +1110,24 @@ h1, h2, h3 {
       '  vec3 n = normalize(vN);',
       '  vec3 V = normalize(vec3(0.0, 0.0, uCam) - vP);',
       '  vec3 red = vec3(0.886, 0.216, 0.173);',
-      '  vec3 base = vec3(0.93, 0.91, 0.895);',
-      '  float decal = smoothstep(0.585, 0.6, vObj.x) * (1.0 - smoothstep(0.19, 0.205, abs(vObj.z)))',
-      '              * smoothstep(0.2, 0.215, vObj.y) * (1.0 - smoothstep(0.42, 0.435, vObj.y));',
-      '  base = mix(base, red, decal);',
+      '  vec3 base = vCol;',
+      '  float shell = step(0.5, vCol.r);',
+      // красный логотип на лбу, на центральной полосе
+      '  float logo = shell * step(0.6, vObj.z) * (1.0 - smoothstep(0.1, 0.112, abs(vObj.x)))',
+      '             * smoothstep(0.3, 0.312, vObj.y) * (1.0 - smoothstep(0.44, 0.452, vObj.y));',
+      // вентиляционные прорези по бокам
+      '  float vz = (vObj.z + 0.08) / 0.42;',
+      '  float vent = shell * step(0.6, abs(vObj.x)) * step(0.0, vz) * step(vz, 1.0)',
+      '             * step(fract(vz * 5.0), 0.62)',
+      '             * smoothstep(0.585, 0.595, vObj.y) * (1.0 - smoothstep(0.625, 0.635, vObj.y));',
+      '  base = mix(base, red, logo);',
+      '  base = mix(base, vec3(0.16, 0.15, 0.16), vent);',
       '  float diff = max(dot(n, uKey), 0.0);',
       '  float rim = pow(max(dot(n, uRim), 0.0), 1.4);',
       '  float fres = pow(1.0 - max(dot(n, V), 0.0), 3.0);',
       '  vec3 H = normalize(uKey + V);',
-      '  float spec = pow(max(dot(n, H), 0.0), 40.0) * 0.4;',
-      '  vec3 c = base * (0.34 + 0.66 * diff) + red * (0.9 * rim + 0.25 * fres) + vec3(spec);',
+      '  float spec = pow(max(dot(n, H), 0.0), 40.0) * mix(0.15, 0.4, shell);',
+      '  vec3 c = base * (0.34 + 0.66 * diff) + red * (0.9 * rim + 0.25 * fres) * mix(0.35, 1.0, shell) + vec3(spec);',
       '  gl_FragColor = vec4(min(c, vec3(1.0)), 1.0);',
       '}'
     ].join('\n');
@@ -1066,10 +1158,11 @@ h1, h2, h3 {
       };
       upload(gl.ARRAY_BUFFER, new Float32Array(positions), 'aPos');
       upload(gl.ARRAY_BUFFER, new Float32Array(normals), 'aNor');
+      upload(gl.ARRAY_BUFFER, new Float32Array(colors), 'aCol');
       upload(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices));
 
       const uRot = gl.getUniformLocation(prog, 'uRot');
-      gl.uniform1f(gl.getUniformLocation(prog, 'uF'), 3.1);
+      gl.uniform1f(gl.getUniformLocation(prog, 'uF'), 2.8);
       gl.uniform1f(gl.getUniformLocation(prog, 'uCam'), 6.0);
       gl.uniform3fv(gl.getUniformLocation(prog, 'uKey'), norm([-0.55, 0.75, 0.6]));
       gl.uniform3fv(gl.getUniformLocation(prog, 'uRim'), norm([0.8, 0.15, -0.7]));
@@ -1100,6 +1193,16 @@ h1, h2, h3 {
 
   // без WebGL показываем только прогресс
   if (!draw && canvas) canvas.style.display = 'none';
+
+  // Угол поворота во времени. Внутри оборота скорость 1 − EASE·cos(2πf):
+  // у «лица» (f = 0) почти стоит, на обратной стороне разгоняется.
+  // Фаза подобрана так, что к концу загрузки каска снова смотрит на зрителя.
+  function yawAt(now) {
+    const x = (now - MIN_MS) / TURN_MS;
+    const turn = Math.floor(x);
+    const f = x - turn;
+    return TAU * (turn + f - EASE * Math.sin(TAU * f) / TAU);
+  }
 
   // ---------- прогресс ----------
   let loaded = document.readyState === 'complete';
@@ -1141,9 +1244,9 @@ h1, h2, h3 {
 
     if (draw) {
       if (!reduceMotion) {
-        draw((now / SPIN_MS) * TAU, 0.36 + 0.04 * Math.sin(now / 900));
+        draw(yawAt(now), 0.3 + 0.03 * Math.sin(now / 900));
       } else if (!drewStatic) {
-        draw(0.7, 0.36);
+        draw(0.45, 0.3);
         drewStatic = true;
       }
     }
