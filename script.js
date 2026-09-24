@@ -153,28 +153,82 @@
   if ('IntersectionObserver' in window && !reduceMotion) {
     const io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          reveal(entry.target);
-          io.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        // в ленте показываем сразу все карточки: те, что за краем экрана,
+        // иначе остались бы пустыми, пока их не пролистают
+        const parent = entry.target.parentElement;
+        const group = parent.hasAttribute('data-rail') ? Array.from(parent.children) : [entry.target];
+        group.forEach(function (el) {
+          reveal(el);
+          io.unobserve(el);
+        });
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
     revealables.forEach(function (el) { io.observe(el); });
-
-    // активный этап — тот, что посередине экрана
-    const steps = Array.from(document.querySelectorAll('.step'));
-    const stepIo = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          steps.forEach(function (s) { s.classList.toggle('is-active', s === entry.target); });
-        }
-      });
-    }, { rootMargin: '-45% 0px -45% 0px' });
-    steps.forEach(function (s) { stepIo.observe(s); });
-    if (steps[0]) steps[0].classList.add('is-active');
   } else {
     revealables.forEach(function (el) { el.classList.add('is-in'); });
   }
+
+  // ---------- Ленты карточек ----------
+  // До 1080px услуги, проекты, направления и этапы листаются вбок (.rail в
+  // style.css). Под лентой — счётчик, полоска прогресса и стрелки; когда
+  // карточки помещаются в ряд, всё это скрыто.
+  document.querySelectorAll('[data-rail]').forEach(function (rail) {
+    const items = Array.from(rail.children);
+    const total = items.length;
+    const pad = function (n) { return (n < 10 ? '0' : '') + n; };
+
+    const nav = document.createElement('div');
+    nav.className = 'rail-nav';
+    nav.innerHTML =
+      '<span class="rail-nav__count"><b>01</b> / ' + pad(total) + '</span>' +
+      '<span class="rail-nav__track"><span class="rail-nav__thumb"></span></span>' +
+      '<button class="rail-nav__btn" type="button" aria-label="Назад">←</button>' +
+      '<button class="rail-nav__btn" type="button" aria-label="Вперёд">→</button>';
+    rail.after(nav);
+    const countEl = nav.querySelector('b');
+    const thumb = nav.querySelector('.rail-nav__thumb');
+    const buttons = nav.querySelectorAll('button');
+
+    // шаг ленты — расстояние между соседними карточками
+    const stepPx = function () {
+      return total > 1 ? items[1].offsetLeft - items[0].offsetLeft : rail.clientWidth;
+    };
+
+    function update() {
+      const max = rail.scrollWidth - rail.clientWidth;
+      const scrollable = max > 1;
+      let current = -1;
+      nav.hidden = !scrollable;
+      if (scrollable) {
+        const x = rail.scrollLeft;
+        current = x >= max - 2 ? total - 1 : Math.round(x / stepPx());
+        const size = rail.clientWidth / rail.scrollWidth;
+        thumb.style.width = (size * 100).toFixed(2) + '%';
+        thumb.style.transform = 'translateX(' + ((x / max) * (1 / size - 1) * 100).toFixed(2) + '%)';
+        countEl.textContent = pad(current + 1);
+        buttons[0].disabled = x <= 2;
+        buttons[1].disabled = x >= max - 2;
+      }
+      items.forEach(function (el, i) { el.classList.toggle('is-current', i === current); });
+    }
+
+    buttons.forEach(function (btn, i) {
+      btn.addEventListener('click', function () {
+        rail.scrollBy({ left: (i ? 1 : -1) * stepPx(), behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+    });
+
+    let queued = false;
+    const schedule = function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; update(); });
+    };
+    rail.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    update();
+  });
 
   // ---------- 3D-каска на главном экране ----------
   // Та же модель, что на экране загрузки (helmet.js). three.js уже загружен

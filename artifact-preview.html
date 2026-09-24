@@ -924,16 +924,27 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 }
 
 /* ===== Услуги ===== */
-.service-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.service-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.service-list > li { display: flex; }
 
 .service {
   position: relative;
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1.25fr) minmax(0, 1fr) 56px;
-  gap: 24px;
-  align-items: center;
-  padding: clamp(24px, 3vw, 38px) 18px;
-  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: clamp(300px, 27vw, 380px);
+  padding: 26px 26px 30px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
   text-decoration: none;
   isolation: isolate;
   overflow: hidden;
@@ -944,7 +955,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(100deg, var(--accent), var(--accent-warm));
+  background: linear-gradient(160deg, var(--accent-warm), var(--accent));
   transform: scaleY(0);
   transform-origin: bottom;
   transition: transform 0.6s var(--ease);
@@ -956,20 +967,28 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 .service__num { font-size: 14px; font-weight: 700; color: var(--text-muted); transition: color 0.3s; }
 
 .service__title {
-  font-size: clamp(22px, 2.7vw, 40px);
+  margin-top: auto;
+  padding-top: 40px;
+  margin-bottom: 12px;
+  font-size: clamp(21px, 1.85vw, 27px);
   font-weight: 600;
   letter-spacing: -0.03em;
-  line-height: 1.1;
-  transition: transform 0.6s var(--ease);
+  line-height: 1.12;
+  /* место под две строки заголовка и пять строк текста:
+     заголовки и тексты соседних карточек стоят на одной линии */
+  min-height: calc(2.24em + 40px);
 }
 
-.service__text { font-size: 15px; color: var(--text-muted); transition: color 0.3s; }
+.service__text { min-height: 7.75em; font-size: 15px; color: var(--text-muted); transition: color 0.3s; }
 
 .service__arrow {
+  position: absolute;
+  top: 18px;
+  right: 18px;
   display: grid;
   place-items: center;
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   border: 1px solid var(--line-strong);
   font-size: 18px;
@@ -978,21 +997,18 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 
 .service:hover .service__num,
 .service:hover .service__text { color: rgba(255, 255, 255, 0.92); }
-.service:hover .service__title { transform: translateX(10px); }
 .service:hover .service__arrow { background: #fff; color: var(--accent); border-color: #fff; transform: rotate(-45deg); }
 
 /* ===== Проекты ===== */
 .project-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: clamp(20px, 3vw, 40px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 28px);
 }
 
 .project { display: flex; flex-direction: column; }
-.project--big { grid-row: span 2; }
 
-.photo--project { aspect-ratio: 4 / 3; cursor: pointer; }
-.project--big .photo--project { aspect-ratio: auto; flex: 1; min-height: 460px; }
+.photo--project { aspect-ratio: 4 / 5; cursor: pointer; }
 
 .project .photo::after {
   content: "Смотреть";
@@ -1119,48 +1135,68 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 .panel__more { font-weight: 700; font-size: 14px; color: var(--accent-warm); }
 
 /* ===== Этапы ===== */
-.process__grid {
+.process__top {
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(40px, 7vw, 120px);
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: end;
+  margin-bottom: clamp(56px, 6vw, 88px);
 }
 
-.process__aside { position: sticky; top: 120px; }
-.process__aside .title { margin-bottom: 20px; }
-.process__aside .muted { max-width: 380px; margin-bottom: 32px; }
+.process__intro .title { margin-bottom: 20px; }
+.process__intro .muted { max-width: 440px; margin-bottom: 32px; }
 
-.process__figure { margin: 40px 0 0; max-width: 440px; }
+.process__figure { margin: 0; }
 .photo--process { aspect-ratio: 5 / 4; }
 .photo--process .photo__img { object-position: 50% 62%; }
 .process__figure figcaption { margin-top: 12px; font-size: 13px; color: var(--text-muted); }
 
-.steps { list-style: none; margin: 0; padding: 0; }
-
-.step {
+/* шаги — линия времени: общая линия сверху, на ней точка каждого шага */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: clamp(80px, 9vw, 130px) minmax(0, 1fr);
-  gap: 20px;
-  padding-block: 36px;
-  border-top: 1px solid var(--line);
-  transition: opacity 0.5s ease;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
-.step:last-child { border-bottom: 1px solid var(--line); }
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 24px 0 0;
+  border-top: 1px solid var(--line-strong);
+}
+
+.step::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  transition: background-color 0.4s, box-shadow 0.4s;
+}
 
 .step__num {
-  font: 800 clamp(44px, 5vw, 72px)/0.9 var(--font-display);
+  margin-bottom: 22px;
+  font: 800 clamp(40px, 3.6vw, 56px)/0.9 var(--font-display);
   letter-spacing: -0.05em;
   color: transparent;
   -webkit-text-stroke: 1px rgba(243, 239, 235, 0.4);
   transition: color 0.5s ease, -webkit-text-stroke-color 0.5s ease;
 }
 
-.step h3 { margin-bottom: 8px; font-size: clamp(20px, 2vw, 26px); }
-.step p { margin-bottom: 14px; color: var(--text-muted); max-width: 440px; }
+.step > div { display: flex; flex: 1; flex-direction: column; align-items: flex-start; }
+.step h3 { margin-bottom: 10px; font-size: clamp(19px, 1.6vw, 23px); }
+.step p { margin-bottom: 16px; color: var(--text-muted); font-size: 15px; }
 
 .step__time {
   display: inline-block;
+  margin-top: auto;
   padding: 5px 12px;
   border-radius: 999px;
   background: var(--surface-2);
@@ -1168,9 +1204,15 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   font-weight: 700;
 }
 
-.motion .step { opacity: 0.4; }
-.motion .step.is-active { opacity: 1; }
-.step.is-active .step__num { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
+.step:hover::before,
+.step.is-current::before { background: var(--accent); box-shadow: 0 0 0 5px rgba(226, 55, 44, 0.18); }
+.step:hover .step__num,
+.step.is-current .step__num { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
+
+/* ===== Лента карточек =====
+   На компьютере карточки стоят в один ряд (сетки выше), до 1080px —
+   листаются пальцем вбок. Счётчик, полоску и стрелки добавляет script.js. */
+.rail-nav { display: none; }
 
 /* ===== Вопросы ===== */
 .faq__grid {
@@ -1382,9 +1424,71 @@ address.footer__col { font-style: normal; }
 @media (max-width: 1080px) {
   .nav { display: none; }
   .menu-btn { display: block; }
-  .service { grid-template-columns: 48px minmax(0, 1fr) 52px; }
-  .service__text { grid-column: 2; grid-row: 2; }
-  .service__arrow { grid-column: 3; grid-row: 1 / span 2; }
+
+  /* лента: листается вбок, карточки прилипают к краю экрана */
+  .rail {
+    display: flex;
+    gap: 12px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar { display: none; }
+  /* растут, только если все помещаются без прокрутки */
+  .rail > * { flex: 1 0 min(80vw, 340px); scroll-snap-align: start; }
+  .steps.rail { gap: 0; padding-top: 12px; }
+  .steps.rail > * { flex-basis: min(72vw, 290px); }
+  .panels.rail > * { flex-basis: min(84vw, 440px); }
+  .panels:hover .panel, .panels .panel:hover { flex-grow: 1; }
+
+  .rail-nav { display: flex; align-items: center; gap: 12px; margin-top: 28px; }
+  .rail-nav[hidden] { display: none; }
+  .rail-nav__count {
+    min-width: 58px;
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+  }
+  .rail-nav__count b { color: var(--text); }
+  .rail-nav__track {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    margin-right: 8px;
+    border-radius: 2px;
+    background: var(--line-strong);
+    overflow: hidden;
+  }
+  .rail-nav__thumb {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .rail-nav__btn {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, opacity 0.3s;
+  }
+  .rail-nav__btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .rail-nav__btn:disabled { opacity: 0.3; cursor: default; }
   .footer__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .footer__lead { grid-column: 1 / -1; }
 }
@@ -1398,8 +1502,7 @@ address.footer__col { font-style: normal; }
   .hero__chip--left { top: auto; bottom: 96px; }
   .hero__chip--right { top: auto; bottom: 96px; }
   .about__grid { grid-template-columns: 1fr; }
-  .process__grid { grid-template-columns: 1fr; }
-  .process__aside { position: static; }
+  .process__top { grid-template-columns: 1fr; align-items: start; }
   .process__figure { max-width: 520px; }
   .request__grid { grid-template-columns: 1fr; }
   .faq__grid { grid-template-columns: 1fr; }
@@ -1409,14 +1512,9 @@ address.footer__col { font-style: normal; }
 
 @media (max-width: 760px) {
   .header__cta { display: none; }
-  .project-grid { grid-template-columns: 1fr; }
-  .project--big { grid-row: auto; }
-  .project--big .photo--project { aspect-ratio: 4 / 5; min-height: 0; }
   .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
   .stat:nth-child(3) { border-left: none; padding-left: 0; }
-  .panels { flex-direction: column; height: auto; }
-  .panel { flex: none; height: 440px; }
-  .panels:hover .panel, .panels .panel:hover { flex-grow: 0; }
+  .panels { height: 460px; }
 }
 
 @media (max-width: 560px) {
@@ -1434,9 +1532,7 @@ address.footer__col { font-style: normal; }
   .hero__chip--left, .hero__chip--right { bottom: 84px; max-width: 150px; }
   .hero__scroll { display: none; }
   .hero__contact span { display: none; }
-  .service { gap: 12px 16px; padding-inline: 4px; }
-  .service__num { font-size: 12px; }
-  .service__arrow { width: 44px; height: 44px; }
+  .service { min-height: 290px; padding: 22px 22px 26px; }
   .facts li { grid-template-columns: 1fr; gap: 4px; }
   .footer__grid { grid-template-columns: 1fr 1fr; }
   .footer__lead { grid-column: 1 / -1; }
@@ -1463,9 +1559,9 @@ address.footer__col { font-style: normal; }
     Фото: положите файл с нужным именем в папку img/ — он сам встанет на место.
       img/hero.jpg          фото объекта под главным экраном, вертикальное, от 1200×1500
       img/about.jpg         блок «О студии», от 1200×900
-      img/project-1.jpg     проект 1 (большой), вертикальное, от 1200×1500
-      img/project-2.jpg     проект 2, от 1200×900
-      img/project-3.jpg     проект 3, от 1200×900
+      img/project-1.jpg     проект 1, вертикальное, от 1200×1500
+      img/project-2.jpg     проект 2, вертикальное, от 1200×1500
+      img/project-3.jpg     проект 3, вертикальное, от 1200×1500
       img/interiors.jpg     направление «Интерьеры», вертикальное, от 1000×1300
       img/architecture.jpg  направление «Архитектура», вертикальное, от 1000×1300
       img/process.jpg       блок «Этапы», работа на объекте, от 1000×800
@@ -2296,7 +2392,7 @@ address.footer__col { font-style: normal; }
           <p class="section-head__text">Дизайн интерьера квартир, домов и коммерческих помещений, архитектурное проектирование частных домов, рабочая документация и авторский надзор — в <span class="ph">Москве и Московской области</span>.</p>
         </div>
 
-        <ul class="service-list">
+        <ul class="service-list rail" data-rail>
           <li data-reveal>
             <a class="service" href="#request-form">
               <span class="service__num">01</span>
@@ -2344,8 +2440,8 @@ address.footer__col { font-style: normal; }
           <a class="link-arrow" href="#request-form">Хочу так же <span aria-hidden="true">→</span></a>
         </div>
 
-        <div class="project-grid">
-          <article class="project project--big" data-reveal>
+        <div class="project-grid rail" data-rail>
+          <article class="project" data-reveal>
             <div class="photo photo--project">
               <img class="photo__img" src="img/project-1.jpg" alt="Дизайн интерьера квартиры для семьи — проект ONYX" loading="lazy" decoding="async">
               <span class="photo__label">Ваше фото · проект 1 · 1200×1500</span>
@@ -2360,7 +2456,7 @@ address.footer__col { font-style: normal; }
           <article class="project" data-reveal>
             <div class="photo photo--project">
               <img class="photo__img" src="img/project-2.jpg" alt="Архитектурный проект загородного дома — ONYX" loading="lazy" decoding="async">
-              <span class="photo__label">Ваше фото · проект 2 · 1200×900</span>
+              <span class="photo__label">Ваше фото · проект 2 · 1200×1500</span>
             </div>
             <div class="project__caption">
               <span class="project__num">02</span>
@@ -2372,7 +2468,7 @@ address.footer__col { font-style: normal; }
           <article class="project" data-reveal>
             <div class="photo photo--project">
               <img class="photo__img" src="img/project-3.jpg" alt="Дизайн интерьера офиса IT-компании — ONYX" loading="lazy" decoding="async">
-              <span class="photo__label">Ваше фото · проект 3 · 1200×900</span>
+              <span class="photo__label">Ваше фото · проект 3 · 1200×1500</span>
             </div>
             <div class="project__caption">
               <span class="project__num">03</span>
@@ -2414,7 +2510,7 @@ address.footer__col { font-style: normal; }
           <h2 class="title">Два направления —<br><em>одна команда</em></h2>
         </div>
 
-        <div class="panels">
+        <div class="panels rail" data-rail>
           <a class="panel" href="#request-form" data-reveal>
             <div class="photo photo--panel">
               <img class="photo__img" src="img/interiors.jpg" alt="Дизайн интерьера квартиры от бюро ONYX" loading="lazy" decoding="async">
@@ -2446,17 +2542,19 @@ address.footer__col { font-style: normal; }
 
     <!-- ================= ЭТАПЫ ================= -->
     <section class="section process" id="process">
-      <div class="container process__grid">
-        <div class="process__aside">
-          <p class="kicker"><span>(05)</span> Этапы</p>
-          <h2 class="title">Как мы <em>работаем</em></h2>
-          <p class="muted">Пять шагов от первой встречи до сдачи объекта. Каждый заканчивается приёмкой — и только потом вы оплачиваете следующий.</p>
-          <a class="pill pill--dark" href="#request-form">
-            Начать со встречи
-            <span class="pill__arrow" aria-hidden="true">→</span>
-          </a>
+      <div class="container">
+        <div class="process__top">
+          <div class="process__intro" data-reveal>
+            <p class="kicker"><span>(05)</span> Этапы</p>
+            <h2 class="title">Как мы <em>работаем</em></h2>
+            <p class="muted">Пять шагов от первой встречи до сдачи объекта. Каждый заканчивается приёмкой — и только потом вы оплачиваете следующий.</p>
+            <a class="pill pill--dark" href="#request-form">
+              Начать со встречи
+              <span class="pill__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
 
-          <figure class="process__figure">
+          <figure class="process__figure" data-reveal>
             <div class="photo photo--process">
               <img class="photo__img" src="img/process.jpg" alt="Строительные работы на объекте — авторский надзор архитектора" width="931" height="1400" loading="lazy" decoding="async">
               <span class="photo__label">Ваше фото · на объекте · 1000×800</span>
@@ -2465,8 +2563,8 @@ address.footer__col { font-style: normal; }
           </figure>
         </div>
 
-        <ol class="steps">
-          <li class="step">
+        <ol class="steps rail" data-rail>
+          <li class="step" data-reveal>
             <span class="step__num">01</span>
             <div>
               <h3>Встреча и обмер</h3>
@@ -2474,7 +2572,7 @@ address.footer__col { font-style: normal; }
               <span class="step__time"><span class="ph">1–3 дня</span></span>
             </div>
           </li>
-          <li class="step">
+          <li class="step" data-reveal>
             <span class="step__num">02</span>
             <div>
               <h3>Планировка</h3>
@@ -2482,7 +2580,7 @@ address.footer__col { font-style: normal; }
               <span class="step__time"><span class="ph">1–2 недели</span></span>
             </div>
           </li>
-          <li class="step">
+          <li class="step" data-reveal>
             <span class="step__num">03</span>
             <div>
               <h3>Концепция и 3D</h3>
@@ -2490,7 +2588,7 @@ address.footer__col { font-style: normal; }
               <span class="step__time"><span class="ph">2–4 недели</span></span>
             </div>
           </li>
-          <li class="step">
+          <li class="step" data-reveal>
             <span class="step__num">04</span>
             <div>
               <h3>Рабочие чертежи</h3>
@@ -2498,7 +2596,7 @@ address.footer__col { font-style: normal; }
               <span class="step__time"><span class="ph">2–3 недели</span></span>
             </div>
           </li>
-          <li class="step">
+          <li class="step" data-reveal>
             <span class="step__num">05</span>
             <div>
               <h3>Авторский надзор</h3>
@@ -2784,28 +2882,82 @@ address.footer__col { font-style: normal; }
   if ('IntersectionObserver' in window && !reduceMotion) {
     const io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          reveal(entry.target);
-          io.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        // в ленте показываем сразу все карточки: те, что за краем экрана,
+        // иначе остались бы пустыми, пока их не пролистают
+        const parent = entry.target.parentElement;
+        const group = parent.hasAttribute('data-rail') ? Array.from(parent.children) : [entry.target];
+        group.forEach(function (el) {
+          reveal(el);
+          io.unobserve(el);
+        });
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
     revealables.forEach(function (el) { io.observe(el); });
-
-    // активный этап — тот, что посередине экрана
-    const steps = Array.from(document.querySelectorAll('.step'));
-    const stepIo = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          steps.forEach(function (s) { s.classList.toggle('is-active', s === entry.target); });
-        }
-      });
-    }, { rootMargin: '-45% 0px -45% 0px' });
-    steps.forEach(function (s) { stepIo.observe(s); });
-    if (steps[0]) steps[0].classList.add('is-active');
   } else {
     revealables.forEach(function (el) { el.classList.add('is-in'); });
   }
+
+  // ---------- Ленты карточек ----------
+  // До 1080px услуги, проекты, направления и этапы листаются вбок (.rail в
+  // style.css). Под лентой — счётчик, полоска прогресса и стрелки; когда
+  // карточки помещаются в ряд, всё это скрыто.
+  document.querySelectorAll('[data-rail]').forEach(function (rail) {
+    const items = Array.from(rail.children);
+    const total = items.length;
+    const pad = function (n) { return (n < 10 ? '0' : '') + n; };
+
+    const nav = document.createElement('div');
+    nav.className = 'rail-nav';
+    nav.innerHTML =
+      '<span class="rail-nav__count"><b>01</b> / ' + pad(total) + '</span>' +
+      '<span class="rail-nav__track"><span class="rail-nav__thumb"></span></span>' +
+      '<button class="rail-nav__btn" type="button" aria-label="Назад">←</button>' +
+      '<button class="rail-nav__btn" type="button" aria-label="Вперёд">→</button>';
+    rail.after(nav);
+    const countEl = nav.querySelector('b');
+    const thumb = nav.querySelector('.rail-nav__thumb');
+    const buttons = nav.querySelectorAll('button');
+
+    // шаг ленты — расстояние между соседними карточками
+    const stepPx = function () {
+      return total > 1 ? items[1].offsetLeft - items[0].offsetLeft : rail.clientWidth;
+    };
+
+    function update() {
+      const max = rail.scrollWidth - rail.clientWidth;
+      const scrollable = max > 1;
+      let current = -1;
+      nav.hidden = !scrollable;
+      if (scrollable) {
+        const x = rail.scrollLeft;
+        current = x >= max - 2 ? total - 1 : Math.round(x / stepPx());
+        const size = rail.clientWidth / rail.scrollWidth;
+        thumb.style.width = (size * 100).toFixed(2) + '%';
+        thumb.style.transform = 'translateX(' + ((x / max) * (1 / size - 1) * 100).toFixed(2) + '%)';
+        countEl.textContent = pad(current + 1);
+        buttons[0].disabled = x <= 2;
+        buttons[1].disabled = x >= max - 2;
+      }
+      items.forEach(function (el, i) { el.classList.toggle('is-current', i === current); });
+    }
+
+    buttons.forEach(function (btn, i) {
+      btn.addEventListener('click', function () {
+        rail.scrollBy({ left: (i ? 1 : -1) * stepPx(), behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+    });
+
+    let queued = false;
+    const schedule = function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; update(); });
+    };
+    rail.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    update();
+  });
 
   // ---------- 3D-каска на главном экране ----------
   // Та же модель, что на экране загрузки (helmet.js). three.js уже загружен
