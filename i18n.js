@@ -23,11 +23,15 @@
     'nav.projects': { en: 'Projects', ar: 'المشاريع' },
     'nav.process': { en: 'Process', ar: 'مراحل العمل' },
     'nav.contacts': { en: 'Contacts', ar: 'التواصل' },
-    'nav.request': { en: 'Enquiry', ar: 'الطلب' },
+    'nav.home': { en: 'Home', ar: 'الرئيسية' },
+    'nav.directions': { en: 'Disciplines', ar: 'الاتجاهات' },
     'nav.faq': { en: 'FAQ', ar: 'الأسئلة' },
     'logo.label': { en: 'ONYX — home', ar: 'ONYX — الصفحة الرئيسية' },
     'lang.label': { en: 'Site language', ar: 'لغة الموقع' },
     'menu.label': { en: 'Menu', ar: 'القائمة' },
+    'menu.city': { en: 'Moscow', ar: 'موسكو' },
+    'menu.address': { en: '<span class="ph">1 Primernaya St, office 1</span>', ar: '<span class="ph">شارع بريميرنايا، 1، مكتب 1</span>' },
+    'menu.write': { en: 'Write to us', ar: 'راسلنا' },
     'cta.discuss': { en: 'Discuss a project', ar: 'ناقش مشروعك' },
 
     // ---------- главный экран ----------

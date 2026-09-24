@@ -276,17 +276,31 @@
   </header>
 
   <div class="menu" id="mobileMenu" aria-hidden="true">
-    <nav class="menu__nav" aria-label="Меню" data-i18n-attr="aria-label=menu.label">
-      <a href="#about"><span>01</span><b data-i18n="nav.about">О студии</b></a>
-      <a href="#services"><span>02</span><b data-i18n="nav.services">Услуги</b></a>
-      <a href="#projects"><span>03</span><b data-i18n="nav.projects">Проекты</b></a>
-      <a href="#process"><span>04</span><b data-i18n="nav.process">Этапы</b></a>
-      <a href="#request-form"><span>05</span><b data-i18n="nav.request">Заявка</b></a>
-    </nav>
-    <a class="pill pill--light" href="#request-form">
-      <span data-i18n="cta.discuss">Обсудить проект</span>
-      <span class="pill__arrow" aria-hidden="true">→</span>
-    </a>
+    <div class="menu__inner">
+      <nav class="menu__nav" aria-label="Меню" data-i18n-attr="aria-label=menu.label">
+        <a href="#top" data-i18n="nav.home">На главную</a>
+        <a href="#about" data-i18n="nav.about">О студии</a>
+        <a href="#services" data-i18n="nav.services">Услуги</a>
+        <a href="#projects" data-i18n="nav.projects">Проекты</a>
+        <a href="#directions" data-i18n="nav.directions">Направления</a>
+        <a href="#process" data-i18n="nav.process">Этапы</a>
+        <a href="#faq" data-i18n="nav.faq">Вопросы</a>
+        <a href="#contacts" data-i18n="nav.contacts">Контакты</a>
+      </nav>
+
+      <div class="menu__info">
+        <p class="menu__city" data-i18n="menu.city">Москва</p>
+        <!-- ВАШИ ДАННЫЕ: адрес студии -->
+        <p class="menu__address" data-i18n="menu.address"><span class="ph">ул. Примерная, 1, офис 1</span></p>
+      </div>
+
+      <div class="menu__contacts">
+        <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a>
+        <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
+      </div>
+
+      <a class="menu__cta" href="#request-form" data-i18n="menu.write">Написать нам</a>
+    </div>
   </div>
 
   <main id="top">

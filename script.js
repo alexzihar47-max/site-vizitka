@@ -107,6 +107,8 @@
   const flyWords = heroWrap ? Array.from(heroWrap.querySelectorAll('.hero__word')) : [];
   const heroSolid = flyWords[0];
   const heroOutline = heroWrap && heroWrap.querySelector('.hero__word--outline');
+  // подписи и кнопки первого экрана: гаснут, пока ONYX пролетает над ними
+  const heroUi = Array.from(document.querySelectorAll('.hero .intro'));
   const FLY_PATH = 0.8;   // слово долетает до шапки за 0.8 высоты экрана прокрутки
   const FLY_SMOOTH = 140; // мс: насколько мягко слово догоняет прокрутку
   const FADE_FROM = 0.9;  // с этой доли пути слово сменяется логотипом
@@ -138,7 +140,7 @@
       heroWrap.style.width = '';
       heroWrap.style.height = '';
       flyWords.forEach(function (el) {
-        ['position', 'inset', 'left', 'top', 'width', 'height', 'margin', 'transform'].forEach(function (prop) {
+        ['position', 'inset', 'left', 'top', 'width', 'height', 'margin', 'transform', 'zIndex'].forEach(function (prop) {
           el.style[prop] = '';
         });
       });
@@ -176,18 +178,32 @@
         heroOutline.style.webkitTextStrokeColor = '';
       }
       if (heroSolid) heroSolid.style.opacity = '';
+      heroUi.forEach(function (el) {
+        el.style.opacity = '';
+        el.style.transition = '';
+        el.style.pointerEvents = '';
+      });
     } else if (p >= 1) {
       heroWrap.style.visibility = 'hidden';
     } else {
       setFlying(true);
       heroWrap.style.visibility = '';
-      // центр слова идёт от своего места к логотипу, размер — к размеру логотипа
+      // центр слова идёт от своего места к логотипу, размер — к размеру логотипа;
+      // на место слово встаёт к FADE_FROM, а дальше только сменяется логотипом
+      // (без этого в момент смены было бы видно два ONYX)
+      const g = Math.min(1, p / FADE_FROM);
       const l = logo.getBoundingClientRect();
-      const scale = Math.pow(l.width / fly.w, p);
-      const dx = (l.left + l.width / 2 - fly.cx) * p;
-      const dy = (l.top + l.height / 2 - fly.cy) * p;
+      const scale = Math.pow(l.width / fly.w, g);
+      const dx = (l.left + l.width / 2 - fly.cx) * g;
+      const dy = (l.top + l.height / 2 - fly.cy) * g;
       const tr = 'translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px) scale(' + scale.toFixed(4) + ')';
       flyWords.forEach(function (el) { el.style.transform = tr; });
+      // Когда контур уже залит (дальше 0.12 пути), слово поднимаем над шапкой:
+      // её фон проявляется по ходу полёта и иначе приглушил бы буквы.
+      // Каска к этому моменту далеко внизу, так что порядок с ней не важен.
+      const over = p >= 0.15;
+      if (heroSolid) heroSolid.style.zIndex = over ? '61' : '';
+      if (heroOutline) heroOutline.style.zIndex = over ? '62' : '';
 
       // Слово отстаёт от страницы, и каска наезжает на сплошные буквы.
       // Поэтому контур (он лежит поверх каски) заливается цветом — слово
@@ -201,6 +217,16 @@
         heroOutline.style.webkitTextStrokeColor = fade < 1 ? 'rgba(243, 239, 235, ' + (0.55 * fade).toFixed(3) + ')' : '';
       }
       if (heroSolid) heroSolid.style.opacity = fade < 1 ? fade.toFixed(3) : '';
+    }
+    if (p > 0) {
+      // подписи первого экрана гаснут с 0.2 до 0.5 пути — раньше, чем слово
+      // пересечёт их (своя анимация появления тут не нужна, отключаем её)
+      const ui = 1 - Math.min(1, Math.max(0, (p - 0.2) / 0.3));
+      heroUi.forEach(function (el) {
+        el.style.transition = 'none';
+        el.style.opacity = ui.toFixed(3);
+        el.style.pointerEvents = ui < 0.3 ? 'none' : '';
+      });
     }
     logo.classList.toggle('is-hidden', p <= FADE_FROM);
     logo.style.opacity = p > FADE_FROM && p < 1 ? String((p - FADE_FROM) / (1 - FADE_FROM)) : '';
@@ -244,8 +270,14 @@
   // ---------- Шапка при прокрутке ----------
   function updateHeader() {
     if (!header) return;
-    // пока ONYX летит в шапку, у неё нет фона — иначе она закрыла бы слово
-    header.classList.toggle('is-scrolled', fly ? flyShown >= 1 : window.scrollY > 30);
+    if (fly) {
+      // фон шапки проявляется в первой половине полёта: когда ONYX подлетает,
+      // шапка уже на месте и закрывает страницу, которая уезжает под неё
+      const bg = Math.min(1, Math.max(0, (flyShown - 0.1) / 0.45));
+      header.style.setProperty('--hdr-bg', bg.toFixed(3));
+    } else {
+      header.classList.toggle('is-scrolled', window.scrollY > 30);
+    }
   }
 
   let ticking = false;
