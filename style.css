@@ -226,7 +226,7 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 
 .photo__label {
   position: absolute;
-  left: 16px;
+  inset-inline-start: 16px;
   bottom: 16px;
   z-index: 3;
   padding: 6px 12px;
@@ -394,35 +394,91 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 .header__side { grid-column: 3; grid-row: 1; justify-self: end; display: flex; align-items: center; gap: 12px; }
 .header__actions { display: flex; align-items: center; gap: 12px; }
 
-.status-badge {
+.header__phone {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.header__phone:hover { color: var(--accent-warm); }
+
+/* выбор языка */
+.lang { position: relative; }
+
+.lang__btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 999px;
+  justify-content: center;
+  gap: 7px;
+  height: 46px;
+  padding: 0 15px;
   border: 1px solid var(--line-strong);
+  border-radius: 999px;
   background: rgba(14, 12, 15, 0.4);
-  backdrop-filter: blur(10px);
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
+  color: var(--text);
+  font: 700 13px/1 var(--font-body);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: border-color 0.3s;
 }
 
-.status-badge__short { display: none; }
+.lang__btn:hover,
+.lang.is-open .lang__btn { border-color: var(--text); }
 
-.status-badge__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #4cd17f;
-  box-shadow: 0 0 0 0 rgba(76, 209, 127, 0.5);
-  animation: ping 2.2s ease-out infinite;
+.lang__caret {
+  width: 10px;
+  height: 6px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  transition: transform 0.3s var(--ease);
 }
 
-@keyframes ping {
-  0% { box-shadow: 0 0 0 0 rgba(76, 209, 127, 0.5); }
-  80%, 100% { box-shadow: 0 0 0 8px rgba(76, 209, 127, 0); }
+.lang.is-open .lang__caret { transform: rotate(180deg); }
+
+.lang__list {
+  position: absolute;
+  top: calc(100% + 10px);
+  inset-inline-end: 0;
+  z-index: 2;
+  display: grid;
+  min-width: 190px;
+  padding: 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  background: rgba(22, 19, 24, 0.97);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.25s ease, transform 0.3s var(--ease), visibility 0.25s;
 }
+
+.lang.is-open .lang__list { opacity: 1; visibility: visible; transform: none; }
+
+.lang__list button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--text);
+  font: 600 14px/1.2 var(--font-body);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.lang__list [lang="ar"] { font-family: 'IBM Plex Sans Arabic', var(--font-body); }
+.lang__list button span { font: 700 11px/1 var(--font-body); letter-spacing: 0.08em; color: var(--text-muted); }
+.lang__list button:hover { background: var(--surface-2); }
+.lang__list button[aria-checked="true"],
+.lang__list button[aria-checked="true"] span { color: var(--accent-warm); }
 
 .menu-btn {
   display: none;
@@ -678,7 +734,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 }
 
 .hero__contact { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(243, 239, 235, 0.72); }
-.hero__contact span { margin-right: 4px; }
+.hero__contact span { margin-inline-end: 4px; }
 
 .round-btn {
   display: grid;
@@ -858,9 +914,13 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   white-space: nowrap;
 }
 
+/* Контурные буквы: у шрифта внутри букв есть стыки, и простая обводка
+   рисует их лишними линиями. Заливаем буквы цветом фона поверх обводки —
+   остаётся только чистый внешний контур. */
 .marquee .outline {
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(243, 239, 235, 0.55);
+  color: var(--bg);
+  -webkit-text-stroke: 2px rgba(243, 239, 235, 0.6);
+  paint-order: stroke fill;
 }
 
 .marquee i {
@@ -870,7 +930,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   padding-inline: clamp(18px, 2.6vw, 40px);
 }
 
-@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes marquee { to { transform: translate3d(-50%, 0, 0); } }
 
 /* ===== О студии ===== */
 .manifesto {
@@ -987,7 +1047,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 .service__arrow {
   position: absolute;
   top: 18px;
-  right: 18px;
+  inset-inline-end: 18px;
   display: grid;
   place-items: center;
   width: 48px;
@@ -1059,7 +1119,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 }
 
 .stat { padding-inline: clamp(12px, 2vw, 32px); text-align: center; }
-.stat + .stat { border-left: 1px solid var(--line); }
+.stat + .stat { border-inline-start: 1px solid var(--line); }
 
 .stat__value {
   margin-bottom: 10px;
@@ -1166,7 +1226,8 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 36px 24px 0 0;
+  padding: 36px 0 0;
+  padding-inline-end: 24px;
   border-top: 1px solid var(--line-strong);
 }
 
@@ -1174,7 +1235,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   content: "";
   position: absolute;
   top: -5px;
-  left: 0;
+  inset-inline-start: 0;
   width: 9px;
   height: 9px;
   border-radius: 50%;
@@ -1187,8 +1248,9 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   margin-bottom: 22px;
   font: 800 clamp(40px, 3.6vw, 56px)/0.9 var(--font-display);
   letter-spacing: -0.05em;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(243, 239, 235, 0.4);
+  color: var(--bg); /* заливка поверх обводки — как в бегущей строке */
+  -webkit-text-stroke: 2px rgba(243, 239, 235, 0.4);
+  paint-order: stroke fill;
   transition: color 0.5s ease, -webkit-text-stroke-color 0.5s ease;
 }
 
@@ -1270,7 +1332,8 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 
 .faq__a {
   max-width: 640px;
-  padding: 0 64px 28px 0;
+  padding: 0 0 28px;
+  padding-inline-end: 64px;
   color: var(--text-muted);
   font-size: 16px;
 }
@@ -1423,21 +1486,13 @@ address.footer__col { font-style: normal; }
 .motion [data-reveal].is-in { opacity: 1; transform: none; }
 
 /* ===== Адаптив ===== */
-@media (max-width: 1280px) {
-  /* в шапке тесно: меню, логотип и кнопки — статус короче */
-  .status-badge__text { display: none; }
-  .status-badge__short { display: inline; }
-}
-
 @media (max-width: 1080px) {
   .nav { display: none; }
   .menu-btn { display: block; }
-  /* меню спрятано: статус переезжает влево, кнопки остаются справа */
+  /* меню спрятано: номер переезжает влево, кнопки остаются справа */
   .header__side { display: contents; }
-  .status-badge { grid-column: 1; grid-row: 1; justify-self: start; }
+  .header__phone { grid-column: 1; grid-row: 1; justify-self: start; }
   .header__actions { grid-column: 3; grid-row: 1; justify-self: end; }
-  .status-badge__text { display: inline; }
-  .status-badge__short { display: none; }
 
   /* лента: листается вбок, карточки прилипают к краю экрана */
   .rail {
@@ -1474,14 +1529,15 @@ address.footer__col { font-style: normal; }
     position: relative;
     flex: 1;
     height: 2px;
-    margin-right: 8px;
+    margin-inline-end: 8px;
     border-radius: 2px;
     background: var(--line-strong);
     overflow: hidden;
   }
   .rail-nav__thumb {
     position: absolute;
-    inset: 0 auto 0 0;
+    inset-block: 0;
+    inset-inline-start: 0;
     border-radius: 2px;
     background: var(--accent);
   }
@@ -1507,6 +1563,10 @@ address.footer__col { font-style: normal; }
   .footer__lead { grid-column: 1 / -1; }
 }
 
+@media (max-width: 940px) {
+  .header__cta { display: none; }
+}
+
 @media (max-width: 900px) {
   .lead__grid { grid-template-columns: 1fr; }
   .lead__visual { max-width: 520px; }
@@ -1521,33 +1581,21 @@ address.footer__col { font-style: normal; }
   .request__grid { grid-template-columns: 1fr; }
   .faq__grid { grid-template-columns: 1fr; }
   .faq__aside { position: static; }
-  .faq__a { padding-right: 0; }
+  .faq__a { padding-inline-end: 0; }
 }
 
 @media (max-width: 760px) {
-  .header__cta { display: none; }
-  .status-badge__text { display: none; }
-  .status-badge__short { display: inline; }
   .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
-  .stat:nth-child(3) { border-left: none; }
+  .stat:nth-child(3) { border-inline-start: none; }
   .panels { height: 460px; }
 }
 
 @media (max-width: 560px) {
-  /* статус — подпись в две строки, чтобы логотип остался ровно по центру */
-  .status-badge {
-    max-width: 96px;
-    padding: 0;
-    border: 0;
-    background: none;
-    backdrop-filter: none;
-    font-size: 10px;
-    line-height: 1.25;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: normal;
-  }
-  .status-badge__dot { flex: none; }
+  /* номер и кнопки мельче, чтобы логотип остался ровно по центру */
+  .header__phone { font-size: clamp(11px, 3.3vw, 13px); }
+  .header__actions { gap: 8px; }
+  .lang__btn { width: 46px; padding: 0; }
+  .lang__caret { display: none; }
   .logo { font-size: 20px; }
   .lead__meta { grid-template-columns: repeat(2, minmax(0, auto)); gap: 16px 32px; }
   .lead__meta div:last-child { grid-column: 1 / -1; }
@@ -1567,9 +1615,47 @@ address.footer__col { font-style: normal; }
   .footer__lead { grid-column: 1 / -1; }
 }
 
+/* ===== Английская и арабская версии (i18n.js) ===== */
+html[lang="en"] .project .photo::after { content: "View"; }
+html[lang="ar"] .project .photo::after { content: "عرض"; }
+
+/* Арабский: свой шрифт; у латинского Unbounded нет арабских букв —
+   их браузер берёт из IBM Plex Sans Arabic */
+html[lang="ar"] {
+  --font-body: 'IBM Plex Sans Arabic', 'Manrope', sans-serif;
+  --font-display: 'Unbounded', 'IBM Plex Sans Arabic', sans-serif;
+}
+
+/* арабские буквы в слове связаны между собой — разрядка их рвёт */
+html[lang="ar"] body *:not(.hero__word, .hero__word *, .logo, .footer__wordmark, .preloader__label) {
+  letter-spacing: normal !important;
+}
+
+/* у арабских букв длинные хвосты вверх и вниз — строкам нужно больше воздуха */
+html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__title, .footer__lead, .step h3, .faq__q, .project__title) {
+  line-height: 1.3;
+}
+
+/* бегущая строка, чертежи и надпись ONYX не отражаются
+   (буквы ONYX — отдельные блоки, справа налево они встали бы задом наперёд) */
+.marquee,
+.hero__drawings,
+.photo__art,
+.hero__word { direction: ltr; }
+
+/* числа с пробелом («18 000») справа налево распались бы на «000 18» */
+[dir="rtl"] .stat__value { direction: ltr; }
+
+[dir="rtl"] .badge-spin { left: auto; right: -62px; }
+[dir="rtl"] input[type="tel"] { direction: ltr; text-align: right; }
+
+@media (max-width: 900px) {
+  [dir="rtl"] .badge-spin { right: auto; left: -8px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .marquee__track, .badge-spin svg, .status-badge__dot { animation: none; }
+  .marquee__track, .badge-spin svg { animation: none; }
   .photo__img, .service::before, .panel { transition: none; }
   .hero__object { animation: none !important; }
 }

@@ -3,6 +3,9 @@
   const reduceMotion = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Тексты из скрипта на выбранном языке (словарь — в i18n.js)
+  const t = function (key, ru) { return window.onyxT ? window.onyxT(key, ru) : ru; };
+
   // Анимации включаем только если человек не просил «уменьшить движение».
   // Без JavaScript класса .motion нет — и всё видно сразу.
   if (!reduceMotion) root.classList.add('motion');
@@ -39,7 +42,8 @@
   // ---------- Манифест: слова проявляются по мере прокрутки ----------
   const manifesto = document.querySelector('[data-words]');
   let words = [];
-  if (manifesto) {
+  function splitManifesto() {
+    if (!manifesto) return;
     const split = function (node) {
       Array.from(node.childNodes).forEach(function (child) {
         if (child.nodeType === 3) {
@@ -64,6 +68,7 @@
     split(manifesto);
     words = Array.from(manifesto.querySelectorAll('.w'));
   }
+  splitManifesto();
 
   function updateManifesto() {
     if (!words.length) return;
@@ -89,6 +94,10 @@
   // ---------- ONYX с первого экрана уезжает в центр шапки ----------
   // При прокрутке большое слово уменьшается и встаёт ровно на место логотипа
   // в шапке, а там его подменяет сам логотип. Каска остаётся на месте.
+  // Пока слово летит, оно закреплено относительно экрана (position: fixed):
+  // его положение зависит только от прогресса, а не от того, как браузер
+  // прокручивает страницу, — поэтому на телефоне оно не дрожит. Прогресс
+  // догоняет прокрутку мягко, поэтому рывки колёсика сглаживаются.
   const header = document.getElementById('header');
   const logo = header && header.querySelector('.logo');
   const heroLetters = document.querySelector('.hero__letters');
@@ -98,45 +107,87 @@
   const flyWords = heroWrap ? Array.from(heroWrap.querySelectorAll('.hero__word')) : [];
   const heroSolid = flyWords[0];
   const heroOutline = heroWrap && heroWrap.querySelector('.hero__word--outline');
-  const FADE_FROM = 0.9; // с этой доли пути слово сменяется логотипом
-  let fly = null;        // положение слова без сдвига
-  let flyProgress = 0;
+  const FLY_PATH = 0.8;   // слово долетает до шапки за 0.8 высоты экрана прокрутки
+  const FLY_SMOOTH = 140; // мс: насколько мягко слово догоняет прокрутку
+  const FADE_FROM = 0.9;  // с этой доли пути слово сменяется логотипом
+  let fly = null;         // положение слова на странице без сдвига
+  let flying = false;     // слово вынуто из потока и летит
+  let flyTarget = 0;      // прогресс по прокрутке
+  let flyShown = 0;       // прогресс, который сейчас на экране
+  let flyLoop = false;
+  let flyLast = 0;
+
+  function setFlying(on) {
+    if (on === flying) return;
+    flying = on;
+    if (on) {
+      // обёртка держит место, чтобы остальной первый экран не сдвинулся
+      heroWrap.style.width = fly.wrap.width + 'px';
+      heroWrap.style.height = fly.wrap.height + 'px';
+      flyWords.forEach(function (el, i) {
+        const r = fly.rects[i];
+        el.style.position = 'fixed';
+        el.style.inset = 'auto';
+        el.style.left = r.left + 'px';
+        el.style.top = r.top + 'px';
+        el.style.width = r.width + 'px';
+        el.style.height = r.height + 'px';
+        el.style.margin = '0';
+      });
+    } else {
+      heroWrap.style.width = '';
+      heroWrap.style.height = '';
+      flyWords.forEach(function (el) {
+        ['position', 'inset', 'left', 'top', 'width', 'height', 'margin', 'transform'].forEach(function (prop) {
+          el.style[prop] = '';
+        });
+      });
+    }
+  }
 
   function measureFly() {
     if (reduceMotion || !logo || !heroLetters || !flyWords.length) return;
-    flyWords.forEach(function (el) { el.style.transform = ''; });
+    setFlying(false);
+    const sx = window.scrollX;
+    const sy = window.scrollY;
     const r = heroLetters.getBoundingClientRect();
-    const cx = r.left + r.width / 2;
-    const cy = r.top + r.height / 2;
-    // масштабируем вокруг центра букв, а не центра блока
-    flyWords.forEach(function (el) {
+    // всё — в координатах страницы (как при прокрутке в самый верх)
+    const cx = r.left + r.width / 2 + sx;
+    const cy = r.top + r.height / 2 + sy;
+    const rects = flyWords.map(function (el) {
       const b = el.getBoundingClientRect();
-      el.style.transformOrigin = (cx - b.left).toFixed(1) + 'px ' + (cy - b.top).toFixed(1) + 'px';
+      return { left: b.left + sx, top: b.top + sy, width: b.width, height: b.height };
     });
-    fly = { cx: cx, cy: cy + window.scrollY, w: r.width };
+    // масштабируем вокруг центра букв, а не центра блока
+    flyWords.forEach(function (el, i) {
+      el.style.transformOrigin = (cx - rects[i].left).toFixed(1) + 'px ' + (cy - rects[i].top).toFixed(1) + 'px';
+    });
+    const w = heroWrap.getBoundingClientRect();
+    fly = { cx: cx, cy: cy, w: r.width, rects: rects, wrap: { width: w.width, height: w.height } };
   }
 
-  function updateLogo() {
-    if (!fly) return;
-    const l = logo.getBoundingClientRect();
-    const lx = l.left + l.width / 2;
-    const ly = l.top + l.height / 2;
-    const y = window.scrollY;
-    // путь чуть длиннее, чем расстояние до шапки: слово отстаёт от страницы
-    const path = Math.max(fly.cy - ly, window.innerHeight * 0.55);
-    const p = Math.min(1, Math.max(0, y / path));
-    flyProgress = p;
-
-    if (p >= 1) {
+  function renderFly() {
+    const p = flyShown;
+    if (p <= 0) {
+      setFlying(false);
+      heroWrap.style.visibility = '';
+      if (heroOutline) {
+        heroOutline.style.color = '';
+        heroOutline.style.webkitTextStrokeColor = '';
+      }
+      if (heroSolid) heroSolid.style.opacity = '';
+    } else if (p >= 1) {
       heroWrap.style.visibility = 'hidden';
     } else {
-      // центр слова идёт от своего места к логотипу, размер — к размеру логотипа
-      const scale = Math.pow(l.width / fly.w, p);
-      const dx = (lx - fly.cx) * p;
-      const dy = y + (ly - fly.cy) * p;
-      const t = p ? 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + scale.toFixed(4) + ')' : '';
-      flyWords.forEach(function (el) { el.style.transform = t; });
+      setFlying(true);
       heroWrap.style.visibility = '';
+      // центр слова идёт от своего места к логотипу, размер — к размеру логотипа
+      const l = logo.getBoundingClientRect();
+      const scale = Math.pow(l.width / fly.w, p);
+      const dx = (l.left + l.width / 2 - fly.cx) * p;
+      const dy = (l.top + l.height / 2 - fly.cy) * p;
+      const tr = 'translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px) scale(' + scale.toFixed(4) + ')';
+      flyWords.forEach(function (el) { el.style.transform = tr; });
 
       // Слово отстаёт от страницы, и каска наезжает на сплошные буквы.
       // Поэтому контур (он лежит поверх каски) заливается цветом — слово
@@ -146,7 +197,7 @@
       const fade = p > FADE_FROM ? 1 - (p - FADE_FROM) / (1 - FADE_FROM) : 1;
       const fill = Math.min(1, p / 0.12) * fade;
       if (heroOutline) {
-        heroOutline.style.color = p ? 'rgba(243, 239, 235, ' + fill.toFixed(3) + ')' : '';
+        heroOutline.style.color = 'rgba(243, 239, 235, ' + fill.toFixed(3) + ')';
         heroOutline.style.webkitTextStrokeColor = fade < 1 ? 'rgba(243, 239, 235, ' + (0.55 * fade).toFixed(3) + ')' : '';
       }
       if (heroSolid) heroSolid.style.opacity = fade < 1 ? fade.toFixed(3) : '';
@@ -155,11 +206,46 @@
     logo.style.opacity = p > FADE_FROM && p < 1 ? String((p - FADE_FROM) / (1 - FADE_FROM)) : '';
   }
 
+  function flyStep(now) {
+    const dt = Math.min(80, Math.max(0, now - flyLast));
+    flyLast = now;
+    flyShown += (flyTarget - flyShown) * (1 - Math.exp(-dt / FLY_SMOOTH));
+    if (Math.abs(flyTarget - flyShown) < 0.0005) flyShown = flyTarget;
+    renderFly();
+    updateHeader();
+    if (flyShown !== flyTarget) requestAnimationFrame(flyStep);
+    else flyLoop = false;
+  }
+
+  // instant — без сглаживания: при загрузке, смене размера окна или языка
+  function updateLogo(instant) {
+    if (!fly) return;
+    const l = logo.getBoundingClientRect();
+    const path = Math.max(fly.cy - (l.top + l.height / 2), window.innerHeight * FLY_PATH);
+    flyTarget = Math.min(1, Math.max(0, window.scrollY / path));
+    if (instant) {
+      flyShown = flyTarget;
+      renderFly();
+      return;
+    }
+    if (!flyLoop) {
+      flyLoop = true;
+      flyLast = performance.now();
+      requestAnimationFrame(flyStep);
+    }
+  }
+
+  function remeasureFly() {
+    measureFly();
+    updateLogo(true);
+    updateHeader();
+  }
+
   // ---------- Шапка при прокрутке ----------
   function updateHeader() {
     if (!header) return;
     // пока ONYX летит в шапку, у неё нет фона — иначе она закрыла бы слово
-    header.classList.toggle('is-scrolled', fly ? flyProgress >= 1 : window.scrollY > 30);
+    header.classList.toggle('is-scrolled', fly ? flyShown >= 1 : window.scrollY > 30);
   }
 
   let ticking = false;
@@ -177,14 +263,20 @@
     });
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', function () { measureFly(); onScroll(); });
-  measureFly();
+  window.addEventListener('resize', function () { remeasureFly(); onScroll(); });
+  remeasureFly();
   onScroll();
   // размер слова зависит от шрифта: пересчитываем, когда он загрузится
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () { measureFly(); onScroll(); });
+    document.fonts.ready.then(remeasureFly);
   }
-  window.addEventListener('load', function () { measureFly(); onScroll(); });
+  window.addEventListener('load', remeasureFly);
+  // сменился язык (i18n.js): тексты другой длины — всё пересчитываем
+  document.addEventListener('onyx:lang', function () {
+    splitManifesto();
+    remeasureFly();
+    onScroll();
+  });
 
   // ---------- Счётчики ----------
   function countUp(el) {
@@ -260,16 +352,25 @@
     nav.innerHTML =
       '<span class="rail-nav__count"><b>01</b> / ' + pad(total) + '</span>' +
       '<span class="rail-nav__track"><span class="rail-nav__thumb"></span></span>' +
-      '<button class="rail-nav__btn" type="button" aria-label="Назад">←</button>' +
-      '<button class="rail-nav__btn" type="button" aria-label="Вперёд">→</button>';
+      '<button class="rail-nav__btn" type="button"></button>' +
+      '<button class="rail-nav__btn" type="button"></button>';
     rail.after(nav);
     const countEl = nav.querySelector('b');
     const thumb = nav.querySelector('.rail-nav__thumb');
     const buttons = nav.querySelectorAll('button');
+    // справа налево (арабский) лента листается в другую сторону
+    const rtl = function () { return getComputedStyle(rail).direction === 'rtl'; };
+
+    function labelButtons() {
+      buttons[0].setAttribute('aria-label', t('js.rail.prev', 'Назад'));
+      buttons[1].setAttribute('aria-label', t('js.rail.next', 'Вперёд'));
+      buttons[0].textContent = rtl() ? '→' : '←';
+      buttons[1].textContent = rtl() ? '←' : '→';
+    }
 
     // шаг ленты — расстояние между соседними карточками
     const stepPx = function () {
-      return total > 1 ? items[1].offsetLeft - items[0].offsetLeft : rail.clientWidth;
+      return total > 1 ? Math.abs(items[1].offsetLeft - items[0].offsetLeft) : rail.clientWidth;
     };
 
     function update() {
@@ -278,11 +379,13 @@
       let current = -1;
       nav.hidden = !scrollable;
       if (scrollable) {
-        const x = rail.scrollLeft;
+        // справа налево scrollLeft идёт от 0 в минус
+        const x = Math.abs(rail.scrollLeft);
         current = x >= max - 2 ? total - 1 : Math.round(x / stepPx());
         const size = rail.clientWidth / rail.scrollWidth;
+        const shift = (x / max) * (1 / size - 1) * 100 * (rtl() ? -1 : 1);
         thumb.style.width = (size * 100).toFixed(2) + '%';
-        thumb.style.transform = 'translateX(' + ((x / max) * (1 / size - 1) * 100).toFixed(2) + '%)';
+        thumb.style.transform = 'translateX(' + shift.toFixed(2) + '%)';
         countEl.textContent = pad(current + 1);
         buttons[0].disabled = x <= 2;
         buttons[1].disabled = x >= max - 2;
@@ -292,7 +395,8 @@
 
     buttons.forEach(function (btn, i) {
       btn.addEventListener('click', function () {
-        rail.scrollBy({ left: (i ? 1 : -1) * stepPx(), behavior: reduceMotion ? 'auto' : 'smooth' });
+        const dir = (i ? 1 : -1) * (rtl() ? -1 : 1);
+        rail.scrollBy({ left: dir * stepPx(), behavior: reduceMotion ? 'auto' : 'smooth' });
       });
     });
 
@@ -304,6 +408,12 @@
     };
     rail.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule);
+    document.addEventListener('onyx:lang', function () {
+      labelButtons();
+      rail.scrollLeft = 0; // с новым направлением — снова к первой карточке
+      schedule();
+    });
+    labelButtons();
     update();
   });
 
@@ -365,11 +475,13 @@
     root.classList.toggle('menu-open', open);
     if (menuBtn) {
       menuBtn.setAttribute('aria-expanded', String(open));
-      menuBtn.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+      menuBtn.setAttribute('aria-label', open ? t('js.menu.close', 'Закрыть меню') : t('js.menu.open', 'Открыть меню'));
     }
     if (menu) menu.setAttribute('aria-hidden', String(!open));
   }
   if (menuBtn && menu) {
+    setMenu(false);
+    document.addEventListener('onyx:lang', function () { setMenu(root.classList.contains('menu-open')); });
     menuBtn.addEventListener('click', function () {
       setMenu(!root.classList.contains('menu-open'));
     });
@@ -402,7 +514,7 @@
     const message = form.message.value.trim();
 
     if (!name || !phone) {
-      showResult('Пожалуйста, заполните имя и телефон.', 'error');
+      showResult(t('js.form.required', 'Пожалуйста, заполните имя и телефон.'), 'error');
       return;
     }
 
@@ -421,10 +533,10 @@
 
       // В режиме no-cors ответ сервера непрозрачен для JS,
       // поэтому считаем отправку успешной, если запрос не выбросил ошибку.
-      showResult('Заявка отправлена, мы свяжемся с вами', 'success');
+      showResult(t('js.form.success', 'Заявка отправлена, мы свяжемся с вами'), 'success');
       form.reset();
     } catch (error) {
-      showResult('Не удалось отправить заявку. Попробуйте ещё раз.', 'error');
+      showResult(t('js.form.error', 'Не удалось отправить заявку. Попробуйте ещё раз.'), 'error');
     } finally {
       setLoading(false);
     }
@@ -433,8 +545,8 @@
   function setLoading(isLoading) {
     submitBtn.disabled = isLoading;
     submitBtn.querySelector('.btn__text').textContent = isLoading
-      ? 'Отправка...'
-      : 'Отправить заявку';
+      ? t('js.form.sending', 'Отправка...')
+      : t('form.submit', 'Отправить заявку');
   }
 
   function showResult(text, type) {
