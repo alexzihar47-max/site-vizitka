@@ -109,8 +109,8 @@
   const heroOutline = heroWrap && heroWrap.querySelector('.hero__word--outline');
   // подписи и кнопки первого экрана: гаснут, пока ONYX пролетает над ними
   const heroUi = Array.from(document.querySelectorAll('.hero .intro'));
-  const FLY_PATH = 0.8;   // слово долетает до шапки за 0.8 высоты экрана прокрутки
-  const FLY_SMOOTH = 140; // мс: насколько мягко слово догоняет прокрутку
+  const FLY_PATH = 1.1;   // слово долетает до шапки за 1.1 высоты экрана прокрутки
+  const FLY_SMOOTH = 280; // мс: насколько мягко слово догоняет прокрутку
   const FADE_FROM = 0.9;  // с этой доли пути слово сменяется логотипом
   let fly = null;         // положение слова на странице без сдвига
   let flying = false;     // слово вынуто из потока и летит
@@ -191,7 +191,8 @@
       // центр слова идёт от своего места к логотипу, размер — к размеру логотипа;
       // на место слово встаёт к FADE_FROM, а дальше только сменяется логотипом
       // (без этого в момент смены было бы видно два ONYX)
-      const g = Math.min(1, p / FADE_FROM);
+      // плавный разгон и торможение
+      const g = 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, p / FADE_FROM));
       const l = logo.getBoundingClientRect();
       const scale = Math.pow(l.width / fly.w, g);
       const dx = (l.left + l.width / 2 - fly.cx) * g;
