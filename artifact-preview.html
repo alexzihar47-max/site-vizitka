@@ -1,0 +1,3864 @@
+<title>ONYX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   ONYX — стили
+   ===================================================================== */
+
+:root {
+  --bg: #0e0c0f;
+  --surface: #161318;
+  --surface-2: #1e1a20;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --text: #f3efeb;
+  --text-muted: #9e979c;
+  --accent: #e2372c;
+  --accent-warm: #ff6a2b;
+  --success: #5fd493;
+  --error: #ff6b5e;
+
+  --font-display: 'Unbounded', 'Arial Black', sans-serif;
+  --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --r-xl: 32px;
+  --r-lg: 22px;
+  --max: 1280px;
+  --gutter: clamp(16px, 4vw, 48px);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+p { margin: 0; }
+
+h1, h2, h3 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+/* акцент в заголовках: тот же шрифт, только цветом */
+h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
+  font-style: normal;
+  color: var(--accent-warm);
+}
+
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-inline: var(--gutter);
+}
+
+.section { padding-block: clamp(80px, 11vw, 150px); }
+
+.muted { color: var(--text-muted); }
+
+:focus-visible {
+  outline: 2px solid var(--accent-warm);
+  outline-offset: 3px;
+}
+
+::selection { background: var(--accent); color: #fff; }
+
+/* Метка «замените на свои данные» */
+.ph {
+  outline: 1px dashed rgba(255, 106, 43, 0.75);
+  outline-offset: 2px;
+  border-radius: 4px;
+  background: rgba(255, 106, 43, 0.1);
+}
+
+/* плёночное зерно поверх страницы */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ===== Общие элементы ===== */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.kicker span { color: var(--accent-warm); letter-spacing: 0.04em; }
+
+.title {
+  font-size: clamp(34px, 5vw, 72px);
+  line-height: 1.02;
+}
+
+.title--xl { font-size: clamp(40px, 6.2vw, 96px); line-height: 0.98; }
+
+.section-head { margin-bottom: clamp(40px, 5vw, 72px); }
+
+/* заголовок раздела по центру — над рядами карточек */
+.section-head--center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.section-head--center .link-arrow { margin-top: 28px; }
+
+.kicker--center { justify-content: center; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 7px 7px 24px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font: 600 15px/1 var(--font-body);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.pill__arrow {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 17px;
+  transition: transform 0.35s var(--ease);
+}
+
+.pill:hover .pill__arrow { transform: rotate(-45deg); }
+
+.pill--light { background: var(--text); color: #141114; }
+.pill--light .pill__arrow { background: var(--accent); color: #fff; }
+.pill--light:hover { background: #fff; }
+
+.pill--dark { background: var(--surface-2); color: var(--text); border-color: var(--line-strong); }
+.pill--dark .pill__arrow { background: var(--accent); color: #fff; }
+.pill--dark:hover { border-color: var(--accent-warm); }
+
+.pill--accent { background: var(--accent); color: #fff; }
+.pill--accent .pill__arrow { background: #fff; color: var(--accent); }
+.pill--accent:hover { background: #f0463a; }
+
+.pill:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.link-arrow {
+  position: relative;
+  display: inline-flex;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  padding-bottom: 4px;
+}
+
+.link-arrow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform-origin: right;
+  transition: transform 0.45s var(--ease);
+}
+
+.link-arrow:hover::after { transform: scaleX(0); }
+
+/* ===== Места под фото ===== */
+.photo {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 90% at 85% 10%, rgba(226, 55, 44, 0.24), transparent 60%),
+    linear-gradient(160deg, #221c21, #121014);
+  border-radius: var(--r-lg);
+}
+
+.photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.55;
+}
+
+.photo__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  transition: transform 1.2s var(--ease);
+}
+
+.photo__label {
+  position: absolute;
+  inset-inline-start: 16px;
+  bottom: 16px;
+  z-index: 3;
+  padding: 6px 12px;
+  border: 1px dashed rgba(255, 106, 43, 0.75);
+  border-radius: 999px;
+  background: rgba(14, 12, 15, 0.65);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.photo__art {
+  position: absolute;
+  z-index: 1;
+  left: 10%;
+  top: 50%;
+  width: 80%;
+  transform: translateY(-50%);
+  opacity: 0.6;
+}
+
+.photo.has-img::before,
+.photo.has-img .photo__label,
+.photo.has-img .photo__art { display: none; }
+
+.art-wall { fill: none; stroke: rgba(255, 255, 255, 0.45); stroke-width: 3; }
+.art-thin { stroke: rgba(255, 255, 255, 0.22); stroke-width: 2; }
+.art-accent { fill: none; stroke: var(--accent-warm); stroke-width: 1.4; }
+.art-dim { stroke: rgba(255, 255, 255, 0.35); stroke-width: 1; }
+.art-text { font: 500 10px var(--font-body); fill: rgba(255, 255, 255, 0.45); }
+.art-label { font: 700 11px var(--font-body); letter-spacing: 0.06em; fill: rgba(255, 255, 255, 0.6); }
+
+/* ===== Экран загрузки ===== */
+/* Показывается, только если скрипт в начале <body> поставил .is-loading,
+   поэтому без JavaScript сайт открывается сразу. */
+.preloader {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.is-loading .preloader { display: flex; }
+.is-loading body { overflow: hidden; }
+.preloader-hide .preloader { opacity: 0; visibility: hidden; }
+
+.preloader__canvas {
+  display: block;
+  width: 170px;
+  height: 170px;
+  background: radial-gradient(ellipse 36% 7% at 50% 84%, rgba(226, 55, 44, 0.45), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.preloader__canvas.is-ready { opacity: 1; }
+
+.preloader__meta {
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.preloader__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.preloader__label {
+  font: 800 13px var(--font-display);
+  letter-spacing: 0.2em;
+}
+
+.preloader__pct {
+  font: 600 13px var(--font-body);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.preloader__track {
+  height: 2px;
+  background: var(--line-strong);
+  overflow: hidden;
+}
+
+.preloader__bar {
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+
+/* ===== Шапка ===== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 20px;
+  padding: calc(22px + env(safe-area-inset-top, 0px)) var(--gutter) 22px;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.35s ease, padding 0.35s ease, border-color 0.35s ease;
+}
+
+.header.is-scrolled {
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  padding-bottom: 12px;
+  background: rgba(14, 12, 15, 0.78);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+}
+
+.logo {
+  grid-column: 2;
+  grid-row: 1;
+  font: 800 22px/1 var(--font-display);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+/* пока ONYX с первого экрана летит в шапку, логотип спрятан (script.js) */
+.logo.is-hidden { opacity: 0; pointer-events: none; }
+.menu-open .logo.is-hidden { opacity: 1; pointer-events: auto; }
+
+.nav { grid-column: 1; grid-row: 1; justify-self: start; display: flex; gap: 30px; }
+
+.nav a {
+  position: relative;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  color: rgba(243, 239, 235, 0.8);
+  padding-block: 4px;
+}
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--accent-warm);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+
+.nav a:hover { color: #fff; }
+.nav a:hover::after { transform: scaleX(1); }
+
+.header__side { grid-column: 3; grid-row: 1; justify-self: end; display: flex; align-items: center; gap: 12px; }
+.header__actions { display: flex; align-items: center; gap: 12px; }
+
+.header__phone {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.header__phone:hover { color: var(--accent-warm); }
+
+/* выбор языка */
+.lang { position: relative; }
+
+.lang__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 46px;
+  padding: 0 15px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(14, 12, 15, 0.4);
+  color: var(--text);
+  font: 700 13px/1 var(--font-body);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.lang__btn:hover,
+.lang.is-open .lang__btn { border-color: var(--text); }
+
+.lang__caret {
+  width: 10px;
+  height: 6px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  transition: transform 0.3s var(--ease);
+}
+
+.lang.is-open .lang__caret { transform: rotate(180deg); }
+
+.lang__list {
+  position: absolute;
+  top: calc(100% + 10px);
+  inset-inline-end: 0;
+  z-index: 2;
+  display: grid;
+  min-width: 190px;
+  padding: 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  background: rgba(22, 19, 24, 0.97);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.25s ease, transform 0.3s var(--ease), visibility 0.25s;
+}
+
+.lang.is-open .lang__list { opacity: 1; visibility: visible; transform: none; }
+
+.lang__list button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--text);
+  font: 600 14px/1.2 var(--font-body);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.lang__list [lang="ar"] { font-family: 'IBM Plex Sans Arabic', var(--font-body); }
+.lang__list button span { font: 700 11px/1 var(--font-body); letter-spacing: 0.08em; color: var(--text-muted); }
+.lang__list button:hover { background: var(--surface-2); }
+.lang__list button[aria-checked="true"],
+.lang__list button[aria-checked="true"] span { color: var(--accent-warm); }
+
+.menu-btn {
+  display: none;
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: rgba(14, 12, 15, 0.4);
+  cursor: pointer;
+}
+
+.menu-btn span {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 1.5px;
+  background: var(--text);
+  transition: transform 0.35s var(--ease);
+}
+
+.menu-btn span:first-child { top: 18px; }
+.menu-btn span:last-child { top: 26px; }
+.menu-open .menu-btn span:first-child { transform: translateY(4px) rotate(45deg); }
+.menu-open .menu-btn span:last-child { transform: translateY(-4px) rotate(-45deg); }
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+  padding: 100px var(--gutter) 48px;
+  background: var(--bg);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.menu-open .menu { opacity: 1; visibility: visible; }
+.menu-open body { overflow: hidden; }
+
+.menu__nav { display: grid; gap: 8px; }
+
+.menu__nav a {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-size: clamp(34px, 9vw, 56px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  padding-block: 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.menu__nav span { font-size: 13px; color: var(--accent-warm); letter-spacing: 0; }
+
+.menu .pill { align-self: flex-start; }
+
+/* ===== Главный экран: буквы, каска поверх, чертежи на фоне ===== */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.hero {
+  /* размер огромного ONYX: слово занимает всю ширину контейнера
+     (в Unbounded 800 слово шириной ≈ 3.55 кегля) */
+  --wm: calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 3.62);
+  position: relative;
+  min-height: clamp(700px, 100svh, 1040px);
+  display: flex;
+  padding-block: 104px 28px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero__bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+
+.hero__glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(42% 46% at 50% 62%, rgba(226, 55, 44, 0.55), rgba(226, 55, 44, 0.16) 55%, transparent 80%),
+    radial-gradient(120% 80% at 50% 110%, rgba(14, 12, 15, 0) 40%, var(--bg) 85%);
+}
+
+.hero__drawings { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.9; }
+
+.bp-grid { fill: none; stroke: rgba(255, 255, 255, 0.035); stroke-width: 1; }
+.bp-line { fill: none; stroke: rgba(243, 239, 235, 0.2); stroke-width: 1.4; }
+.bp-thin { fill: none; stroke: rgba(243, 239, 235, 0.12); stroke-width: 1; }
+.bp-accent { fill: none; stroke: rgba(255, 106, 43, 0.5); stroke-width: 1.2; }
+path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); }
+.bp-dash { stroke-dasharray: 8 8; }
+.bp-text { font: 500 13px var(--font-body); fill: rgba(243, 239, 235, 0.3); letter-spacing: 0.04em; }
+.bp-label { font: 700 13px var(--font-body); fill: rgba(243, 239, 235, 0.38); letter-spacing: 0.12em; }
+
+.hero__stage {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(243, 239, 235, 0.72);
+}
+
+.dash { width: 40px; height: 1px; background: var(--accent-warm); }
+
+.hero__word-wrap { position: relative; }
+
+.hero__word {
+  margin: 0;
+  font: 800 var(--wm)/0.8 var(--font-display);
+  letter-spacing: -0.06em;
+  white-space: nowrap;
+  text-align: center;
+  user-select: none;
+}
+
+.hero__letters { position: relative; z-index: 1; display: inline-block; }
+
+/* контур букв поверх каски: будто каска стоит внутри слова */
+.hero__word--outline {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(243, 239, 235, 0.55);
+  pointer-events: none;
+}
+
+.hero__letters .wm {
+  display: inline-block;
+  clip-path: inset(-50% -50% 0 -50%);
+}
+
+.hero__letters .wm > span { display: inline-block; }
+
+.hero__object {
+  --obj: min(52vw, 680px);
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  /* купол каски заходит на нижнюю половину букв */
+  top: calc(var(--wm) * 0.55 - var(--obj) * 0.33);
+  width: var(--obj);
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+}
+
+.hero__helmet,
+.hero__helmet-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero__helmet { opacity: 0; transition: opacity 0.6s ease; }
+.hero__helmet.is-ready { opacity: 1; }
+.hero__helmet.is-ready + .hero__floor { opacity: 1; }
+.hero__object:has(.hero__helmet.is-ready) .hero__helmet-img { opacity: 0; }
+.hero__helmet-img { transition: opacity 0.6s ease; }
+
+.hero__floor {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 13%;
+  height: 9%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.6), transparent);
+}
+
+.hero__chip {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  gap: 2px;
+  max-width: 190px;
+}
+
+.hero__chip strong {
+  font: 700 clamp(28px, 3vw, 44px)/1 var(--font-display);
+  letter-spacing: -0.04em;
+}
+
+.hero__chip span:last-child { font-size: 13px; color: rgba(243, 239, 235, 0.72); }
+
+.hero__chip--left { left: var(--gutter); top: calc(var(--wm) * 1.05); }
+.hero__chip--right { right: var(--gutter); top: calc(var(--wm) * 0.98); text-align: right; justify-items: end; }
+
+.hero__tag {
+  position: absolute;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: rgba(14, 12, 15, 0.55);
+  backdrop-filter: blur(10px);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hero__tag i {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--accent);
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hero__tag--1 { left: calc(50% - min(26vw, 340px)); top: calc(var(--wm) * 1.35); }
+.hero__tag--2 { right: calc(50% - min(28vw, 360px)); top: calc(var(--wm) * 1.7); }
+
+.hero__bottom {
+  position: relative;
+  z-index: 4;
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.hero__contact { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(243, 239, 235, 0.72); }
+.hero__contact span { margin-inline-end: 4px; }
+
+.round-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  transition: transform 0.3s var(--ease), background-color 0.3s;
+}
+
+.round-btn:hover { transform: scale(1.08); background: #f0463a; }
+.round-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+
+.hero__scroll {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(243, 239, 235, 0.6);
+}
+
+@keyframes float { 50% { transform: translateX(-50%) translateY(-12px); } }
+.motion.intro-done .hero__object { animation: float 7s ease-in-out infinite; }
+
+/* ===== Интро под главным экраном ===== */
+.lead__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(40px, 7vw, 110px);
+  align-items: center;
+}
+
+.lead__title {
+  margin-bottom: 28px;
+  font-size: clamp(40px, 5.6vw, 88px);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.lead__lead { max-width: 460px; margin-bottom: 32px; font-size: 17px; color: var(--text-muted); }
+
+.lead__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-bottom: 48px; }
+
+.lead__meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  justify-content: start;
+  gap: 16px 48px;
+  margin: 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.lead__meta dt {
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.lead__meta dd { margin: 0; font-size: 14px; font-weight: 600; }
+
+.lead__visual { position: relative; }
+.photo--lead { aspect-ratio: 4 / 5; border-radius: var(--r-xl); }
+.photo--lead .photo__img { object-position: 50% 30%; }
+.lead__visual:hover .photo__img { transform: scale(1.04); }
+
+.lead__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.lead__caption span:first-child {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.badge-spin {
+  position: absolute;
+  left: -62px;
+  bottom: 18%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 20px 50px rgba(226, 55, 44, 0.35);
+  transition: transform 0.4s var(--ease);
+}
+
+.badge-spin:hover { transform: scale(1.06); }
+
+.badge-spin svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: spin 18s linear infinite;
+}
+
+.badge-spin text {
+  font: 700 10px var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  fill: #fff;
+}
+
+.badge-spin__arrow { font-size: 28px; line-height: 1; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* появление первого экрана после загрузки */
+.motion .hero__letters .wm > span {
+  transform: translateY(102%);
+  transition: transform 1.3s var(--ease);
+}
+
+.motion .hero__letters .wm:nth-child(2) > span { transition-delay: 0.07s; }
+.motion .hero__letters .wm:nth-child(3) > span { transition-delay: 0.14s; }
+.motion .hero__letters .wm:nth-child(4) > span { transition-delay: 0.21s; }
+
+.motion .hero__word--outline { opacity: 0; transition: opacity 1.2s ease 0.9s; }
+
+.motion .hero__object {
+  opacity: 0;
+  transform: translateX(-50%) translateY(80px) scale(0.92);
+  transition: opacity 1.1s ease 0.35s, transform 1.4s var(--ease) 0.35s;
+}
+
+.motion .intro {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease 0.8s, transform 1.1s var(--ease) 0.8s;
+}
+
+.motion.intro-done .hero__letters .wm > span,
+.motion.intro-done .hero__word--outline,
+.motion.intro-done .intro {
+  opacity: 1;
+  transform: none;
+}
+
+.motion.intro-done .hero__object { opacity: 1; transform: translateX(-50%); }
+
+/* ===== Бегущая строка ===== */
+.marquee {
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  padding-block: clamp(18px, 2.4vw, 30px);
+}
+
+.marquee__track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: marquee 34s linear infinite;
+}
+
+.marquee span {
+  font: 700 clamp(30px, 4.6vw, 68px)/1 var(--font-display);
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+/* Контурные буквы: у шрифта внутри букв есть стыки, и простая обводка
+   рисует их лишними линиями. Заливаем буквы цветом фона поверх обводки —
+   остаётся только чистый внешний контур. */
+.marquee .outline {
+  color: var(--bg);
+  -webkit-text-stroke: 2px rgba(243, 239, 235, 0.6);
+  paint-order: stroke fill;
+}
+
+.marquee i {
+  font-style: normal;
+  color: var(--accent-warm);
+  font-size: clamp(18px, 2.4vw, 34px);
+  padding-inline: clamp(18px, 2.6vw, 40px);
+}
+
+@keyframes marquee { to { transform: translate3d(-50%, 0, 0); } }
+
+/* ===== О студии ===== */
+.manifesto {
+  max-width: 1120px;
+  margin: 0 auto clamp(56px, 7vw, 100px);
+  text-align: center;
+  text-wrap: balance;
+  font-size: clamp(26px, 3.7vw, 54px);
+  line-height: 1.16;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.motion .manifesto .w { opacity: 0.16; transition: opacity 0.4s ease; }
+.motion .manifesto .w.is-lit { opacity: 1; }
+
+.about__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: end;
+}
+
+.about__figure { margin: 0; }
+.photo--about { aspect-ratio: 4 / 3; }
+.about__figure:hover .photo__img { transform: scale(1.04); }
+
+.about__figure figcaption {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.facts { list-style: none; margin: 0; padding: 0; }
+
+.facts li {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 20px;
+  padding-block: 22px;
+  border-top: 1px solid var(--line);
+  font-size: 17px;
+}
+
+.facts li:last-child { border-bottom: 1px solid var(--line); }
+
+.facts__key {
+  padding-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+}
+
+/* ===== Услуги ===== */
+.service-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.service-list > li { display: flex; }
+
+.service {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: clamp(300px, 27vw, 380px);
+  padding: 26px 26px 30px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  text-decoration: none;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.service::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(160deg, var(--accent-warm), var(--accent));
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.6s var(--ease);
+}
+
+.service:hover::before,
+.service:focus-visible::before { transform: scaleY(1); }
+
+.service__num { font-size: 14px; font-weight: 700; color: var(--text-muted); transition: color 0.3s; }
+
+.service__title {
+  margin-top: auto;
+  padding-top: 40px;
+  margin-bottom: 12px;
+  font-size: clamp(21px, 1.85vw, 27px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  /* место под две строки заголовка и пять строк текста:
+     заголовки и тексты соседних карточек стоят на одной линии */
+  min-height: calc(2.24em + 40px);
+}
+
+.service__text { min-height: 7.75em; font-size: 15px; color: var(--text-muted); transition: color 0.3s; }
+
+.service__arrow {
+  position: absolute;
+  top: 18px;
+  inset-inline-end: 18px;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  font-size: 18px;
+  transition: transform 0.5s var(--ease), background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.service:hover .service__num,
+.service:hover .service__text { color: rgba(255, 255, 255, 0.92); }
+.service:hover .service__arrow { background: #fff; color: var(--accent); border-color: #fff; transform: rotate(-45deg); }
+
+/* ===== Проекты ===== */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+}
+
+.project { display: flex; flex-direction: column; }
+
+.photo--project { aspect-ratio: 4 / 5; cursor: pointer; }
+
+.project .photo::after {
+  content: "Смотреть";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  background: var(--text);
+  color: #141114;
+  font-size: 13px;
+  font-weight: 700;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s var(--ease);
+}
+
+.project:hover .photo::after { transform: translate(-50%, -50%) scale(1); }
+.project:hover .photo__img { transform: scale(1.06); }
+
+.project__caption {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 2px 8px;
+  padding-top: 18px;
+}
+
+.project__num { grid-row: span 2; padding-top: 6px; font-size: 13px; font-weight: 700; color: var(--accent-warm); }
+.project__title { font-size: clamp(20px, 1.9vw, 26px); letter-spacing: -0.02em; }
+.project__meta { font-size: 14px; color: var(--text-muted); }
+
+/* ===== Цифры ===== */
+.stats {
+  padding-block: clamp(56px, 7vw, 96px);
+  border-block: 1px solid var(--line);
+  background: radial-gradient(60% 120% at 100% 50%, rgba(226, 55, 44, 0.12), transparent 70%);
+}
+
+.stats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.stat { padding-inline: clamp(12px, 2vw, 32px); text-align: center; }
+.stat + .stat { border-inline-start: 1px solid var(--line); }
+
+.stat__value {
+  margin-bottom: 10px;
+  font: 700 clamp(30px, 3.6vw, 58px)/1 var(--font-display);
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat__label { max-width: 200px; margin-inline: auto; font-size: 14px; color: var(--text-muted); }
+
+/* ===== Направления ===== */
+.panels {
+  display: flex;
+  gap: 20px;
+  height: clamp(480px, 64vh, 680px);
+}
+
+.panel {
+  position: relative;
+  flex: 1;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  isolation: isolate;
+  text-decoration: none;
+  transition: flex-grow 0.8s var(--ease);
+}
+
+.panels:hover .panel { flex-grow: 0.8; }
+.panels .panel:hover { flex-grow: 1.5; }
+
+.photo--panel { position: absolute; inset: 0; border-radius: 0; }
+.photo--panel .photo__label { top: 20px; bottom: auto; }
+
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 30%, rgba(14, 12, 15, 0.92) 100%);
+  pointer-events: none;
+}
+
+.panel:hover .photo__img { transform: scale(1.05); }
+
+.panel__body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: clamp(24px, 3vw, 40px);
+}
+
+.panel__tag {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.panel__title {
+  max-width: 460px;
+  margin-bottom: 12px;
+  font-size: clamp(26px, 2.6vw, 40px);
+  line-height: 1.05;
+}
+
+.panel__text { max-width: 420px; margin-bottom: 18px; color: rgba(243, 239, 235, 0.75); font-size: 15px; }
+
+.panel__more { font-weight: 700; font-size: 14px; color: var(--accent-warm); }
+
+/* ===== Этапы ===== */
+.process__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: end;
+  margin-bottom: clamp(56px, 6vw, 88px);
+}
+
+.process__intro .title { margin-bottom: 20px; }
+.process__intro .muted { max-width: 440px; margin-bottom: 32px; }
+
+.process__figure { margin: 0; }
+.photo--process { aspect-ratio: 5 / 4; }
+.photo--process .photo__img { object-position: 50% 62%; }
+.process__figure figcaption { margin-top: 12px; font-size: 13px; color: var(--text-muted); }
+
+/* шаги — линия времени: общая линия сверху, на ней точка каждого шага */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 0 0;
+  padding-inline-end: 24px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.step::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  inset-inline-start: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  transition: background-color 0.4s, box-shadow 0.4s;
+}
+
+.step__num {
+  margin-bottom: 22px;
+  font: 800 clamp(40px, 3.6vw, 56px)/0.9 var(--font-display);
+  letter-spacing: -0.05em;
+  color: var(--bg); /* заливка поверх обводки — как в бегущей строке */
+  -webkit-text-stroke: 2px rgba(243, 239, 235, 0.4);
+  paint-order: stroke fill;
+  transition: color 0.5s ease, -webkit-text-stroke-color 0.5s ease;
+}
+
+.step > div { display: flex; flex: 1; flex-direction: column; align-items: flex-start; }
+.step h3 { margin-bottom: 10px; font-size: clamp(19px, 1.6vw, 23px); }
+.step p { margin-bottom: 16px; color: var(--text-muted); font-size: 15px; }
+
+.step__time {
+  display: inline-block;
+  margin-top: auto;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.step:hover::before,
+.step.is-current::before { background: var(--accent); box-shadow: 0 0 0 5px rgba(226, 55, 44, 0.18); }
+.step:hover .step__num,
+.step.is-current .step__num { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
+
+/* ===== Лента карточек =====
+   На компьютере карточки стоят в один ряд (сетки выше), до 1080px —
+   листаются пальцем вбок. Счётчик, полоску и стрелки добавляет script.js. */
+.rail-nav { display: none; }
+
+/* ===== Вопросы ===== */
+.faq__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(40px, 7vw, 120px);
+  align-items: start;
+}
+
+.faq__aside { position: sticky; top: 120px; }
+.faq__aside .title { margin-bottom: 20px; }
+.faq__aside .muted { max-width: 380px; }
+.faq__aside a { color: var(--text); font-weight: 600; }
+
+.faq__list { border-top: 1px solid var(--line); }
+.faq__item { border-bottom: 1px solid var(--line); }
+
+.faq__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 26px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq__item summary::-webkit-details-marker { display: none; }
+
+.faq__q {
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  transition: color 0.3s;
+}
+
+.faq__item summary:hover .faq__q { color: var(--accent-warm); }
+
+.faq__icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  font-size: 20px;
+  line-height: 1;
+  transition: transform 0.4s var(--ease), background-color 0.3s, border-color 0.3s;
+}
+
+.faq__item[open] .faq__icon { transform: rotate(45deg); background: var(--accent); border-color: var(--accent); }
+
+.faq__a {
+  max-width: 640px;
+  padding: 0 0 28px;
+  padding-inline-end: 64px;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.section-head__text {
+  max-width: 620px;
+  margin-top: 20px;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+address.footer__col { font-style: normal; }
+
+/* ===== Заявка ===== */
+.request { border-top: 1px solid var(--line); }
+
+.request__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+
+.request__intro .title { margin-bottom: 24px; }
+.request__intro .muted { max-width: 420px; font-size: 17px; }
+
+.request__contacts { display: grid; gap: 10px; margin-top: 40px; }
+
+.request__contacts a {
+  justify-self: start;
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.request__contacts a:hover { color: var(--accent-warm); }
+
+.form {
+  display: grid;
+  gap: 26px;
+  padding: clamp(24px, 3.5vw, 44px);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(80% 60% at 100% 0%, rgba(226, 55, 44, 0.14), transparent 70%),
+    var(--surface);
+}
+
+.field { display: grid; gap: 4px; }
+
+.field__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.field__input {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-bottom: 1px solid var(--line-strong);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font: 500 18px var(--font-body);
+  transition: border-color 0.3s ease;
+}
+
+.field__input::placeholder { color: rgba(158, 151, 156, 0.6); }
+.field__input:focus { outline: none; border-bottom-color: var(--accent-warm); }
+.field__input--area { resize: vertical; min-height: 84px; }
+
+.form__footer { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 6px; }
+.form__consent { max-width: 260px; font-size: 12px; color: var(--text-muted); }
+
+.form__result { font-size: 14px; font-weight: 600; }
+.form__result.is-success,
+.form__result.is-error { padding: 12px 16px; border-radius: 14px; }
+.form__result.is-success { color: var(--success); background: rgba(95, 212, 147, 0.1); }
+.form__result.is-error { color: var(--error); background: rgba(226, 55, 44, 0.12); }
+
+/* ===== Подвал ===== */
+.footer {
+  padding-block: clamp(64px, 8vw, 110px) calc(28px + env(safe-area-inset-bottom, 0px));
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) repeat(3, minmax(0, 1fr));
+  gap: 40px;
+}
+
+.footer__lead {
+  font-size: clamp(26px, 2.8vw, 42px);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.footer__col { display: grid; align-content: start; gap: 10px; font-size: 15px; }
+
+.footer__col h3 {
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.footer__col a { justify-self: start; text-decoration: none; }
+.footer__col a:hover { color: var(--accent-warm); }
+
+.footer__wordmark {
+  margin: clamp(48px, 7vw, 96px) 0 8px;
+  font: 800 calc((min(100vw, var(--max)) - 2 * var(--gutter)) / 3.62)/0.78 var(--font-display);
+  letter-spacing: -0.06em;
+  text-align: center;
+  background: linear-gradient(180deg, var(--text) 10%, rgba(243, 239, 235, 0.06) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  user-select: none;
+}
+
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ===== Появление при прокрутке ===== */
+.motion [data-reveal] {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.9s ease, transform 1.1s var(--ease);
+}
+
+.motion [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* ===== Адаптив ===== */
+@media (max-width: 1080px) {
+  .nav { display: none; }
+  .menu-btn { display: block; }
+  /* меню спрятано: номер переезжает влево, кнопки остаются справа */
+  .header__side { display: contents; }
+  .header__phone { grid-column: 1; grid-row: 1; justify-self: start; }
+  .header__actions { grid-column: 3; grid-row: 1; justify-self: end; }
+
+  /* лента: листается вбок, карточки прилипают к краю экрана */
+  .rail {
+    display: flex;
+    gap: 12px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .rail::-webkit-scrollbar { display: none; }
+  /* растут, только если все помещаются без прокрутки */
+  .rail > * { flex: 1 0 min(80vw, 340px); scroll-snap-align: start; }
+  .steps.rail { gap: 0; padding-top: 12px; }
+  .steps.rail > * { flex-basis: min(72vw, 290px); }
+  .panels.rail > * { flex-basis: min(84vw, 440px); }
+  .panels:hover .panel, .panels .panel:hover { flex-grow: 1; }
+
+  .rail-nav { display: flex; align-items: center; gap: 12px; margin-top: 28px; }
+  .rail-nav[hidden] { display: none; }
+  .rail-nav__count {
+    min-width: 58px;
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+  }
+  .rail-nav__count b { color: var(--text); }
+  .rail-nav__track {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    margin-inline-end: 8px;
+    border-radius: 2px;
+    background: var(--line-strong);
+    overflow: hidden;
+  }
+  .rail-nav__thumb {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .rail-nav__btn {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, opacity 0.3s;
+  }
+  .rail-nav__btn:hover:not(:disabled) { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .rail-nav__btn:disabled { opacity: 0.3; cursor: default; }
+  .footer__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .footer__lead { grid-column: 1 / -1; }
+}
+
+@media (max-width: 940px) {
+  .header__cta { display: none; }
+}
+
+@media (max-width: 900px) {
+  .lead__grid { grid-template-columns: 1fr; }
+  .lead__visual { max-width: 520px; }
+  .badge-spin { left: auto; right: -8px; bottom: auto; top: -40px; width: 108px; height: 108px; }
+  .hero__tag { display: none; }
+  .hero__object { --obj: min(78vw, 560px); }
+  .hero__chip--left { top: auto; bottom: 96px; }
+  .hero__chip--right { top: auto; bottom: 96px; }
+  .about__grid { grid-template-columns: 1fr; }
+  .process__top { grid-template-columns: 1fr; align-items: start; }
+  .process__figure { max-width: 520px; }
+  .request__grid { grid-template-columns: 1fr; }
+  .faq__grid { grid-template-columns: 1fr; }
+  .faq__aside { position: static; }
+  .faq__a { padding-inline-end: 0; }
+}
+
+@media (max-width: 760px) {
+  .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
+  .stat:nth-child(3) { border-inline-start: none; }
+  .panels { height: 460px; }
+}
+
+@media (max-width: 560px) {
+  /* номер и кнопки мельче, чтобы логотип остался ровно по центру */
+  .header__phone { font-size: clamp(11px, 3.3vw, 13px); }
+  .header__actions { gap: 8px; }
+  .lang__btn { width: 46px; padding: 0; }
+  .lang__caret { display: none; }
+  .logo { font-size: 20px; }
+  .lead__meta { grid-template-columns: repeat(2, minmax(0, auto)); gap: 16px 32px; }
+  .lead__meta div:last-child { grid-column: 1 / -1; }
+  .hero { min-height: 640px; padding-top: 92px; }
+  .hero__eyebrow { font-size: 11px; letter-spacing: 0.12em; }
+  .hero__eyebrow .dash { width: 20px; }
+  .hero__object { --obj: 96vw; top: calc(var(--wm) * 0.8 - var(--obj) * 0.3); }
+  .hero { min-height: 600px; }
+  .hero__chip strong { font-size: 26px; }
+  .hero__chip span:last-child { font-size: 12px; }
+  .hero__chip--left, .hero__chip--right { bottom: 84px; max-width: 150px; }
+  .hero__scroll { display: none; }
+  .hero__contact span { display: none; }
+  .service { min-height: 290px; padding: 22px 22px 26px; }
+  .facts li { grid-template-columns: 1fr; gap: 4px; }
+  .footer__grid { grid-template-columns: 1fr 1fr; }
+  .footer__lead { grid-column: 1 / -1; }
+}
+
+/* ===== Английская и арабская версии (i18n.js) ===== */
+html[lang="en"] .project .photo::after { content: "View"; }
+html[lang="ar"] .project .photo::after { content: "عرض"; }
+
+/* Арабский: свой шрифт; у латинского Unbounded нет арабских букв —
+   их браузер берёт из IBM Plex Sans Arabic */
+html[lang="ar"] {
+  --font-body: 'IBM Plex Sans Arabic', 'Manrope', sans-serif;
+  --font-display: 'Unbounded', 'IBM Plex Sans Arabic', sans-serif;
+}
+
+/* арабские буквы в слове связаны между собой — разрядка их рвёт */
+html[lang="ar"] body *:not(.hero__word, .hero__word *, .logo, .footer__wordmark, .preloader__label) {
+  letter-spacing: normal !important;
+}
+
+/* у арабских букв длинные хвосты вверх и вниз — строкам нужно больше воздуха */
+html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__title, .footer__lead, .step h3, .faq__q, .project__title) {
+  line-height: 1.3;
+}
+
+/* бегущая строка, чертежи и надпись ONYX не отражаются
+   (буквы ONYX — отдельные блоки, справа налево они встали бы задом наперёд) */
+.marquee,
+.hero__drawings,
+.photo__art,
+.hero__word { direction: ltr; }
+
+/* числа с пробелом («18 000») справа налево распались бы на «000 18» */
+[dir="rtl"] .stat__value { direction: ltr; }
+
+[dir="rtl"] .badge-spin { left: auto; right: -62px; }
+[dir="rtl"] input[type="tel"] { direction: ltr; text-align: right; }
+
+@media (max-width: 900px) {
+  [dir="rtl"] .badge-spin { right: auto; left: -8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .marquee__track, .badge-spin svg { animation: none; }
+  .photo__img, .service::before, .panel { transition: none; }
+  .hero__object { animation: none !important; }
+}
+.preview-note {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+</style>
+<!--
+    КАК ЗАМЕНИТЬ ЗАГЛУШКИ
+
+    Фото: положите файл с нужным именем в папку img/ — он сам встанет на место.
+      img/hero.jpg          фото объекта под главным экраном, вертикальное, от 1200×1500
+      img/about.jpg         блок «О студии», от 1200×900
+      img/project-1.jpg     проект 1, вертикальное, от 1200×1500
+      img/project-2.jpg     проект 2, вертикальное, от 1200×1500
+      img/project-3.jpg     проект 3, вертикальное, от 1200×1500
+      img/interiors.jpg     направление «Интерьеры», вертикальное, от 1000×1300
+      img/architecture.jpg  направление «Архитектура», вертикальное, от 1000×1300
+      img/process.jpg       блок «Этапы», работа на объекте, от 1000×800
+
+    Тексты и цифры: всё, что обведено оранжевым пунктиром на странице,
+    размечено в коде классом class="ph". Замените текст внутри и удалите class="ph".
+  -->
+  <script>document.documentElement.classList.add('is-loading');</script>
+
+  <div class="preloader" aria-hidden="true">
+    <canvas class="preloader__canvas" id="helmetCanvas" width="170" height="170" data-three="https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.module.min.js"></canvas>
+    <div class="preloader__meta">
+      <div class="preloader__row">
+        <span class="preloader__label">ONYX</span>
+        <span class="preloader__pct" id="preloaderPct">0%</span>
+      </div>
+      <div class="preloader__track"><div class="preloader__bar" id="preloaderBar"></div></div>
+    </div>
+  </div>
+  <script>
+// 3D-каска ONYX на three.js: общая модель для экрана загрузки и главного экрана.
+// OnyxHelmet.build(THREE, canvas) → { render(yaw, tilt), resize() }
+(function () {
+  const TAU = Math.PI * 2;
+  const HALF = Math.PI / 2;
+
+  // ======================================================================
+  // Модель
+  // ======================================================================
+  function smoothstep(a, b, x) {
+    const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+  }
+  function smoothBox(x, half, soft) {
+    return smoothstep(-half - soft, -half, x) * (1 - smoothstep(half, half + soft, x));
+  }
+  function angleDiff(a, b) {
+    let d = (a - b) % TAU;
+    if (d > Math.PI) d -= TAU;
+    if (d < -Math.PI) d += TAU;
+    return d;
+  }
+  function bezier(p0, p1, p2, p3, t) {
+    const m = 1 - t;
+    const a = m * m * m, b = 3 * m * m * t, c = 3 * m * t * t, d = t * t * t;
+    return [a * p0[0] + b * p1[0] + c * p2[0] + d * p3[0], a * p0[1] + b * p1[1] + c * p2[1] + d * p3[1]];
+  }
+
+  // Оси: y — вверх, +z — перёд (козырёк), x — вбок.
+  const ELONG = 1.18;   // вытянута вперёд-назад
+  const H = 1.27;       // высота купола над краем (≈ 0.62 ширины)
+  const FIL = 0.07;     // высота скругления между куполом и козырьком
+  const R0 = 1.04;      // радиус купола у края
+  const THICK = 0.035;  // толщина пластика
+  const EDGE_R = 0.02;  // радиус завальцовки края
+
+  // край поднимается от козырька к бокам и чуть опускается сзади
+  function rimY(u) {
+    const s = Math.sin(u);
+    return 0.06 * (1 - Math.max(0, s)) - 0.02 * Math.pow(Math.max(0, -s), 2);
+  }
+  function lipLength(u) {
+    return 0.075 + 0.2 * Math.pow(Math.max(0, Math.sin(u)), 3);
+  }
+  function lipDrop(u) {
+    const f = Math.max(0, Math.sin(u));
+    return 0.02 + 0.07 * f * f;
+  }
+
+  const SLOTS = [0.5, -0.5, Math.PI + 0.5, Math.PI - 0.5];
+
+  // рельеф купола: центральная полоса, боковые рёбра, бобышки слотов
+  function relief(u, t, x) {
+    const ax = Math.abs(x);
+    let r = (0.024 * (1 - smoothstep(0.11, 0.2, ax)) +
+      0.014 * Math.exp(-Math.pow((ax - 0.44) / 0.07, 2))) * (1 - Math.pow(t, 4));
+    for (let i = 0; i < SLOTS.length; i++) {
+      r += 0.03 * smoothBox(angleDiff(u, SLOTS[i]), 0.075, 0.03) * smoothBox(t - 0.855, 0.05, 0.025);
+    }
+    return r;
+  }
+
+  function domeOuter(u, th) {
+    const t = th / HALF;
+    // подъём края затухает к макушке, иначе сечения сходились бы в ней на разной высоте
+    const cy = FIL + rimY(u) * Math.pow(t, 3);
+    const r = Math.pow(Math.sin(th), 0.76) * (1 + 0.04 * Math.pow(t, 8));
+    const y = cy + (H - FIL) * Math.cos(th);
+    const k = 1 + relief(u, t, r * Math.cos(u));
+    return [r * k * Math.cos(u), cy + (y - cy) * k, r * k * Math.sin(u) * ELONG];
+  }
+
+  const ND = 48;  // купол
+  const NB = 22;  // козырёк сверху и снизу
+  const NE = 10;  // завальцовка
+
+  // Профиль одного сечения: снаружи купол → скругление → козырёк →
+  // завальцовка → низ козырька → внутренняя сторона купола.
+  function section(u) {
+    const pts = [];
+    const cu = Math.cos(u), su = Math.sin(u);
+    const to3 = function (p) { return [p[0] * cu, p[1], p[0] * su * ELONG]; };
+    const yb = rimY(u);
+    const L = lipLength(u), D = lipDrop(u);
+
+    for (let j = 0; j <= ND; j++) pts.push(domeOuter(u, HALF * j / ND));
+
+    const P0 = [R0, yb + FIL], P1 = [R0, yb + 0.012];
+    const P2 = [R0 + 0.45 * L, yb - 0.25 * D], P3 = [R0 + L, yb - D];
+    for (let k = 1; k <= NB; k++) pts.push(to3(bezier(P0, P1, P2, P3, k / NB)));
+
+    const tl = Math.hypot(P3[0] - P2[0], P3[1] - P2[1]);
+    const T = [(P3[0] - P2[0]) / tl, (P3[1] - P2[1]) / tl];
+    const up = [-T[1], T[0]];
+    const C = [P3[0] - up[0] * EDGE_R, P3[1] - up[1] * EDGE_R];
+    for (let k = 1; k <= NE; k++) {
+      const phi = HALF - Math.PI * k / NE;
+      pts.push(to3([
+        C[0] + up[0] * EDGE_R * Math.sin(phi) + T[0] * EDGE_R * Math.cos(phi),
+        C[1] + up[1] * EDGE_R * Math.sin(phi) + T[1] * EDGE_R * Math.cos(phi)
+      ]));
+    }
+
+    const Q3 = [P3[0] - up[0] * 2 * EDGE_R, P3[1] - up[1] * 2 * EDGE_R];
+    const Q2 = [P2[0], P2[1] - 2 * EDGE_R];
+    const Q1 = [R0 - THICK, yb - 0.01];
+    const Q0 = [R0 - THICK, yb + FIL];
+    for (let k = 1; k <= NB; k++) pts.push(to3(bezier(Q3, Q2, Q1, Q0, k / NB)));
+
+    const inner = (R0 - THICK) / R0;
+    for (let j = ND - 1; j >= 0; j--) {
+      const th = HALF * j / ND;
+      const t = th / HALF;
+      const r = inner * Math.pow(Math.sin(th), 0.76) * (1 + 0.04 * Math.pow(t, 8));
+      pts.push(to3([r, FIL + yb * Math.pow(t, 3) + (H - THICK - FIL) * Math.cos(th)]));
+    }
+    return pts;
+  }
+
+  function shellGeometry(THREE) {
+    const NU = 220;
+    const rows = [];
+    for (let i = 0; i < NU; i++) rows.push(section(TAU * i / NU));
+    const NP = rows[0].length;
+
+    const pos = new Float32Array((NU + 1) * NP * 3);
+    const nor = new Float32Array((NU + 1) * NP * 3);
+    const sub = function (a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; };
+
+    for (let i = 0; i <= NU; i++) {
+      const ic = i % NU;
+      const prev = rows[(ic - 1 + NU) % NU], next = rows[(ic + 1) % NU], cur = rows[ic];
+      for (let j = 0; j < NP; j++) {
+        const p = cur[j];
+        let n;
+        if (j === 0) n = [0, 1, 0];
+        else if (j === NP - 1) n = [0, -1, 0];
+        else {
+          const du = sub(next[j], prev[j]);
+          const ds = sub(cur[j + 1], cur[j - 1]);
+          n = [du[1] * ds[2] - du[2] * ds[1], du[2] * ds[0] - du[0] * ds[2], du[0] * ds[1] - du[1] * ds[0]];
+          const l = Math.hypot(n[0], n[1], n[2]) || 1;
+          n = [n[0] / l, n[1] / l, n[2] / l];
+        }
+        const o = (i * NP + j) * 3;
+        pos[o] = p[0]; pos[o + 1] = p[1]; pos[o + 2] = p[2];
+        nor[o] = n[0]; nor[o + 1] = n[1]; nor[o + 2] = n[2];
+      }
+    }
+
+    const idx = new Uint32Array(NU * (NP - 1) * 6);
+    let q = 0;
+    for (let i = 0; i < NU; i++) {
+      for (let j = 0; j < NP - 1; j++) {
+        const a = i * NP + j, b = (i + 1) * NP + j, c = a + 1, d = b + 1;
+        idx[q++] = a; idx[q++] = b; idx[q++] = c;
+        idx[q++] = b; idx[q++] = d; idx[q++] = c;
+      }
+    }
+
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+    g.setIndex(new THREE.BufferAttribute(idx, 1));
+    return g;
+  }
+
+  // Наклейка, повторяющая поверхность купола: логотип и вентиляция.
+  function surfacePatch(THREE, uc, du, thc, dth, flipU) {
+    const nx = 64, ny = 20;
+    const pos = [], uv = [], idx = [];
+    const e = 1e-3;
+    for (let iy = 0; iy <= ny; iy++) {
+      for (let ix = 0; ix <= nx; ix++) {
+        const s = ix / nx;
+        const u = uc + du * (flipU ? 1 - 2 * s : 2 * s - 1);
+        const th = thc - dth + 2 * dth * iy / ny;
+        const p = domeOuter(u, th);
+        const a = domeOuter(u + e, th), b = domeOuter(u - e, th);
+        const c = domeOuter(u, th + e), d = domeOuter(u, th - e);
+        const tu = [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+        const tt = [c[0] - d[0], c[1] - d[1], c[2] - d[2]];
+        let n = [tu[1] * tt[2] - tu[2] * tt[1], tu[2] * tt[0] - tu[0] * tt[2], tu[0] * tt[1] - tu[1] * tt[0]];
+        const l = Math.hypot(n[0], n[1], n[2]) || 1;
+        n = [n[0] / l, n[1] / l, n[2] / l];
+        if (n[0] * p[0] + n[2] * p[2] < 0) n = [-n[0], -n[1], -n[2]];
+        pos.push(p[0] + n[0] * 0.006, p[1] + n[1] * 0.006, p[2] + n[2] * 0.006);
+        uv.push(s, 1 - iy / ny);
+      }
+    }
+    for (let iy = 0; iy < ny; iy++) {
+      for (let ix = 0; ix < nx; ix++) {
+        const a = iy * (nx + 1) + ix, b = a + 1, c = a + nx + 1, d = c + 1;
+        idx.push(a, c, b, b, c, d);
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+
+  function canvasTexture(THREE, w, h, paint) {
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    paint(c.getContext('2d'), w, h);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+    return tex;
+  }
+
+  // Студия для отражений: тёмная комната с софтбоксами и красной полосой.
+  function studioEnvironment(THREE, renderer) {
+    const env = new THREE.Scene();
+    env.add(new THREE.Mesh(
+      new THREE.BoxGeometry(24, 14, 24),
+      new THREE.MeshBasicMaterial({ color: 0x0d0c0e, side: THREE.BackSide })
+    ));
+    const panel = function (w, h, color, power, x, y, z) {
+      const m = new THREE.Mesh(
+        new THREE.PlaneGeometry(w, h),
+        new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(power), side: THREE.DoubleSide })
+      );
+      m.position.set(x, y, z);
+      m.lookAt(0, 0.4, 0);
+      env.add(m);
+    };
+    panel(9, 3.5, 0xffffff, 3.2, 0, 6.5, 1.5);      // верхний софтбокс
+    panel(3.5, 7, 0xffffff, 2.6, -8, 2, 5);         // ключевой слева-спереди
+    panel(2.2, 7, 0xfff4ec, 1.2, 8, 1.5, 4);        // заполняющий справа
+    panel(1.4, 8, 0xff3b2e, 3.0, 6, 1.5, -8);       // красная полоса сзади-справа
+    panel(12, 3, 0xffffff, 0.35, 0, -6.5, 0);       // слабый отражённый снизу
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const tex = pmrem.fromScene(env, 0.03).texture;
+    pmrem.dispose();
+    return tex;
+  }
+
+  function buildHelmet(THREE, canvas, opts) {
+    opts = opts || {};
+    let size = canvas.clientWidth || 170;
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, opts.maxDpr || 2));
+    renderer.setSize(size, size, false);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const scene = new THREE.Scene();
+    scene.environment = studioEnvironment(THREE, renderer);
+
+    const camera = new THREE.PerspectiveCamera(27, 1, 0.1, 50);
+    camera.position.set(0, 1.5, 6.9);
+    camera.lookAt(0, 0.5, 0);
+
+    const rimLight = new THREE.DirectionalLight(0xff3b2e, 2.4);
+    rimLight.position.set(3.5, 1.5, -3);
+    scene.add(rimLight);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.7);
+    keyLight.position.set(-2.5, 3.5, 3);
+    scene.add(keyLight);
+
+    const helmet = new THREE.Group();
+    scene.add(helmet);
+
+    // корпус: глянцевый белый ABS
+    const plastic = new THREE.MeshPhysicalMaterial({
+      color: 0xf2f0ec, roughness: 0.34, metalness: 0,
+      clearcoat: 1, clearcoatRoughness: 0.07
+    });
+    helmet.add(new THREE.Mesh(shellGeometry(THREE), plastic));
+
+    const decal = function (map) {
+      return new THREE.MeshPhysicalMaterial({
+        map: map, transparent: true, depthWrite: false, roughness: 0.4, side: THREE.DoubleSide,
+        clearcoat: 1, clearcoatRoughness: 0.08,
+        polygonOffset: true, polygonOffsetFactor: -4
+      });
+    };
+
+    // логотип ONYX на лбу — крупный, шрифтом сайта; когда Unbounded
+    // загрузится, текстура перерисуется
+    const paintLogo = function (ctx, w, h) {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#e2372c';
+      ctx.font = '800 220px Unbounded, "Arial Black", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('ONYX', w / 2, h / 2 + 10, w - 60);
+    };
+    const logo = canvasTexture(THREE, 1024, 256, paintLogo);
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, HALF, 0.6, 1.0, 0.16, true), decal(logo)));
+    const repaintLogo = function () {
+      paintLogo(logo.image.getContext('2d'), logo.image.width, logo.image.height);
+      logo.needsUpdate = true;
+    };
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('800 220px Unbounded').then(repaintLogo).catch(function () {});
+      document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', repaintLogo);
+    }
+
+    // вентиляционные прорези по бокам
+    const vents = canvasTexture(THREE, 512, 64, function (ctx, w, h) {
+      ctx.fillStyle = '#141214';
+      for (let i = 0; i < 5; i++) {
+        const x = 20 + i * 98, y = 12, rw = 70, rh = h - 24, r = rh / 2;
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + rw, y, x + rw, y + rh, r);
+        ctx.arcTo(x + rw, y + rh, x, y + rh, r);
+        ctx.arcTo(x, y + rh, x, y, r);
+        ctx.arcTo(x, y, x + rw, y, r);
+        ctx.fill();
+      }
+    });
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, 0.12, 0.2, 0.66, 0.017, false), decal(vents)));
+    helmet.add(new THREE.Mesh(surfacePatch(THREE, Math.PI - 0.12, 0.2, 0.66, 0.017, false), decal(vents)));
+
+    // оголовье: чёрная лента, сзади свисает ниже, и рифлёный регулятор
+    const rubber = new THREE.MeshStandardMaterial({ color: 0x151414, roughness: 0.55, side: THREE.DoubleSide });
+    const bandPos = [], bandIdx = [];
+    const BU = 96;
+    for (let i = 0; i <= BU; i++) {
+      const u = TAU * i / BU;
+      const back = Math.max(0, -Math.sin(u));
+      const yTop = rimY(u) + 0.06;
+      const yBot = rimY(u) * 0.3 - (0.06 + 0.2 * back);
+      const x = 0.93 * Math.cos(u), z = 0.93 * Math.sin(u) * ELONG * 0.96;
+      bandPos.push(x, yTop, z, x, yBot, z);
+      if (i < BU) {
+        const a = i * 2;
+        bandIdx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
+      }
+    }
+    const band = new THREE.BufferGeometry();
+    band.setAttribute('position', new THREE.Float32BufferAttribute(bandPos, 3));
+    band.setIndex(bandIdx);
+    band.computeVertexNormals();
+    helmet.add(new THREE.Mesh(band, rubber));
+
+    const knobGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.08, 96, 1);
+    const kp = knobGeo.attributes.position;
+    for (let i = 0; i < kp.count; i++) {
+      const x = kp.getX(i), z = kp.getZ(i);
+      if (Math.hypot(x, z) > 0.1) {
+        const k = 1 + 0.07 * Math.pow(Math.max(0, Math.cos(20 * Math.atan2(z, x))), 0.6);
+        kp.setX(i, x * k);
+        kp.setZ(i, z * k);
+      }
+    }
+    knobGeo.computeVertexNormals();
+    knobGeo.rotateX(HALF);
+    const knob = new THREE.Mesh(knobGeo, new THREE.MeshStandardMaterial({ color: 0x151414, roughness: 0.5 }));
+    knob.position.set(0, -0.17, -(0.93 * ELONG * 0.96 + 0.05));
+    helmet.add(knob);
+
+    return {
+      render: function (yaw, tilt) {
+        helmet.rotation.y = yaw;
+        helmet.rotation.x = tilt;
+        renderer.render(scene, camera);
+      },
+      resize: function () {
+        size = canvas.clientWidth || size;
+        renderer.setSize(size, size, false);
+      }
+    };
+  }
+
+  window.OnyxHelmet = { build: buildHelmet };
+})();
+</script>
+  <script>
+// Экран загрузки: реалистичная 3D-каска (three.js) + прогресс загрузки.
+//
+// Корпус — одна непрерывная поверхность, как в 3D-редакторе: купол плавно
+// переходит в козырёк, край завальцован, у пластика есть толщина и
+// внутренняя сторона. Рельеф и бобышки слотов под наушники — часть формы.
+// Материал — глянцевый ABS с лаковым слоем, свет — студийные софтбоксы
+// в отражениях и красный контровой свет.
+//
+// Вращение неравномерное: лицом к зрителю каска почти замирает,
+// остальную часть оборота проходит быстро.
+(function () {
+  const root = document.documentElement;
+  if (!root.classList.contains('is-loading')) return;
+
+  const MIN_MS = 3000;  // минимум, если 3D недоступно
+  const MAX_MS = 12000; // и снимается не позже, даже если что-то зависло
+  const TURNS = 2;      // сколько полных оборотов каска делает до конца загрузки
+  const FADE_MS = 500;
+  const TURN_MS = 2300; // один оборот каски
+  const EASE = 0.8;     // 0 — равномерно, ближе к 1 — дольше смотрит на зрителя
+
+  const canvas = document.getElementById('helmetCanvas');
+  const bar = document.getElementById('preloaderBar');
+  const pctEl = document.getElementById('preloaderPct');
+  const reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const TAU = Math.PI * 2;
+  const HALF = Math.PI / 2;
+
+  let render = null;               // появится, когда сцена готова
+  let sceneSettled = !canvas || !canvas.dataset.three;
+
+  if (!sceneSettled) {
+    // путь без «./» браузер счёл бы именем пакета, поэтому делаем полный адрес
+    const src = new URL(canvas.dataset.three, document.baseURI).href;
+    import(src).then(function (THREE) {
+      render = window.OnyxHelmet.build(THREE, canvas).render;
+      canvas.classList.add('is-ready');
+    }).catch(function () {
+      canvas.style.display = 'none'; // без 3D показываем только прогресс
+    }).then(function () {
+      sceneSettled = true;
+    });
+  } else if (canvas) {
+    canvas.style.display = 'none';
+  }
+
+  // ======================================================================
+  // Вращение и прогресс
+  // ======================================================================
+
+  // Внутри оборота скорость 1 − EASE·cos(2πf): у «лица» (f = 0) почти стоит,
+  // на обратной стороне разгоняется. Отсчёт идёт с момента появления каски:
+  // она появляется лицом к зрителю и после TURNS оборотов снова смотрит на него.
+  let spinStart = null;
+
+  function yawAt(now) {
+    const x = (now - spinStart) / TURN_MS;
+    const turn = Math.floor(x);
+    const f = x - turn;
+    return TAU * (turn + f - EASE * Math.sin(TAU * f) / TAU);
+  }
+
+  let windowLoaded = document.readyState === 'complete';
+  let shown = 0;
+  let finished = false;
+  let hideStarted = false;
+  let drewStatic = false;
+  let lastNow = 0;
+
+  window.addEventListener('load', function () { windowLoaded = true; });
+
+  function setProgress(value) {
+    if (bar) bar.style.transform = 'scaleX(' + value.toFixed(4) + ')';
+    if (pctEl) pctEl.textContent = Math.round(value * 100) + '%';
+  }
+
+  function hide() {
+    if (hideStarted) return;
+    hideStarted = true;
+    setProgress(1);
+    setTimeout(function () {
+      root.classList.add('preloader-hide');
+      // сигнал сайту: экран загрузки гаснет, можно запускать анимацию первого экрана
+      document.dispatchEvent(new CustomEvent('preloader:hide'));
+      setTimeout(function () {
+        finished = true;
+        root.classList.remove('is-loading', 'preloader-hide');
+      }, FADE_MS);
+    }, 300);
+  }
+
+  function frame(now) {
+    if (finished) return;
+
+    if (render && spinStart === null) spinStart = now;
+
+    // Конец загрузки: когда каска закончит TURNS оборотов. Пока 3D ещё
+    // грузится, считаем, что обороты начнутся прямо сейчас. Без 3D или при
+    // «уменьшении движения» хватает MIN_MS.
+    let end = MIN_MS;
+    if (!reduceMotion) {
+      if (spinStart !== null) end = spinStart + TURNS * TURN_MS;
+      else if (!sceneSettled) end = now + TURNS * TURN_MS;
+    }
+    end = Math.max(end, MIN_MS);
+
+    // Прогресс идёт по времени, но не дальше 90%, пока страница и каска
+    // реально не загрузились.
+    const ready = windowLoaded && sceneSettled;
+    const byTime = Math.min(1, now / end);
+    const target = Math.min(byTime, ready ? 1 : 0.9);
+    // сглаживание по реальному времени, а не по кадрам: на слабом
+    // устройстве с низким FPS прогресс идёт с той же скоростью
+    const dt = Math.min(100, Math.max(0, now - lastNow));
+    lastNow = now;
+    shown += (target - shown) * (1 - Math.exp(-dt / 130));
+    if (target === 1 && shown > 0.97) shown = 1; // не тянем хвост: каска уже смотрит на зрителя
+    if (!hideStarted) setProgress(shown);
+    if (shown === 1) hide();
+
+    if (render) {
+      if (!reduceMotion) {
+        render(yawAt(now), 0.025 * Math.sin(now / 900));
+      } else if (!drewStatic) {
+        render(0.45, 0);
+        drewStatic = true;
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  // страховка на случай, если вкладка в фоне и кадры не рисуются
+  setTimeout(function () { windowLoaded = true; sceneSettled = true; hide(); }, MAX_MS);
+
+  requestAnimationFrame(frame);
+})();
+</script>
+
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ================= ШАПКА ================= -->
+  <header class="header" id="header">
+    <nav class="nav" aria-label="Разделы сайта" data-i18n-attr="aria-label=nav.label">
+      <a href="#about" data-i18n="nav.about">О студии</a>
+      <a href="#services" data-i18n="nav.services">Услуги</a>
+      <a href="#projects" data-i18n="nav.projects">Проекты</a>
+      <a href="#process" data-i18n="nav.process">Этапы</a>
+      <a href="#contacts" data-i18n="nav.contacts">Контакты</a>
+    </nav>
+
+    <a class="logo" href="#top" aria-label="ONYX — на главную" data-i18n-attr="aria-label=logo.label">ONYX</a>
+
+    <div class="header__side">
+      <a class="header__phone" href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a>
+      <div class="header__actions">
+        <div class="lang">
+          <button class="lang__btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="langList" aria-label="Язык сайта" data-i18n-attr="aria-label=lang.label">
+            <span class="lang__code">RU</span>
+            <svg class="lang__caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+          </button>
+          <div class="lang__list" id="langList" role="menu">
+            <button type="button" role="menuitemradio" aria-checked="true" data-lang="ru" lang="ru">Русский <span>RU</span></button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-lang="en" lang="en">English <span>EN</span></button>
+            <button type="button" role="menuitemradio" aria-checked="false" data-lang="ar"><bdi lang="ar">العربية</bdi> <span>AR</span></button>
+          </div>
+        </div>
+        <a class="pill pill--light header__cta" href="#request-form">
+          <span data-i18n="cta.discuss">Обсудить проект</span>
+          <span class="pill__arrow" aria-hidden="true">→</span>
+        </a>
+        <button class="menu-btn" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="menu" id="mobileMenu" aria-hidden="true">
+    <nav class="menu__nav" aria-label="Меню" data-i18n-attr="aria-label=menu.label">
+      <a href="#about"><span>01</span><b data-i18n="nav.about">О студии</b></a>
+      <a href="#services"><span>02</span><b data-i18n="nav.services">Услуги</b></a>
+      <a href="#projects"><span>03</span><b data-i18n="nav.projects">Проекты</b></a>
+      <a href="#process"><span>04</span><b data-i18n="nav.process">Этапы</b></a>
+      <a href="#request-form"><span>05</span><b data-i18n="nav.request">Заявка</b></a>
+    </nav>
+    <a class="pill pill--light" href="#request-form">
+      <span data-i18n="cta.discuss">Обсудить проект</span>
+      <span class="pill__arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+
+  <main id="top">
+
+    <!-- ================= ГЛАВНЫЙ ЭКРАН ================= -->
+    <section class="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__glow"></div>
+        <svg class="hero__drawings" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="bpGrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" class="bp-grid"/></pattern>
+          </defs>
+          <rect width="1600" height="1000" fill="url(#bpGrid)"/>
+
+          <!-- направляющие окружности за каской -->
+          <circle cx="800" cy="600" r="330" class="bp-accent bp-dash"/>
+          <circle cx="800" cy="600" r="420" class="bp-thin"/>
+          <line x1="800" y1="160" x2="800" y2="1000" class="bp-thin bp-dash"/>
+          <line x1="300" y1="600" x2="1300" y2="600" class="bp-thin bp-dash"/>
+
+          <!-- план слева -->
+          <g transform="translate(70 170) rotate(-6)">
+            <rect x="0" y="0" width="420" height="300" class="bp-line"/>
+            <rect x="8" y="8" width="404" height="284" class="bp-thin"/>
+            <line x1="170" y1="0" x2="170" y2="150" class="bp-line"/>
+            <line x1="0" y1="150" x2="260" y2="150" class="bp-line"/>
+            <line x1="260" y1="150" x2="260" y2="300" class="bp-line"/>
+            <path d="M170 110 A40 40 0 0 1 210 150" class="bp-accent"/>
+            <path d="M260 250 A34 34 0 0 0 226 284" class="bp-accent"/>
+            <rect x="30" y="200" width="120" height="44" rx="6" class="bp-thin"/>
+            <circle cx="90" cy="80" r="26" class="bp-thin"/>
+            <rect x="300" y="190" width="90" height="80" class="bp-thin"/>
+            <line x1="0" y1="-30" x2="420" y2="-30" class="bp-thin"/>
+            <line x1="0" y1="-38" x2="0" y2="-22" class="bp-thin"/><line x1="170" y1="-38" x2="170" y2="-22" class="bp-thin"/><line x1="420" y1="-38" x2="420" y2="-22" class="bp-thin"/>
+            <text x="85" y="-38" class="bp-text" text-anchor="middle">3200</text>
+            <text x="295" y="-38" class="bp-text" text-anchor="middle">4400</text>
+            <text x="60" y="120" class="bp-label" data-i18n="bp.living">ГОСТИНАЯ</text>
+            <text x="200" y="60" class="bp-label" data-i18n="bp.kitchen">КУХНЯ</text>
+            <text x="290" y="180" class="bp-label" data-i18n="bp.bedroom">СПАЛЬНЯ</text>
+            <circle cx="0" cy="340" r="14" class="bp-thin"/><text x="0" y="345" class="bp-text" text-anchor="middle">1</text>
+            <circle cx="170" cy="340" r="14" class="bp-thin"/><text x="170" y="345" class="bp-text" text-anchor="middle">2</text>
+            <circle cx="420" cy="340" r="14" class="bp-thin"/><text x="420" y="345" class="bp-text" text-anchor="middle">3</text>
+          </g>
+
+          <!-- фасад справа -->
+          <g transform="translate(1110 250)">
+            <line x1="-40" y1="380" x2="460" y2="380" class="bp-line"/>
+            <rect x="20" y="170" width="380" height="210" class="bp-line"/>
+            <path d="M0 180 L210 40 L420 180" class="bp-line"/>
+            <rect x="60" y="220" width="70" height="90" class="bp-thin"/><line x1="95" y1="220" x2="95" y2="310" class="bp-thin"/>
+            <rect x="170" y="220" width="80" height="160" class="bp-thin"/>
+            <rect x="290" y="220" width="70" height="90" class="bp-thin"/><line x1="325" y1="220" x2="325" y2="310" class="bp-thin"/>
+            <circle cx="210" cy="120" r="22" class="bp-thin"/>
+            <line x1="440" y1="40" x2="440" y2="380" class="bp-thin"/>
+            <line x1="432" y1="40" x2="448" y2="40" class="bp-thin"/><line x1="432" y1="380" x2="448" y2="380" class="bp-thin"/>
+            <text x="458" y="215" class="bp-text" transform="rotate(-90 458 215)" text-anchor="middle">7800</text>
+            <path d="M-40 380 l10 -12 h-20 z" class="bp-accent"/><text x="-60" y="372" class="bp-text" text-anchor="end">±0.000</text>
+            <path d="M-40 170 l10 -12 h-20 z" class="bp-accent"/><text x="-60" y="162" class="bp-text" text-anchor="end">+3.300</text>
+            <path d="M-40 40 l10 -12 h-20 z" class="bp-accent"/><text x="-60" y="32" class="bp-text" text-anchor="end">+6.600</text>
+            <text x="210" y="420" class="bp-label" text-anchor="middle" data-i18n="bp.facade">ФАСАД 1–3</text>
+          </g>
+
+          <!-- эскиз каски -->
+          <g transform="translate(1180 80) scale(.9)">
+            <path d="M20 80 C20 30 60 5 110 5 C165 5 200 35 205 80" class="bp-line"/>
+            <path d="M5 84 H220 C230 84 236 90 230 96 H0 C-6 90 -2 84 5 84 Z" class="bp-line"/>
+            <path d="M95 6 C92 30 92 60 94 84 M125 6 C128 30 128 60 126 84" class="bp-thin"/>
+            <line x1="240" y1="50" x2="300" y2="30" class="bp-thin"/>
+            <text x="306" y="34" class="bp-text" data-i18n="bp.ppe">СИЗ · каска</text>
+          </g>
+
+          <!-- разрез и надписи внизу -->
+          <g transform="translate(120 820)">
+            <line x1="0" y1="0" x2="360" y2="0" class="bp-accent bp-dash"/>
+            <path d="M0 0 v-22 M0 -22 l-8 10 M0 -22 l8 10" class="bp-accent"/>
+            <path d="M360 0 v-22 M360 -22 l-8 10 M360 -22 l8 10" class="bp-accent"/>
+            <text x="-6" y="30" class="bp-label" data-i18n="bp.a">А</text><text x="354" y="30" class="bp-label" data-i18n="bp.a">А</text>
+            <text x="120" y="30" class="bp-text" data-i18n="bp.section">РАЗРЕЗ А–А · М 1:50</text>
+          </g>
+          <g transform="translate(1250 860)">
+            <rect width="260" height="64" class="bp-thin"/><line x1="0" y1="32" x2="260" y2="32" class="bp-thin"/><line x1="180" y1="0" x2="180" y2="64" class="bp-thin"/>
+            <text x="12" y="22" class="bp-label">ONYX</text><text x="12" y="54" class="bp-text" data-i18n="bp.sheet">Лист АР-01 · Эскиз</text>
+            <text x="192" y="54" class="bp-text">2026</text>
+          </g>
+
+          <!-- стрелка севера -->
+          <g transform="translate(90 90)">
+            <circle r="26" class="bp-thin"/>
+            <path d="M0 -22 L8 10 L0 4 L-8 10 Z" class="bp-accent"/>
+            <text y="46" class="bp-text" text-anchor="middle" data-i18n="bp.north">С</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="container hero__stage">
+        <p class="hero__eyebrow intro">
+          <span class="dash" aria-hidden="true"></span>
+          <span data-i18n="hero.eyebrow">Бюро интерьеров и архитектуры</span>
+          <span class="dash" aria-hidden="true"></span>
+        </p>
+
+        <div class="hero__word-wrap">
+          <h1 class="hero__word">
+            <span class="visually-hidden" data-i18n="hero.h1">ONYX — дизайн интерьера и архитектурное проектирование в Москве</span>
+            <span class="hero__letters" aria-hidden="true"><span class="wm"><span>O</span></span><span class="wm"><span>N</span></span><span class="wm"><span>Y</span></span><span class="wm"><span>X</span></span></span>
+          </h1>
+          <p class="hero__word hero__word--outline" aria-hidden="true">ONYX</p>
+        </div>
+
+        <div class="hero__object" aria-hidden="true">
+          <img class="hero__helmet-img" src="img/helmet.webp" alt="" width="1000" height="1000" fetchpriority="high">
+          <canvas class="hero__helmet" id="heroHelmet" width="600" height="600"></canvas>
+          <div class="hero__floor"></div>
+        </div>
+
+        <div class="hero__chip hero__chip--left intro">
+          <strong><span class="ph">120+</span></strong>
+          <span data-i18n="hero.chip1">реализованных проектов</span>
+        </div>
+        <div class="hero__chip hero__chip--right intro">
+          <strong data-i18n="hero.chip2.value"><span class="ph">9 лет</span></strong>
+          <span data-i18n="hero.chip2">в архитектуре и&nbsp;интерьерах</span>
+        </div>
+
+        <span class="hero__tag hero__tag--1 intro"><i aria-hidden="true">✓</i> <b data-i18n="hero.tag1">Свои рабочие чертежи</b></span>
+        <span class="hero__tag hero__tag--2 intro"><i aria-hidden="true">✓</i> <b data-i18n="hero.tag2">Авторский надзор</b></span>
+
+        <div class="hero__bottom intro">
+          <div class="hero__contact">
+            <span data-i18n="hero.contact">Связаться</span>
+            <a class="round-btn" href="tel:+79253760375" aria-label="Позвонить: +7 925 376-03-75" data-i18n-attr="aria-label=hero.call">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+            </a>
+            <a class="round-btn" href="#request-form" aria-label="Оставить заявку" data-i18n-attr="aria-label=hero.request">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/></svg>
+            </a>
+          </div>
+          <a class="hero__scroll" href="#lead"><span data-i18n="hero.scroll">Листайте</span> <span aria-hidden="true">↓</span></a>
+          <a class="pill pill--light" href="#request-form">
+            <span data-i18n="cta.discuss">Обсудить проект</span>
+            <span class="pill__arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= БЕГУЩАЯ СТРОКА ================= -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span data-i18n="mq.interiors">Дизайн интерьеров</span><i>✦</i><span class="outline" data-i18n="mq.architecture">Архитектура</span><i>✦</i>
+        <span data-i18n="mq.drawings">Рабочие чертежи</span><i>✦</i><span class="outline" data-i18n="mq.supervision">Авторский надзор</span><i>✦</i>
+        <span data-i18n="mq.interiors">Дизайн интерьеров</span><i>✦</i><span class="outline" data-i18n="mq.architecture">Архитектура</span><i>✦</i>
+        <span data-i18n="mq.drawings">Рабочие чертежи</span><i>✦</i><span class="outline" data-i18n="mq.supervision">Авторский надзор</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- ================= ИНТРО ================= -->
+    <section class="section lead" id="lead">
+      <div class="container lead__grid">
+        <div class="lead__text" data-reveal>
+          <h2 class="lead__title" data-i18n="lead.title">Проектируем <em>пространство</em> для жизни</h2>
+          <p class="lead__lead" data-i18n="lead.text">Интерьеры и дома, в которых хочется жить. От первого эскиза до рабочих чертежей и сдачи объекта — один архитектор ведёт проект от начала до конца.</p>
+
+          <div class="lead__actions">
+            <a class="pill pill--light" href="#request-form">
+              <span data-i18n="cta.discuss">Обсудить проект</span>
+              <span class="pill__arrow" aria-hidden="true">→</span>
+            </a>
+            <a class="link-arrow" href="#projects"><span data-i18n="lead.more">Смотреть проекты</span> <span aria-hidden="true">↓</span></a>
+          </div>
+
+          <dl class="lead__meta">
+            <div><dt data-i18n="lead.city">Город</dt><dd data-i18n="lead.city.v"><span class="ph">Москва и область</span></dd></div>
+            <div><dt data-i18n="lead.since">Работаем с</dt><dd data-i18n="lead.since.v"><span class="ph">2016</span> года</dd></div>
+            <div><dt data-i18n="lead.format">Формат</dt><dd data-i18n="lead.format.v">Интерьеры · Архитектура</dd></div>
+          </dl>
+        </div>
+
+        <div class="lead__visual" data-reveal>
+          <div class="photo photo--lead">
+            <img class="photo__img" src="img/hero.jpg" alt="Жилой дом на стадии строительства" data-i18n-attr="alt=lead.alt" width="1200" height="1787" loading="lazy" decoding="async">
+            <svg class="photo__art" viewBox="0 0 440 380" aria-hidden="true">
+              <rect x="40" y="40" width="360" height="280" class="art-wall"/>
+              <line x1="220" y1="40" x2="220" y2="210" class="art-thin"/>
+              <line x1="40" y1="210" x2="400" y2="210" class="art-thin"/>
+              <line x1="300" y1="210" x2="300" y2="320" class="art-thin"/>
+              <path d="M220 130 A 40 40 0 0 1 260 170" class="art-accent"/>
+              <path d="M300 260 A 30 30 0 0 1 330 290" class="art-accent"/>
+              <line x1="40" y1="20" x2="400" y2="20" class="art-dim"/>
+              <text x="220" y="14" class="art-text" text-anchor="middle">5400</text>
+              <text x="130" y="130" class="art-label" data-i18n="bp.living">ГОСТИНАЯ</text>
+              <text x="310" y="130" class="art-label" data-i18n="bp.bedroom">СПАЛЬНЯ</text>
+              <text x="170" y="270" class="art-label" data-i18n="bp.kitchen">КУХНЯ</text>
+            </svg>
+            <span class="photo__label" data-i18n="lead.label">Ваше фото · объект · 1200×1500</span>
+          </div>
+          <p class="lead__caption">
+            <span data-i18n="lead.caption">Проект</span>
+            <span data-i18n="lead.caption.v"><span class="ph">Название объекта</span></span>
+          </p>
+
+          <a class="badge-spin" href="#request-form" aria-label="Обсудить проект" data-i18n-attr="aria-label=cta.discuss">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <defs><path id="spinPath" d="M60 60 m-46 0 a46 46 0 1 1 92 0 a46 46 0 1 1 -92 0"/></defs>
+              <text><textPath href="#spinPath" textLength="286" lengthAdjust="spacing" data-i18n="badge.text">Открыты для новых проектов • </textPath></text>
+            </svg>
+            <span class="badge-spin__arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= О СТУДИИ ================= -->
+    <section class="section about" id="about">
+      <div class="container">
+        <h2 class="kicker kicker--center" data-reveal data-i18n="about.kicker"><span>(01)</span> О студии</h2>
+
+        <p class="manifesto" data-words data-i18n="about.manifesto">
+          Мы — бюро ONYX. Проектируем интерьеры и дома, в которых <em>каждая деталь</em> работает на вашу жизнь: от планировки и света до розетки у кровати.
+        </p>
+
+        <div class="about__grid">
+          <figure class="about__figure" data-reveal>
+            <div class="photo photo--about">
+              <img class="photo__img" src="img/about.jpg" alt="План квартиры с расстановкой мебели — чертёж бюро ONYX" data-i18n-attr="alt=about.alt" width="1800" height="1350" loading="lazy" decoding="async">
+              <span class="photo__label" data-i18n="about.label">Ваше фото · студия или объект · 1200×900</span>
+            </div>
+            <figcaption data-i18n="about.caption">Жихарев Александр Алексеевич, основатель ONYX</figcaption>
+          </figure>
+
+          <ul class="facts" data-reveal>
+            <li><span class="facts__key" data-i18n="facts.1">Под ключ</span><span data-i18n="facts.1.v">Полный цикл — от замера до сдачи объекта.</span></li>
+            <li><span class="facts__key" data-i18n="facts.2">Цена</span><span data-i18n="facts.2.v">Фиксируем в договоре до начала работ.</span></li>
+            <li><span class="facts__key" data-i18n="facts.3">Оплата</span><span data-i18n="facts.3.v">Поэтапно — после приёмки каждого этапа.</span></li>
+            <li><span class="facts__key" data-i18n="facts.4">Сроки</span><span data-i18n="facts.4.v">Дизайн-проект — за <span class="ph">6–10 недель</span>.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= УСЛУГИ ================= -->
+    <section class="section services" id="services">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal>
+          <p class="kicker" data-i18n="services.kicker"><span>(02)</span> Услуги</p>
+          <h2 class="title" data-i18n="services.title">Берём на себя <em>всё</em> —<br>от идеи до ключей</h2>
+          <p class="section-head__text" data-i18n="services.text">Дизайн интерьера квартир, домов и коммерческих помещений, архитектурное проектирование частных домов, рабочая документация и авторский надзор — в <span class="ph">Москве и Московской области</span>.</p>
+        </div>
+
+        <ul class="service-list rail" data-rail>
+          <li data-reveal>
+            <a class="service" href="#request-form">
+              <span class="service__num">01</span>
+              <h3 class="service__title" data-i18n="s1.title">Дизайн-проект интерьера</h3>
+              <span class="service__text" data-i18n="s1.text">Дизайн квартир и домов: планировка, 3D-визуализации, свет, подбор материалов и мебели.</span>
+              <span class="service__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal>
+            <a class="service" href="#request-form">
+              <span class="service__num">02</span>
+              <h3 class="service__title" data-i18n="s2.title">Архитектурное проектирование</h3>
+              <span class="service__text" data-i18n="s2.text">Проекты частных домов: фасады, реконструкция и благоустройство участка.</span>
+              <span class="service__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal>
+            <a class="service" href="#request-form">
+              <span class="service__num">03</span>
+              <h3 class="service__title" data-i18n="s3.title">Рабочая документация</h3>
+              <span class="service__text" data-i18n="s3.text">Полный комплект для строителей: развёртки, электрика, сантехника.</span>
+              <span class="service__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li data-reveal>
+            <a class="service" href="#request-form">
+              <span class="service__num">04</span>
+              <h3 class="service__title" data-i18n="s4.title">Авторский надзор</h3>
+              <span class="service__text" data-i18n="s4.text">Выезжаем на объект и следим, чтобы строили по проекту.</span>
+              <span class="service__arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= ПРОЕКТЫ ================= -->
+    <section class="section projects" id="projects">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal>
+          <p class="kicker" data-i18n="projects.kicker"><span>(03)</span> Проекты</p>
+          <h2 class="title" data-i18n="projects.title">Избранные <em>работы</em></h2>
+          <a class="link-arrow" href="#request-form"><span data-i18n="projects.more">Хочу так же</span> <span aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="project-grid rail" data-rail>
+          <article class="project" data-reveal>
+            <div class="photo photo--project">
+              <img class="photo__img" src="img/project-1.jpg" alt="Дизайн интерьера квартиры для семьи — проект ONYX" data-i18n-attr="alt=p1.alt" loading="lazy" decoding="async">
+              <span class="photo__label" data-i18n="p1.label">Ваше фото · проект 1 · 1200×1500</span>
+            </div>
+            <div class="project__caption">
+              <span class="project__num">01</span>
+              <h3 class="project__title" data-i18n="p1.title"><span class="ph">Квартира для семьи</span></h3>
+              <p class="project__meta" data-i18n="p1.meta"><span class="ph">Жилой интерьер · 86 м² · 2024</span></p>
+            </div>
+          </article>
+
+          <article class="project" data-reveal>
+            <div class="photo photo--project">
+              <img class="photo__img" src="img/project-2.jpg" alt="Архитектурный проект загородного дома — ONYX" data-i18n-attr="alt=p2.alt" loading="lazy" decoding="async">
+              <span class="photo__label" data-i18n="p2.label">Ваше фото · проект 2 · 1200×1500</span>
+            </div>
+            <div class="project__caption">
+              <span class="project__num">02</span>
+              <h3 class="project__title" data-i18n="p2.title"><span class="ph">Загородный дом</span></h3>
+              <p class="project__meta" data-i18n="p2.meta"><span class="ph">Архитектура · 210 м² · 2023</span></p>
+            </div>
+          </article>
+
+          <article class="project" data-reveal>
+            <div class="photo photo--project">
+              <img class="photo__img" src="img/project-3.jpg" alt="Дизайн интерьера офиса IT-компании — ONYX" data-i18n-attr="alt=p3.alt" loading="lazy" decoding="async">
+              <span class="photo__label" data-i18n="p3.label">Ваше фото · проект 3 · 1200×1500</span>
+            </div>
+            <div class="project__caption">
+              <span class="project__num">03</span>
+              <h3 class="project__title" data-i18n="p3.title"><span class="ph">Офис IT-компании</span></h3>
+              <p class="project__meta" data-i18n="p3.meta"><span class="ph">Коммерция · 340 м² · 2024</span></p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ЦИФРЫ ================= -->
+    <section class="stats" aria-label="Студия в цифрах" data-i18n-attr="aria-label=stats.label">
+      <div class="container stats__grid">
+        <div class="stat" data-reveal>
+          <p class="stat__value" data-count><span class="ph">120+</span></p>
+          <p class="stat__label" data-i18n="stat1">реализованных проектов</p>
+        </div>
+        <div class="stat" data-reveal>
+          <p class="stat__value" data-count><span class="ph">9</span></p>
+          <p class="stat__label" data-i18n="stat2">лет в архитектуре</p>
+        </div>
+        <div class="stat" data-reveal>
+          <p class="stat__value" data-count><span class="ph">18 000</span></p>
+          <p class="stat__label" data-i18n="stat3">м² спроектировано</p>
+        </div>
+        <div class="stat" data-reveal>
+          <p class="stat__value" data-count><span class="ph">70%</span></p>
+          <p class="stat__label" data-i18n="stat4">клиентов приходят по рекомендации</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= НАПРАВЛЕНИЯ ================= -->
+    <section class="section directions" id="directions">
+      <div class="container">
+        <div class="section-head section-head--center" data-reveal>
+          <p class="kicker" data-i18n="dir.kicker"><span>(04)</span> Направления</p>
+          <h2 class="title" data-i18n="dir.title">Два направления —<br><em>одна команда</em></h2>
+        </div>
+
+        <div class="panels rail" data-rail>
+          <a class="panel" href="#request-form" data-reveal>
+            <div class="photo photo--panel">
+              <img class="photo__img" src="img/interiors.jpg" alt="Дизайн интерьера квартиры от бюро ONYX" data-i18n-attr="alt=d1.alt" loading="lazy" decoding="async">
+              <span class="photo__label" data-i18n="d1.label">Ваше фото · интерьер · 1000×1300</span>
+            </div>
+            <div class="panel__body">
+              <p class="panel__tag" data-i18n="d1.tag">Интерьеры</p>
+              <h3 class="panel__title" data-i18n="d1.title">Интерьер, собранный <em>под вашу жизнь</em></h3>
+              <p class="panel__text" data-i18n="d1.text">Квартиры, дома, офисы и кафе. Продумываем сценарии, свет и хранение до того, как появится первая стена.</p>
+              <span class="panel__more" data-i18n="d1.more">Обсудить интерьер →</span>
+            </div>
+          </a>
+
+          <a class="panel" href="#request-form" data-reveal>
+            <div class="photo photo--panel">
+              <img class="photo__img" src="img/architecture.jpg" alt="Проект частного дома от бюро ONYX" data-i18n-attr="alt=d2.alt" loading="lazy" decoding="async">
+              <span class="photo__label" data-i18n="d2.label">Ваше фото · архитектура · 1000×1300</span>
+            </div>
+            <div class="panel__body">
+              <p class="panel__tag" data-i18n="d2.tag">Архитектура</p>
+              <h3 class="panel__title" data-i18n="d2.title">Дом, который <em>вписан в участок</em></h3>
+              <p class="panel__text" data-i18n="d2.text">Учитываем рельеф, стороны света и виды, чтобы дом работал на вас круглый год.</p>
+              <span class="panel__more" data-i18n="d2.more">Обсудить дом →</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ЭТАПЫ ================= -->
+    <section class="section process" id="process">
+      <div class="container">
+        <div class="process__top">
+          <div class="process__intro" data-reveal>
+            <p class="kicker" data-i18n="proc.kicker"><span>(05)</span> Этапы</p>
+            <h2 class="title" data-i18n="proc.title">Как мы <em>работаем</em></h2>
+            <p class="muted" data-i18n="proc.text">Пять шагов от первой встречи до сдачи объекта. Каждый заканчивается приёмкой — и только потом вы оплачиваете следующий.</p>
+            <a class="pill pill--dark" href="#request-form">
+              <span data-i18n="proc.cta">Начать со встречи</span>
+              <span class="pill__arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <figure class="process__figure" data-reveal>
+            <div class="photo photo--process">
+              <img class="photo__img" src="img/process.jpg" alt="Строительные работы на объекте — авторский надзор архитектора" data-i18n-attr="alt=proc.alt" width="931" height="1400" loading="lazy" decoding="async">
+              <span class="photo__label" data-i18n="proc.label">Ваше фото · на объекте · 1000×800</span>
+            </div>
+            <figcaption data-i18n="proc.caption">Авторский надзор — на объекте, а не по телефону</figcaption>
+          </figure>
+        </div>
+
+        <ol class="steps rail" data-rail>
+          <li class="step" data-reveal>
+            <span class="step__num">01</span>
+            <div>
+              <h3 data-i18n="step1">Встреча и обмер</h3>
+              <p data-i18n="step1.text">Обсуждаем задачу, бюджет и сроки. Выезжаем на объект и снимаем размеры.</p>
+              <span class="step__time" data-i18n="step1.time"><span class="ph">1–3 дня</span></span>
+            </div>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__num">02</span>
+            <div>
+              <h3 data-i18n="step2">Планировка</h3>
+              <p data-i18n="step2.text">Предлагаем 2–3 варианта расстановки стен и мебели, дорабатываем выбранный.</p>
+              <span class="step__time" data-i18n="step2.time"><span class="ph">1–2 недели</span></span>
+            </div>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__num">03</span>
+            <div>
+              <h3 data-i18n="step3">Концепция и 3D</h3>
+              <p data-i18n="step3.text">Стиль, материалы и визуализации каждого помещения — вы видите результат до стройки.</p>
+              <span class="step__time" data-i18n="step3.time"><span class="ph">2–4 недели</span></span>
+            </div>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__num">04</span>
+            <div>
+              <h3 data-i18n="step4">Рабочие чертежи</h3>
+              <p data-i18n="step4.text">Полный комплект документации, по которому строят без лишних вопросов.</p>
+              <span class="step__time" data-i18n="step4.time"><span class="ph">2–3 недели</span></span>
+            </div>
+          </li>
+          <li class="step" data-reveal>
+            <span class="step__num">05</span>
+            <div>
+              <h3 data-i18n="step5">Авторский надзор</h3>
+              <p data-i18n="step5.text">Выезжаем на объект и контролируем стройку до сдачи ключей.</p>
+              <span class="step__time" data-i18n="step5.time">до сдачи</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= ВОПРОСЫ ================= -->
+    <!-- Меняете ответы — поправьте их и в микроразметке FAQPage в <head>. -->
+    <section class="section faq" id="faq">
+      <div class="container faq__grid">
+        <div class="faq__aside" data-reveal>
+          <p class="kicker" data-i18n="faq.kicker"><span>(06)</span> Вопросы</p>
+          <h2 class="title" data-i18n="faq.title">Частые <em>вопросы</em></h2>
+          <p class="muted" data-i18n="faq.text">Не нашли ответ? Позвоните <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> или оставьте заявку — архитектор ответит в течение рабочего дня.</p>
+        </div>
+        <div class="faq__list" data-reveal>
+          <details class="faq__item">
+            <summary><h3 class="faq__q" data-i18n="q1">Сколько стоит дизайн-проект интерьера?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a" data-i18n="a1">Стоимость зависит от площади и состава проекта и считается за квадратный метр — от <span class="ph">2 500 ₽/м²</span>. Итоговую сумму фиксируем в договоре до начала работ, и она не меняется.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q" data-i18n="q2">Сколько времени занимает дизайн-проект квартиры?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a" data-i18n="a2">В среднем <span class="ph">6–10 недель</span>: обмер, планировка, концепция с 3D-визуализациями и рабочие чертежи. Сроки каждого этапа прописываем в договоре.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q" data-i18n="q3">Что входит в дизайн-проект?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a" data-i18n="a3">Обмерный план, планировочные решения, 3D-визуализации всех помещений, рабочие чертежи — планы стен, электрики, сантехники, потолков и полов, развёртки стен — и спецификация материалов и мебели.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q" data-i18n="q4">Проектируете ли вы частные дома?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a" data-i18n="a4">Да. Делаем архитектурный проект частного дома: эскиз, планировки, фасады, рабочую документацию и благоустройство участка. Можем вести и архитектуру, и интерьер одного объекта.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q" data-i18n="q5">Зачем нужен авторский надзор?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a" data-i18n="a5">Чтобы стройка шла строго по проекту. Архитектор выезжает на объект, отвечает на вопросы строителей, проверяет узлы и материалы и вносит корректировки. Это защищает от ошибок, которые дорого исправлять.</p>
+          </details>
+          <details class="faq__item">
+            <summary><h3 class="faq__q" data-i18n="q6">В каких городах вы работаете?</h3><span class="faq__icon" aria-hidden="true">+</span></summary>
+            <p class="faq__a" data-i18n="a6">В <span class="ph">Москве и Московской области</span>. Для других городов возможен дистанционный формат с выездами архитектора на ключевые этапы.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ЗАЯВКА ================= -->
+    <section class="section request" id="request-form">
+      <div class="container request__grid">
+        <div class="request__intro" data-reveal>
+          <p class="kicker" data-i18n="req.kicker"><span>(07)</span> Заявка</p>
+          <h2 class="title title--xl" data-i18n="req.title">Давайте обсудим <em>ваш проект</em></h2>
+          <p class="muted" data-i18n="req.text">Оставьте заявку — архитектор свяжется с вами в течение рабочего дня и расскажет, с чего начать.</p>
+          <div class="request__contacts">
+            <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a>
+            <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
+          </div>
+        </div>
+
+        <form class="form" id="requestForm" novalidate data-reveal>
+          <label class="field">
+            <span class="field__label" data-i18n="form.name">Имя</span>
+            <input type="text" id="name" name="name" class="field__input" placeholder="Как к вам обращаться" data-i18n-attr="placeholder=form.name.ph" required>
+          </label>
+          <label class="field">
+            <span class="field__label" data-i18n="form.phone">Телефон</span>
+            <input type="tel" id="phone" name="phone" class="field__input" placeholder="+7 (___) ___-__-__" required>
+          </label>
+          <label class="field">
+            <span class="field__label" data-i18n="form.message">Сообщение</span>
+            <textarea id="message" name="message" class="field__input field__input--area" placeholder="Тип объекта, площадь, сроки" data-i18n-attr="placeholder=form.message.ph" rows="3"></textarea>
+          </label>
+          <div class="form__footer">
+            <button type="submit" class="pill pill--accent form__submit" id="submitBtn">
+              <span class="btn__text" data-i18n="form.submit">Отправить заявку</span>
+              <span class="pill__arrow" aria-hidden="true">→</span>
+            </button>
+            <p class="form__consent" data-i18n="form.consent">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+          </div>
+          <p class="form__result" id="formResult" role="status" aria-live="polite"></p>
+        <p class="preview-note">Это предпросмотр дизайна. Песочница предпросмотра блокирует запросы к внешним сайтам, поэтому отправка формы здесь не пройдёт. На реальном хостинге заявка уходит в Google-таблицу.</p>
+</form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= ПОДВАЛ ================= -->
+  <footer class="footer" id="contacts">
+    <div class="container">
+      <div class="footer__grid">
+        <p class="footer__lead" data-i18n="footer.lead">Есть идея или участок?<br><em>Напишите нам</em> — ответим в тот же день.</p>
+
+        <nav class="footer__col" aria-label="Разделы" data-i18n-attr="aria-label=footer.sections">
+          <h3 data-i18n="footer.sections">Разделы</h3>
+          <a href="#about" data-i18n="nav.about">О студии</a>
+          <a href="#services" data-i18n="nav.services">Услуги</a>
+          <a href="#projects" data-i18n="nav.projects">Проекты</a>
+          <a href="#process" data-i18n="nav.process">Этапы</a>
+          <a href="#faq" data-i18n="nav.faq">Вопросы</a>
+        </nav>
+
+        <address class="footer__col">
+          <h3 data-i18n="footer.contacts">Контакты</h3>
+          <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a>
+          <a href="mailto:hello@example.com"><span class="ph">hello@onyx-studio.ru</span></a>
+          <p data-i18n="footer.address"><span class="ph">г. Москва, ул. Примерная, 1</span></p>
+        </address>
+
+        <div class="footer__col">
+          <h3 data-i18n="footer.social">Соцсети</h3>
+          <!-- ВАШИ ДАННЫЕ: замените «#» на свои ссылки -->
+          <a href="#">Telegram</a>
+          <a href="#">WhatsApp</a>
+          <a href="#" data-i18n="footer.vk">ВКонтакте</a>
+        </div>
+      </div>
+
+      <p class="footer__wordmark" aria-hidden="true">ONYX</p>
+
+      <div class="footer__bottom">
+        <p>&copy; <span id="year"></span> <span data-i18n="footer.copy">ONYX — дизайн интерьера и архитектурное проектирование в Москве и Московской области.</span></p>
+        <a class="link-arrow" href="#top"><span data-i18n="footer.top">Наверх</span> <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+// Языки сайта: русский (основной — тексты прямо в index.html), английский
+// и арабский (справа налево). Элементы с переводом помечены в разметке:
+//   data-i18n="ключ"                 — содержимое элемента
+//   data-i18n-attr="alt=ключ;..."    — атрибуты (alt, aria-label, placeholder)
+// Меняете русский текст на странице — поправьте здесь английский и арабский.
+// Фрагменты с class="ph" — заглушки под ваши данные, как и в русской версии.
+(function () {
+  const DICT = {
+    // ---------- заголовок вкладки и описание для поиска ----------
+    'meta.title': {
+      en: 'Interior design and architecture in Moscow — ONYX studio',
+      ar: 'التصميم الداخلي والعمارة في موسكو — استوديو ONYX',
+    },
+    'meta.description': {
+      en: 'Interior design for apartments and houses, architectural design and design supervision in Moscow and the Moscow region. The price is fixed in the contract. +7 925 376-03-75',
+      ar: 'تصميم داخلي للشقق والمنازل، وتصميم معماري، وإشراف على التنفيذ في موسكو ومنطقة موسكو. السعر ثابت في العقد. ‎+7 925 376-03-75',
+    },
+
+    // ---------- шапка и меню ----------
+    'nav.label': { en: 'Site sections', ar: 'أقسام الموقع' },
+    'nav.about': { en: 'About', ar: 'عن الاستوديو' },
+    'nav.services': { en: 'Services', ar: 'الخدمات' },
+    'nav.projects': { en: 'Projects', ar: 'المشاريع' },
+    'nav.process': { en: 'Process', ar: 'مراحل العمل' },
+    'nav.contacts': { en: 'Contacts', ar: 'التواصل' },
+    'nav.request': { en: 'Enquiry', ar: 'الطلب' },
+    'nav.faq': { en: 'FAQ', ar: 'الأسئلة' },
+    'logo.label': { en: 'ONYX — home', ar: 'ONYX — الصفحة الرئيسية' },
+    'lang.label': { en: 'Site language', ar: 'لغة الموقع' },
+    'menu.label': { en: 'Menu', ar: 'القائمة' },
+    'cta.discuss': { en: 'Discuss a project', ar: 'ناقش مشروعك' },
+
+    // ---------- главный экран ----------
+    'hero.eyebrow': { en: 'Interior & architecture studio', ar: 'استوديو التصميم الداخلي والعمارة' },
+    'hero.h1': {
+      en: 'ONYX — interior design and architectural design in Moscow',
+      ar: 'ONYX — تصميم داخلي وتصميم معماري في موسكو',
+    },
+    'hero.chip1': { en: 'completed projects', ar: 'مشروعاً منجزاً' },
+    'hero.chip2.value': { en: '<span class="ph">9 years</span>', ar: '<span class="ph">9 سنوات</span>' },
+    'hero.chip2': { en: 'in architecture and&nbsp;interiors', ar: 'في العمارة والتصميم الداخلي' },
+    'hero.tag1': { en: 'Our own working drawings', ar: 'مخططات تنفيذية من إعدادنا' },
+    'hero.tag2': { en: 'Design supervision', ar: 'الإشراف على التنفيذ' },
+    'hero.contact': { en: 'Contact', ar: 'تواصل' },
+    'hero.call': { en: 'Call +7 925 376-03-75', ar: 'اتصل على ‎+7 925 376-03-75' },
+    'hero.request': { en: 'Leave a request', ar: 'اترك طلباً' },
+    'hero.scroll': { en: 'Scroll', ar: 'مرّر للأسفل' },
+
+    // подписи на чертежах
+    'bp.living': { en: 'LIVING ROOM', ar: 'غرفة المعيشة' },
+    'bp.kitchen': { en: 'KITCHEN', ar: 'المطبخ' },
+    'bp.bedroom': { en: 'BEDROOM', ar: 'غرفة النوم' },
+    'bp.facade': { en: 'FACADE 1–3', ar: 'الواجهة 1–3' },
+    'bp.ppe': { en: 'PPE · hard hat', ar: 'معدات السلامة · خوذة' },
+    'bp.section': { en: 'SECTION A–A · 1:50', ar: 'مقطع A–A · 1:50' },
+    'bp.sheet': { en: 'Sheet AR-01 · Sketch', ar: 'لوحة AR-01 · مسودة' },
+    'bp.a': { en: 'A', ar: 'A' },
+    'bp.north': { en: 'N', ar: 'ش' },
+
+    // бегущая строка
+    'mq.interiors': { en: 'Interior design', ar: 'التصميم الداخلي' },
+    'mq.architecture': { en: 'Architecture', ar: 'العمارة' },
+    'mq.drawings': { en: 'Working drawings', ar: 'المخططات التنفيذية' },
+    'mq.supervision': { en: 'Design supervision', ar: 'الإشراف على التنفيذ' },
+
+    // ---------- интро ----------
+    'lead.title': { en: 'We design <em>spaces</em> for living', ar: 'نصمّم <em>مساحات</em> للحياة' },
+    'lead.text': {
+      en: 'Interiors and homes you want to live in. From the first sketch to working drawings and handover — one architect leads the project from start to finish.',
+      ar: 'تصاميم داخلية ومنازل يطيب العيش فيها. من الرسم الأول حتى المخططات التنفيذية وتسليم المشروع — مهندس معماري واحد يقود المشروع من بدايته إلى نهايته.',
+    },
+    'lead.more': { en: 'View projects', ar: 'شاهد المشاريع' },
+    'lead.city': { en: 'City', ar: 'المدينة' },
+    'lead.city.v': { en: '<span class="ph">Moscow and region</span>', ar: '<span class="ph">موسكو ومنطقتها</span>' },
+    'lead.since': { en: 'Working since', ar: 'نعمل منذ' },
+    'lead.since.v': { en: '<span class="ph">2016</span>', ar: '<span class="ph">2016</span>' },
+    'lead.format': { en: 'Scope', ar: 'المجال' },
+    'lead.format.v': { en: 'Interiors · Architecture', ar: 'تصميم داخلي · عمارة' },
+    'lead.alt': { en: 'Residential building under construction', ar: 'مبنى سكني قيد الإنشاء' },
+    'lead.label': { en: 'Your photo · property · 1200×1500', ar: 'صورتك · العقار · 1200×1500' },
+    'lead.caption': { en: 'Project', ar: 'المشروع' },
+    'lead.caption.v': { en: '<span class="ph">Project name</span>', ar: '<span class="ph">اسم المشروع</span>' },
+    'badge.text': { en: 'Open for new projects • ', ar: 'نستقبل مشاريع جديدة • ' },
+
+    // ---------- о студии ----------
+    'about.kicker': { en: '<span>(01)</span> About', ar: '<span>(01)</span> عن الاستوديو' },
+    'about.manifesto': {
+      en: 'We are ONYX studio. We design interiors and homes where <em>every detail</em> works for your life: from the layout and lighting to the socket by the bed.',
+      ar: 'نحن استوديو ONYX. نصمّم مساحات داخلية ومنازل تعمل فيها <em>كل تفصيلة</em> لخدمة حياتك: من المخطط والإضاءة حتى المقبس بجانب السرير.',
+    },
+    'about.alt': {
+      en: 'Apartment plan with furniture layout — ONYX drawing',
+      ar: 'مخطط شقة مع توزيع الأثاث — رسم من استوديو ONYX',
+    },
+    'about.label': { en: 'Your photo · studio or project · 1200×900', ar: 'صورتك · الاستوديو أو المشروع · 1200×900' },
+    'about.caption': { en: 'Alexander Zhikharev, founder of ONYX', ar: 'ألكسندر جيخاريف، مؤسس ONYX' },
+    'facts.1': { en: 'Turnkey', ar: 'تسليم مفتاح' },
+    'facts.1.v': { en: 'Full cycle — from measurements to handover.', ar: 'دورة كاملة — من القياسات حتى تسليم المشروع.' },
+    'facts.2': { en: 'Price', ar: 'السعر' },
+    'facts.2.v': { en: 'Fixed in the contract before work begins.', ar: 'نثبّته في العقد قبل بدء العمل.' },
+    'facts.3': { en: 'Payment', ar: 'الدفع' },
+    'facts.3.v': { en: 'In stages — after each stage is approved.', ar: 'على مراحل — بعد اعتماد كل مرحلة.' },
+    'facts.4': { en: 'Timeline', ar: 'المدة' },
+    'facts.4.v': {
+      en: 'Design project — in <span class="ph">6–10 weeks</span>.',
+      ar: 'المشروع التصميمي — خلال <span class="ph">6–10 أسابيع</span>.',
+    },
+
+    // ---------- услуги ----------
+    'services.kicker': { en: '<span>(02)</span> Services', ar: '<span>(02)</span> الخدمات' },
+    'services.title': {
+      en: 'We take care of <em>everything</em> —<br>from idea to keys',
+      ar: 'نتولّى <em>كل شيء</em> —<br>من الفكرة حتى المفاتيح',
+    },
+    'services.text': {
+      en: 'Interior design for apartments, houses and commercial spaces, architectural design of private houses, working drawings and design supervision — in <span class="ph">Moscow and the Moscow region</span>.',
+      ar: 'تصميم داخلي للشقق والمنازل والمساحات التجارية، وتصميم معماري للمنازل الخاصة، ومخططات تنفيذية وإشراف على التنفيذ — في <span class="ph">موسكو ومنطقة موسكو</span>.',
+    },
+    's1.title': { en: 'Interior design project', ar: 'مشروع التصميم الداخلي' },
+    's1.text': {
+      en: 'Apartments and houses: layout, 3D visualisations, lighting, choice of materials and furniture.',
+      ar: 'للشقق والمنازل: المخطط، والتصورات ثلاثية الأبعاد، والإضاءة، واختيار المواد والأثاث.',
+    },
+    's2.title': { en: 'Architectural design', ar: 'التصميم المعماري' },
+    's2.text': {
+      en: 'Private house projects: facades, reconstruction and landscaping.',
+      ar: 'مشاريع المنازل الخاصة: الواجهات وإعادة التأهيل وتنسيق الموقع.',
+    },
+    's3.title': { en: 'Working drawings', ar: 'المخططات التنفيذية' },
+    's3.text': {
+      en: 'A complete set for builders: wall elevations, electrical, plumbing.',
+      ar: 'مجموعة كاملة للمقاولين: مساقط الجدران والكهرباء والسباكة.',
+    },
+    's4.title': { en: 'Design supervision', ar: 'الإشراف على التنفيذ' },
+    's4.text': {
+      en: 'We visit the site and make sure it is built to the design.',
+      ar: 'نزور الموقع ونتأكد من أن البناء يسير وفق التصميم.',
+    },
+
+    // ---------- проекты ----------
+    'projects.kicker': { en: '<span>(03)</span> Projects', ar: '<span>(03)</span> المشاريع' },
+    'projects.title': { en: 'Selected <em>work</em>', ar: 'أعمال <em>مختارة</em>' },
+    'projects.more': { en: 'I want one like this', ar: 'أريد مثله' },
+    'p1.alt': { en: 'Interior design of a family apartment — ONYX project', ar: 'تصميم داخلي لشقة عائلية — مشروع ONYX' },
+    'p1.label': { en: 'Your photo · project 1 · 1200×1500', ar: 'صورتك · المشروع 1 · 1200×1500' },
+    'p1.title': { en: '<span class="ph">Family apartment</span>', ar: '<span class="ph">شقة لعائلة</span>' },
+    'p1.meta': { en: '<span class="ph">Residential interior · 86 m² · 2024</span>', ar: '<span class="ph">تصميم سكني · 86 م² · 2024</span>' },
+    'p2.alt': { en: 'Architectural design of a country house — ONYX', ar: 'تصميم معماري لمنزل ريفي — ONYX' },
+    'p2.label': { en: 'Your photo · project 2 · 1200×1500', ar: 'صورتك · المشروع 2 · 1200×1500' },
+    'p2.title': { en: '<span class="ph">Country house</span>', ar: '<span class="ph">منزل ريفي</span>' },
+    'p2.meta': { en: '<span class="ph">Architecture · 210 m² · 2023</span>', ar: '<span class="ph">عمارة · 210 م² · 2023</span>' },
+    'p3.alt': { en: 'Interior design of an IT company office — ONYX', ar: 'تصميم داخلي لمكتب شركة تقنية — ONYX' },
+    'p3.label': { en: 'Your photo · project 3 · 1200×1500', ar: 'صورتك · المشروع 3 · 1200×1500' },
+    'p3.title': { en: '<span class="ph">IT company office</span>', ar: '<span class="ph">مكتب شركة تقنية</span>' },
+    'p3.meta': { en: '<span class="ph">Commercial · 340 m² · 2024</span>', ar: '<span class="ph">تجاري · 340 م² · 2024</span>' },
+
+    // ---------- цифры ----------
+    'stats.label': { en: 'The studio in numbers', ar: 'الاستوديو بالأرقام' },
+    'stat1': { en: 'completed projects', ar: 'مشروعاً منجزاً' },
+    'stat2': { en: 'years in architecture', ar: 'سنوات في العمارة' },
+    'stat3': { en: 'm² designed', ar: 'م² من التصميم' },
+    'stat4': { en: 'of clients come by recommendation', ar: 'من العملاء يأتون بالتوصية' },
+
+    // ---------- направления ----------
+    'dir.kicker': { en: '<span>(04)</span> Disciplines', ar: '<span>(04)</span> الاتجاهات' },
+    'dir.title': { en: 'Two disciplines —<br><em>one team</em>', ar: 'اتجاهان —<br><em>فريق واحد</em>' },
+    'd1.alt': { en: 'Apartment interior design by ONYX', ar: 'تصميم داخلي لشقة من استوديو ONYX' },
+    'd1.label': { en: 'Your photo · interior · 1000×1300', ar: 'صورتك · تصميم داخلي · 1000×1300' },
+    'd1.tag': { en: 'Interiors', ar: 'التصميم الداخلي' },
+    'd1.title': { en: 'An interior shaped <em>around your life</em>', ar: 'تصميم داخلي <em>على مقاس حياتك</em>' },
+    'd1.text': {
+      en: 'Apartments, houses, offices and cafés. We plan how you live, the lighting and the storage before the first wall goes up.',
+      ar: 'شقق ومنازل ومكاتب ومقاهٍ. نخطط لطريقة الاستخدام والإضاءة والتخزين قبل أن يُبنى أول جدار.',
+    },
+    'd1.more': { en: 'Discuss an interior →', ar: 'ناقش تصميمك الداخلي ←' },
+    'd2.alt': { en: 'Private house design by ONYX', ar: 'تصميم منزل خاص من استوديو ONYX' },
+    'd2.label': { en: 'Your photo · architecture · 1000×1300', ar: 'صورتك · عمارة · 1000×1300' },
+    'd2.tag': { en: 'Architecture', ar: 'العمارة' },
+    'd2.title': { en: 'A house <em>that fits its site</em>', ar: 'منزل <em>منسجم مع موقعه</em>' },
+    'd2.text': {
+      en: 'We take into account the terrain, orientation and views so that the house works for you all year round.',
+      ar: 'نراعي التضاريس واتجاهات الشمس والإطلالات ليخدمك المنزل طوال العام.',
+    },
+    'd2.more': { en: 'Discuss a house →', ar: 'ناقش منزلك ←' },
+
+    // ---------- этапы ----------
+    'proc.kicker': { en: '<span>(05)</span> Process', ar: '<span>(05)</span> مراحل العمل' },
+    'proc.title': { en: 'How we <em>work</em>', ar: 'كيف <em>نعمل</em>' },
+    'proc.text': {
+      en: 'Five steps from the first meeting to handover. Each one ends with your approval — and only then do you pay for the next.',
+      ar: 'خمس خطوات من اللقاء الأول حتى التسليم. تنتهي كل خطوة باعتمادك — وبعدها فقط تدفع مقابل الخطوة التالية.',
+    },
+    'proc.cta': { en: 'Start with a meeting', ar: 'ابدأ بلقاء' },
+    'proc.alt': {
+      en: 'Construction works on site — the architect’s supervision',
+      ar: 'أعمال بناء في الموقع — إشراف المهندس المعماري',
+    },
+    'proc.label': { en: 'Your photo · on site · 1000×800', ar: 'صورتك · في الموقع · 1000×800' },
+    'proc.caption': {
+      en: 'Design supervision — on site, not over the phone',
+      ar: 'الإشراف على التنفيذ — في الموقع، لا عبر الهاتف',
+    },
+    'step1': { en: 'Meeting and measurements', ar: 'اللقاء والقياسات' },
+    'step1.text': {
+      en: 'We discuss the brief, budget and timeline, then visit the site and take measurements.',
+      ar: 'نناقش المهمة والميزانية والمدة، ثم نزور الموقع ونأخذ القياسات.',
+    },
+    'step1.time': { en: '<span class="ph">1–3 days</span>', ar: '<span class="ph">1–3 أيام</span>' },
+    'step2': { en: 'Layout', ar: 'المخطط' },
+    'step2.text': {
+      en: 'We offer 2–3 options for walls and furniture and refine the one you choose.',
+      ar: 'نقدّم 2–3 خيارات لتوزيع الجدران والأثاث ونطوّر الخيار الذي تختاره.',
+    },
+    'step2.time': { en: '<span class="ph">1–2 weeks</span>', ar: '<span class="ph">أسبوع إلى أسبوعين</span>' },
+    'step3': { en: 'Concept and 3D', ar: 'الفكرة والتصور ثلاثي الأبعاد' },
+    'step3.text': {
+      en: 'Style, materials and visualisations of every room — you see the result before construction.',
+      ar: 'الأسلوب والمواد وتصورات لكل غرفة — ترى النتيجة قبل البدء بالبناء.',
+    },
+    'step3.time': { en: '<span class="ph">2–4 weeks</span>', ar: '<span class="ph">2–4 أسابيع</span>' },
+    'step4': { en: 'Working drawings', ar: 'المخططات التنفيذية' },
+    'step4.text': {
+      en: 'A complete set of documents that builders can follow without extra questions.',
+      ar: 'مجموعة كاملة من الوثائق يبني عليها المقاول دون أسئلة إضافية.',
+    },
+    'step4.time': { en: '<span class="ph">2–3 weeks</span>', ar: '<span class="ph">2–3 أسابيع</span>' },
+    'step5': { en: 'Design supervision', ar: 'الإشراف على التنفيذ' },
+    'step5.text': {
+      en: 'We visit the site and oversee construction until the keys are handed over.',
+      ar: 'نزور الموقع ونتابع البناء حتى تسليم المفاتيح.',
+    },
+    'step5.time': { en: 'until handover', ar: 'حتى التسليم' },
+
+    // ---------- вопросы ----------
+    'faq.kicker': { en: '<span>(06)</span> FAQ', ar: '<span>(06)</span> الأسئلة' },
+    'faq.title': { en: 'Frequently asked <em>questions</em>', ar: 'الأسئلة <em>الشائعة</em>' },
+    'faq.text': {
+      en: 'Didn’t find an answer? Call <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> or leave a request — an architect will reply within one working day.',
+      ar: 'لم تجد إجابتك؟ اتصل على <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> أو اترك طلباً — وسيرد عليك مهندس معماري خلال يوم عمل.',
+    },
+    'q1': { en: 'How much does an interior design project cost?', ar: 'كم تبلغ تكلفة مشروع التصميم الداخلي؟' },
+    'a1': {
+      en: 'The cost depends on the area and the scope and is calculated per square metre — from <span class="ph">2,500 ₽/m²</span>. We fix the total in the contract before work begins, and it does not change.',
+      ar: 'تعتمد التكلفة على المساحة ونطاق المشروع وتُحتسب لكل متر مربع — ابتداءً من <span class="ph">2,500 روبل/م²</span>. نثبّت المبلغ النهائي في العقد قبل بدء العمل، ولا يتغيّر.',
+    },
+    'q2': { en: 'How long does an apartment design project take?', ar: 'كم يستغرق مشروع تصميم شقة؟' },
+    'a2': {
+      en: 'On average <span class="ph">6–10 weeks</span>: measurements, layout, a concept with 3D visualisations and working drawings. The timing of each stage is set out in the contract.',
+      ar: 'في المتوسط <span class="ph">6–10 أسابيع</span>: القياسات، والمخطط، والفكرة مع تصورات ثلاثية الأبعاد، والمخططات التنفيذية. نحدد مدة كل مرحلة في العقد.',
+    },
+    'q3': { en: 'What does a design project include?', ar: 'ماذا يشمل المشروع التصميمي؟' },
+    'a3': {
+      en: 'A measured plan, layout solutions, 3D visualisations of every room, working drawings — wall, electrical, plumbing, ceiling and floor plans and wall elevations — and a specification of materials and furniture.',
+      ar: 'مخطط القياسات، وحلول التوزيع، وتصورات ثلاثية الأبعاد لجميع الغرف، والمخططات التنفيذية — مخططات الجدران والكهرباء والسباكة والأسقف والأرضيات ومساقط الجدران — إضافةً إلى جدول مواصفات المواد والأثاث.',
+    },
+    'q4': { en: 'Do you design private houses?', ar: 'هل تصممون منازل خاصة؟' },
+    'a4': {
+      en: 'Yes. We create architectural designs for private houses: sketch, floor plans, facades, working documents and landscaping. We can handle both the architecture and the interior of the same property.',
+      ar: 'نعم. نُعدّ التصميم المعماري للمنازل الخاصة: المسودة، والمخططات، والواجهات، والوثائق التنفيذية، وتنسيق الموقع. ويمكننا تولّي العمارة والتصميم الداخلي للمشروع نفسه.',
+    },
+    'q5': { en: 'Why is design supervision needed?', ar: 'لماذا نحتاج إلى الإشراف على التنفيذ؟' },
+    'a5': {
+      en: 'So that construction follows the design exactly. The architect visits the site, answers the builders’ questions, checks details and materials and makes adjustments. This protects you from mistakes that are expensive to fix.',
+      ar: 'لكي يسير البناء وفق التصميم تماماً. يزور المهندس المعماري الموقع، ويجيب عن أسئلة المقاولين، ويتحقق من التفاصيل والمواد، ويُجري التعديلات اللازمة. وهذا يحميك من أخطاء يكلّف إصلاحها كثيراً.',
+    },
+    'q6': { en: 'Which cities do you work in?', ar: 'في أي المدن تعملون؟' },
+    'a6': {
+      en: 'In <span class="ph">Moscow and the Moscow region</span>. For other cities we can work remotely, with the architect visiting at key stages.',
+      ar: 'في <span class="ph">موسكو ومنطقة موسكو</span>. وفي المدن الأخرى يمكننا العمل عن بُعد مع زيارات المهندس المعماري في المراحل الرئيسية.',
+    },
+
+    // ---------- заявка ----------
+    'req.kicker': { en: '<span>(07)</span> Enquiry', ar: '<span>(07)</span> الطلب' },
+    'req.title': { en: 'Let’s discuss <em>your project</em>', ar: 'لنناقش <em>مشروعك</em>' },
+    'req.text': {
+      en: 'Leave a request — an architect will contact you within one working day and explain where to start.',
+      ar: 'اترك طلباً — وسيتواصل معك مهندس معماري خلال يوم عمل ويشرح لك من أين نبدأ.',
+    },
+    'form.name': { en: 'Name', ar: 'الاسم' },
+    'form.name.ph': { en: 'How should we address you', ar: 'كيف نناديك' },
+    'form.phone': { en: 'Phone', ar: 'الهاتف' },
+    'form.message': { en: 'Message', ar: 'الرسالة' },
+    'form.message.ph': { en: 'Property type, area, timeline', ar: 'نوع العقار، المساحة، المدة' },
+    'form.submit': { en: 'Send request', ar: 'أرسل الطلب' },
+    'form.consent': {
+      en: 'By clicking the button, you agree to the processing of your personal data.',
+      ar: 'بالضغط على الزر، أنت توافق على معالجة بياناتك الشخصية.',
+    },
+
+    // ---------- подвал ----------
+    'footer.lead': {
+      en: 'Have an idea or a plot?<br><em>Write to us</em> — we reply the same day.',
+      ar: 'لديك فكرة أو قطعة أرض؟<br><em>راسلنا</em> — نرد في اليوم نفسه.',
+    },
+    'footer.sections': { en: 'Sections', ar: 'الأقسام' },
+    'footer.contacts': { en: 'Contacts', ar: 'التواصل' },
+    'footer.address': { en: '<span class="ph">1 Primernaya St, Moscow</span>', ar: '<span class="ph">موسكو، شارع بريميرنايا، 1</span>' },
+    'footer.social': { en: 'Social', ar: 'التواصل الاجتماعي' },
+    'footer.vk': { en: 'VK', ar: 'VK' },
+    'footer.copy': {
+      en: 'ONYX — interior design and architectural design in Moscow and the Moscow region.',
+      ar: 'ONYX — تصميم داخلي وتصميم معماري في موسكو ومنطقة موسكو.',
+    },
+    'footer.top': { en: 'Back to top', ar: 'إلى الأعلى' },
+
+    // ---------- тексты из script.js ----------
+    'js.menu.open': { en: 'Open menu', ar: 'فتح القائمة' },
+    'js.menu.close': { en: 'Close menu', ar: 'إغلاق القائمة' },
+    'js.rail.prev': { en: 'Previous', ar: 'السابق' },
+    'js.rail.next': { en: 'Next', ar: 'التالي' },
+    'js.form.sending': { en: 'Sending...', ar: 'جارٍ الإرسال...' },
+    'js.form.success': { en: 'Request sent, we will contact you', ar: 'تم إرسال الطلب، وسنتواصل معك' },
+    'js.form.error': { en: 'Could not send the request. Please try again.', ar: 'تعذّر إرسال الطلب. حاول مرة أخرى.' },
+    'js.form.required': { en: 'Please fill in your name and phone.', ar: 'يرجى إدخال الاسم ورقم الهاتف.' },
+  };
+
+  const LANGS = ['ru', 'en', 'ar'];
+  const STORE_KEY = 'onyx-lang';
+  const root = document.documentElement;
+
+  const textEls = Array.from(document.querySelectorAll('[data-i18n]'));
+  const attrEls = Array.from(document.querySelectorAll('[data-i18n-attr]'));
+  // стрелки, которые в арабской версии смотрят в другую сторону
+  const arrowEls = Array.from(document.querySelectorAll(
+    '.pill__arrow, .service__arrow, .link-arrow > span[aria-hidden], .badge-spin__arrow'
+  ));
+  const MIRROR = { '→': '←', '←': '→', '↗': '↖', '↖': '↗' };
+
+  // русские тексты берём прямо со страницы — до того, как их что-то поменяет
+  const ruText = new Map(textEls.map(function (el) { return [el, el.innerHTML]; }));
+  const ruAttr = new Map(attrEls.map(function (el) {
+    const saved = {};
+    parsePairs(el).forEach(function (pair) { saved[pair[0]] = el.getAttribute(pair[0]); });
+    return [el, saved];
+  }));
+  const arrowText = new Map(arrowEls.map(function (el) { return [el, el.textContent]; }));
+  const metaDescription = document.querySelector('meta[name="description"]');
+  const canonical = document.querySelector('link[rel="canonical"]');
+  const ruTitle = document.title;
+  const ruDescription = metaDescription ? metaDescription.content : '';
+
+  let current = 'ru';
+
+  function parsePairs(el) {
+    return el.dataset.i18nAttr.split(';').map(function (part) {
+      const i = part.indexOf('=');
+      return [part.slice(0, i).trim(), part.slice(i + 1).trim()];
+    });
+  }
+
+  function pick(key, lang, fallback) {
+    const entry = DICT[key];
+    return lang !== 'ru' && entry && entry[lang] != null ? entry[lang] : fallback;
+  }
+
+  // перевод для script.js: onyxT('ключ', 'русский текст')
+  window.onyxT = function (key, ru) { return pick(key, current, ru); };
+  window.onyxLang = function () { return current; };
+
+  function apply(lang) {
+    current = lang;
+    root.lang = lang;
+    root.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+    textEls.forEach(function (el) {
+      el.innerHTML = pick(el.dataset.i18n, lang, ruText.get(el));
+    });
+    attrEls.forEach(function (el) {
+      const saved = ruAttr.get(el);
+      parsePairs(el).forEach(function (pair) {
+        el.setAttribute(pair[0], pick(pair[1], lang, saved[pair[0]]));
+      });
+    });
+    arrowEls.forEach(function (el) {
+      const text = arrowText.get(el);
+      el.textContent = root.dir === 'rtl' ? (MIRROR[text] || text) : text;
+    });
+
+    document.title = pick('meta.title', lang, ruTitle);
+    if (metaDescription) metaDescription.content = pick('meta.description', lang, ruDescription);
+    if (canonical) {
+      const base = canonical.href.split('?')[0];
+      canonical.href = lang === 'ru' ? base : base + '?lang=' + lang;
+    }
+
+    // переключатель в шапке
+    document.querySelectorAll('.lang__code').forEach(function (el) { el.textContent = lang.toUpperCase(); });
+    document.querySelectorAll('.lang__list [data-lang]').forEach(function (btn) {
+      btn.setAttribute('aria-checked', String(btn.dataset.lang === lang));
+    });
+
+    // сайт перестраивает то, что зависит от текста (слова манифеста, ленты)
+    document.dispatchEvent(new CustomEvent('onyx:lang', { detail: { lang: lang } }));
+  }
+
+  function remember(lang) {
+    try { localStorage.setItem(STORE_KEY, lang); } catch (e) { /* без памяти */ }
+    try {
+      const url = new URL(location.href);
+      if (lang === 'ru') url.searchParams.delete('lang'); else url.searchParams.set('lang', lang);
+      history.replaceState(null, '', url);
+    } catch (e) { /* адрес не меняем */ }
+  }
+
+  // ---------- переключатель языка ----------
+  const box = document.querySelector('.lang');
+  if (box) {
+    const btn = box.querySelector('.lang__btn');
+    const setOpen = function (open) {
+      box.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    };
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setOpen(!box.classList.contains('is-open'));
+    });
+    box.querySelectorAll('[data-lang]').forEach(function (option) {
+      option.addEventListener('click', function () {
+        const lang = option.dataset.lang;
+        setOpen(false);
+        btn.focus();
+        if (lang === current) return;
+        apply(lang);
+        remember(lang);
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!box.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && box.classList.contains('is-open')) {
+        setOpen(false);
+        btn.focus();
+      }
+    });
+  }
+
+  // язык при загрузке: из адреса (?lang=en), иначе — выбранный раньше
+  let start = 'ru';
+  try {
+    start = new URLSearchParams(location.search).get('lang') || localStorage.getItem(STORE_KEY) || 'ru';
+  } catch (e) { /* по умолчанию русский */ }
+  if (LANGS.indexOf(start) < 0) start = 'ru';
+  if (start !== 'ru') apply(start);
+})();
+</script>
+  <script>
+(function () {
+  const root = document.documentElement;
+  const reduceMotion = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Тексты из скрипта на выбранном языке (словарь — в i18n.js)
+  const t = function (key, ru) { return window.onyxT ? window.onyxT(key, ru) : ru; };
+
+  // Анимации включаем только если человек не просил «уменьшить движение».
+  // Без JavaScript класса .motion нет — и всё видно сразу.
+  if (!reduceMotion) root.classList.add('motion');
+
+  // ---------- Места под фото ----------
+  // Есть файл в img/ — показываем его и прячем заглушку; нет — убираем картинку.
+  document.querySelectorAll('.photo__img').forEach(function (img) {
+    const slot = img.closest('.photo');
+    const ok = function () { if (slot) slot.classList.add('has-img'); };
+    const fail = function () { img.remove(); };
+    if (img.complete) {
+      if (img.naturalWidth > 0) ok(); else fail();
+    } else {
+      img.addEventListener('load', ok);
+      img.addEventListener('error', fail);
+    }
+  });
+
+  // ---------- Появление первого экрана ----------
+  // Ждём, пока погаснет экран загрузки, чтобы анимация была видна.
+  let introDone = false;
+  function intro() {
+    if (introDone) return;
+    introDone = true;
+    root.classList.add('intro-done');
+  }
+  if (root.classList.contains('is-loading')) {
+    document.addEventListener('preloader:hide', intro);
+    setTimeout(intro, 13000);
+  } else {
+    requestAnimationFrame(function () { requestAnimationFrame(intro); });
+  }
+
+  // ---------- Манифест: слова проявляются по мере прокрутки ----------
+  const manifesto = document.querySelector('[data-words]');
+  let words = [];
+  function splitManifesto() {
+    if (!manifesto) return;
+    const split = function (node) {
+      Array.from(node.childNodes).forEach(function (child) {
+        if (child.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          child.textContent.split(/(\s+)/).forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) {
+              frag.appendChild(document.createTextNode(part));
+            } else {
+              const span = document.createElement('span');
+              span.className = 'w';
+              span.textContent = part;
+              frag.appendChild(span);
+            }
+          });
+          child.replaceWith(frag);
+        } else if (child.nodeType === 1) {
+          split(child);
+        }
+      });
+    };
+    split(manifesto);
+    words = Array.from(manifesto.querySelectorAll('.w'));
+  }
+  splitManifesto();
+
+  function updateManifesto() {
+    if (!words.length) return;
+    const rect = manifesto.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const progress = Math.min(1, Math.max(0, (vh * 0.85 - rect.top) / (rect.height + vh * 0.3)));
+    const lit = Math.round(progress * words.length);
+    words.forEach(function (w, i) { w.classList.toggle('is-lit', i < lit); });
+  }
+
+  // ---------- Параллакс фото на первом экране ----------
+  const parallax = Array.from(document.querySelectorAll('[data-parallax]'));
+  function updateParallax() {
+    const vh = window.innerHeight;
+    parallax.forEach(function (img) {
+      if (!img.isConnected) return;
+      const rect = img.parentElement.getBoundingClientRect();
+      const shift = (rect.top + rect.height / 2 - vh / 2) * -0.08;
+      img.style.transform = 'translateY(' + shift.toFixed(1) + 'px) scale(1.12)';
+    });
+  }
+
+  // ---------- ONYX с первого экрана уезжает в центр шапки ----------
+  // При прокрутке большое слово уменьшается и встаёт ровно на место логотипа
+  // в шапке, а там его подменяет сам логотип. Каска остаётся на месте.
+  // Пока слово летит, оно закреплено относительно экрана (position: fixed):
+  // его положение зависит только от прогресса, а не от того, как браузер
+  // прокручивает страницу, — поэтому на телефоне оно не дрожит. Прогресс
+  // догоняет прокрутку мягко, поэтому рывки колёсика сглаживаются.
+  const header = document.getElementById('header');
+  const logo = header && header.querySelector('.logo');
+  const heroLetters = document.querySelector('.hero__letters');
+  const heroWrap = document.querySelector('.hero__word-wrap');
+  // сплошные буквы (за каской) и контур (перед ней) двигаем по отдельности:
+  // общий transform на обёртке сломал бы порядок слоёв с каской
+  const flyWords = heroWrap ? Array.from(heroWrap.querySelectorAll('.hero__word')) : [];
+  const heroSolid = flyWords[0];
+  const heroOutline = heroWrap && heroWrap.querySelector('.hero__word--outline');
+  const FLY_PATH = 0.8;   // слово долетает до шапки за 0.8 высоты экрана прокрутки
+  const FLY_SMOOTH = 140; // мс: насколько мягко слово догоняет прокрутку
+  const FADE_FROM = 0.9;  // с этой доли пути слово сменяется логотипом
+  let fly = null;         // положение слова на странице без сдвига
+  let flying = false;     // слово вынуто из потока и летит
+  let flyTarget = 0;      // прогресс по прокрутке
+  let flyShown = 0;       // прогресс, который сейчас на экране
+  let flyLoop = false;
+  let flyLast = 0;
+
+  function setFlying(on) {
+    if (on === flying) return;
+    flying = on;
+    if (on) {
+      // обёртка держит место, чтобы остальной первый экран не сдвинулся
+      heroWrap.style.width = fly.wrap.width + 'px';
+      heroWrap.style.height = fly.wrap.height + 'px';
+      flyWords.forEach(function (el, i) {
+        const r = fly.rects[i];
+        el.style.position = 'fixed';
+        el.style.inset = 'auto';
+        el.style.left = r.left + 'px';
+        el.style.top = r.top + 'px';
+        el.style.width = r.width + 'px';
+        el.style.height = r.height + 'px';
+        el.style.margin = '0';
+      });
+    } else {
+      heroWrap.style.width = '';
+      heroWrap.style.height = '';
+      flyWords.forEach(function (el) {
+        ['position', 'inset', 'left', 'top', 'width', 'height', 'margin', 'transform'].forEach(function (prop) {
+          el.style[prop] = '';
+        });
+      });
+    }
+  }
+
+  function measureFly() {
+    if (reduceMotion || !logo || !heroLetters || !flyWords.length) return;
+    setFlying(false);
+    const sx = window.scrollX;
+    const sy = window.scrollY;
+    const r = heroLetters.getBoundingClientRect();
+    // всё — в координатах страницы (как при прокрутке в самый верх)
+    const cx = r.left + r.width / 2 + sx;
+    const cy = r.top + r.height / 2 + sy;
+    const rects = flyWords.map(function (el) {
+      const b = el.getBoundingClientRect();
+      return { left: b.left + sx, top: b.top + sy, width: b.width, height: b.height };
+    });
+    // масштабируем вокруг центра букв, а не центра блока
+    flyWords.forEach(function (el, i) {
+      el.style.transformOrigin = (cx - rects[i].left).toFixed(1) + 'px ' + (cy - rects[i].top).toFixed(1) + 'px';
+    });
+    const w = heroWrap.getBoundingClientRect();
+    fly = { cx: cx, cy: cy, w: r.width, rects: rects, wrap: { width: w.width, height: w.height } };
+  }
+
+  function renderFly() {
+    const p = flyShown;
+    if (p <= 0) {
+      setFlying(false);
+      heroWrap.style.visibility = '';
+      if (heroOutline) {
+        heroOutline.style.color = '';
+        heroOutline.style.webkitTextStrokeColor = '';
+      }
+      if (heroSolid) heroSolid.style.opacity = '';
+    } else if (p >= 1) {
+      heroWrap.style.visibility = 'hidden';
+    } else {
+      setFlying(true);
+      heroWrap.style.visibility = '';
+      // центр слова идёт от своего места к логотипу, размер — к размеру логотипа
+      const l = logo.getBoundingClientRect();
+      const scale = Math.pow(l.width / fly.w, p);
+      const dx = (l.left + l.width / 2 - fly.cx) * p;
+      const dy = (l.top + l.height / 2 - fly.cy) * p;
+      const tr = 'translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px) scale(' + scale.toFixed(4) + ')';
+      flyWords.forEach(function (el) { el.style.transform = tr; });
+
+      // Слово отстаёт от страницы, и каска наезжает на сплошные буквы.
+      // Поэтому контур (он лежит поверх каски) заливается цветом — слово
+      // выходит вперёд. В конце пути слово гаснет, а логотип проявляется.
+      // Прозрачность меняем цветом, а не opacity: opacity поменяла бы
+      // порядок слоёв, и слово ушло бы за каску.
+      const fade = p > FADE_FROM ? 1 - (p - FADE_FROM) / (1 - FADE_FROM) : 1;
+      const fill = Math.min(1, p / 0.12) * fade;
+      if (heroOutline) {
+        heroOutline.style.color = 'rgba(243, 239, 235, ' + fill.toFixed(3) + ')';
+        heroOutline.style.webkitTextStrokeColor = fade < 1 ? 'rgba(243, 239, 235, ' + (0.55 * fade).toFixed(3) + ')' : '';
+      }
+      if (heroSolid) heroSolid.style.opacity = fade < 1 ? fade.toFixed(3) : '';
+    }
+    logo.classList.toggle('is-hidden', p <= FADE_FROM);
+    logo.style.opacity = p > FADE_FROM && p < 1 ? String((p - FADE_FROM) / (1 - FADE_FROM)) : '';
+  }
+
+  function flyStep(now) {
+    const dt = Math.min(80, Math.max(0, now - flyLast));
+    flyLast = now;
+    flyShown += (flyTarget - flyShown) * (1 - Math.exp(-dt / FLY_SMOOTH));
+    if (Math.abs(flyTarget - flyShown) < 0.0005) flyShown = flyTarget;
+    renderFly();
+    updateHeader();
+    if (flyShown !== flyTarget) requestAnimationFrame(flyStep);
+    else flyLoop = false;
+  }
+
+  // instant — без сглаживания: при загрузке, смене размера окна или языка
+  function updateLogo(instant) {
+    if (!fly) return;
+    const l = logo.getBoundingClientRect();
+    const path = Math.max(fly.cy - (l.top + l.height / 2), window.innerHeight * FLY_PATH);
+    flyTarget = Math.min(1, Math.max(0, window.scrollY / path));
+    if (instant) {
+      flyShown = flyTarget;
+      renderFly();
+      return;
+    }
+    if (!flyLoop) {
+      flyLoop = true;
+      flyLast = performance.now();
+      requestAnimationFrame(flyStep);
+    }
+  }
+
+  function remeasureFly() {
+    measureFly();
+    updateLogo(true);
+    updateHeader();
+  }
+
+  // ---------- Шапка при прокрутке ----------
+  function updateHeader() {
+    if (!header) return;
+    // пока ONYX летит в шапку, у неё нет фона — иначе она закрыла бы слово
+    header.classList.toggle('is-scrolled', fly ? flyShown >= 1 : window.scrollY > 30);
+  }
+
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      updateLogo();
+      updateHeader();
+      if (!reduceMotion) {
+        updateManifesto();
+        updateParallax();
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () { remeasureFly(); onScroll(); });
+  remeasureFly();
+  onScroll();
+  // размер слова зависит от шрифта: пересчитываем, когда он загрузится
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(remeasureFly);
+  }
+  window.addEventListener('load', remeasureFly);
+  // сменился язык (i18n.js): тексты другой длины — всё пересчитываем
+  document.addEventListener('onyx:lang', function () {
+    splitManifesto();
+    remeasureFly();
+    onScroll();
+  });
+
+  // ---------- Счётчики ----------
+  function countUp(el) {
+    const target = el.querySelector('.ph') || el;
+    const text = target.textContent;
+    const m = text.match(/^(\D*)([\d\s ]+)(.*)$/);
+    if (!m) return;
+    const end = parseInt(m[2].replace(/\D/g, ''), 10);
+    const grouped = /[\s ]/.test(m[2].trim());
+    const fmt = function (n) {
+      const s = String(n);
+      return grouped ? s.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : s;
+    };
+    const start = performance.now();
+    const dur = 1600;
+    const step = function (now) {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      target.textContent = m[1] + fmt(Math.round(end * eased)) + m[3];
+      if (t < 1) requestAnimationFrame(step);
+      else target.textContent = text;
+    };
+    requestAnimationFrame(step);
+  }
+
+  // ---------- Появление блоков при прокрутке ----------
+  const revealables = Array.from(document.querySelectorAll('[data-reveal]'));
+  // соседние элементы появляются лесенкой
+  revealables.forEach(function (el) {
+    const siblings = Array.from(el.parentElement.children).filter(function (s) {
+      return s.hasAttribute('data-reveal');
+    });
+    const i = siblings.indexOf(el);
+    if (i > 0) el.style.transitionDelay = Math.min(i, 5) * 90 + 'ms';
+  });
+
+  function reveal(el) {
+    el.classList.add('is-in');
+    const counter = el.querySelector('[data-count]');
+    if (counter && !reduceMotion) countUp(counter);
+  }
+
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        // в ленте показываем сразу все карточки: те, что за краем экрана,
+        // иначе остались бы пустыми, пока их не пролистают
+        const parent = entry.target.parentElement;
+        const group = parent.hasAttribute('data-rail') ? Array.from(parent.children) : [entry.target];
+        group.forEach(function (el) {
+          reveal(el);
+          io.unobserve(el);
+        });
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    revealables.forEach(function (el) { io.observe(el); });
+  } else {
+    revealables.forEach(function (el) { el.classList.add('is-in'); });
+  }
+
+  // ---------- Ленты карточек ----------
+  // До 1080px услуги, проекты, направления и этапы листаются вбок (.rail в
+  // style.css). Под лентой — счётчик, полоска прогресса и стрелки; когда
+  // карточки помещаются в ряд, всё это скрыто.
+  document.querySelectorAll('[data-rail]').forEach(function (rail) {
+    const items = Array.from(rail.children);
+    const total = items.length;
+    const pad = function (n) { return (n < 10 ? '0' : '') + n; };
+
+    const nav = document.createElement('div');
+    nav.className = 'rail-nav';
+    nav.innerHTML =
+      '<span class="rail-nav__count"><b>01</b> / ' + pad(total) + '</span>' +
+      '<span class="rail-nav__track"><span class="rail-nav__thumb"></span></span>' +
+      '<button class="rail-nav__btn" type="button"></button>' +
+      '<button class="rail-nav__btn" type="button"></button>';
+    rail.after(nav);
+    const countEl = nav.querySelector('b');
+    const thumb = nav.querySelector('.rail-nav__thumb');
+    const buttons = nav.querySelectorAll('button');
+    // справа налево (арабский) лента листается в другую сторону
+    const rtl = function () { return getComputedStyle(rail).direction === 'rtl'; };
+
+    function labelButtons() {
+      buttons[0].setAttribute('aria-label', t('js.rail.prev', 'Назад'));
+      buttons[1].setAttribute('aria-label', t('js.rail.next', 'Вперёд'));
+      buttons[0].textContent = rtl() ? '→' : '←';
+      buttons[1].textContent = rtl() ? '←' : '→';
+    }
+
+    // шаг ленты — расстояние между соседними карточками
+    const stepPx = function () {
+      return total > 1 ? Math.abs(items[1].offsetLeft - items[0].offsetLeft) : rail.clientWidth;
+    };
+
+    function update() {
+      const max = rail.scrollWidth - rail.clientWidth;
+      const scrollable = max > 1;
+      let current = -1;
+      nav.hidden = !scrollable;
+      if (scrollable) {
+        // справа налево scrollLeft идёт от 0 в минус
+        const x = Math.abs(rail.scrollLeft);
+        current = x >= max - 2 ? total - 1 : Math.round(x / stepPx());
+        const size = rail.clientWidth / rail.scrollWidth;
+        const shift = (x / max) * (1 / size - 1) * 100 * (rtl() ? -1 : 1);
+        thumb.style.width = (size * 100).toFixed(2) + '%';
+        thumb.style.transform = 'translateX(' + shift.toFixed(2) + '%)';
+        countEl.textContent = pad(current + 1);
+        buttons[0].disabled = x <= 2;
+        buttons[1].disabled = x >= max - 2;
+      }
+      items.forEach(function (el, i) { el.classList.toggle('is-current', i === current); });
+    }
+
+    buttons.forEach(function (btn, i) {
+      btn.addEventListener('click', function () {
+        const dir = (i ? 1 : -1) * (rtl() ? -1 : 1);
+        rail.scrollBy({ left: dir * stepPx(), behavior: reduceMotion ? 'auto' : 'smooth' });
+      });
+    });
+
+    let queued = false;
+    const schedule = function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; update(); });
+    };
+    rail.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    document.addEventListener('onyx:lang', function () {
+      labelButtons();
+      rail.scrollLeft = 0; // с новым направлением — снова к первой карточке
+      schedule();
+    });
+    labelButtons();
+    update();
+  });
+
+  // ---------- 3D-каска на главном экране ----------
+  // Та же модель, что на экране загрузки (helmet.js). three.js уже загружен
+  // экраном загрузки, поэтому повторный import берётся из кэша.
+  const heroCanvas = document.getElementById('heroHelmet');
+  const threeHolder = document.querySelector('[data-three]');
+  if (heroCanvas && window.OnyxHelmet && threeHolder) {
+    const src = new URL(threeHolder.dataset.three, document.baseURI).href;
+    import(src).then(function (THREE) {
+      const helmet = window.OnyxHelmet.build(THREE, heroCanvas, { maxDpr: 1.5 });
+      const BASE_YAW = -0.55;   // три четверти: видно и логотип, и козырёк
+      let targetX = 0, targetY = 0, curX = 0, curY = 0;
+      let visible = true;
+      let running = false;
+
+      window.addEventListener('pointermove', function (e) {
+        targetX = e.clientX / window.innerWidth - 0.5;
+        targetY = e.clientY / window.innerHeight - 0.5;
+      }, { passive: true });
+
+      const hero = heroCanvas.closest('.hero');
+      if ('IntersectionObserver' in window && hero) {
+        new IntersectionObserver(function (entries) {
+          visible = entries[0].isIntersecting;
+          if (visible) start();
+        }).observe(hero);
+      }
+
+      window.addEventListener('resize', function () { helmet.resize(); });
+
+      function frame(now) {
+        if (!visible) { running = false; return; }
+        curX += (targetX - curX) * 0.06;
+        curY += (targetY - curY) * 0.06;
+        const idle = reduceMotion ? 0 : Math.sin(now / 2600) * 0.12;
+        const scrolled = Math.min(1, window.scrollY / window.innerHeight);
+        helmet.render(BASE_YAW + curX * 0.9 + idle + scrolled * 0.9, 0.05 + curY * 0.22);
+        requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (running) return;
+        running = true;
+        requestAnimationFrame(frame);
+      }
+
+      helmet.render(BASE_YAW, 0.05);
+      heroCanvas.classList.add('is-ready');
+      if (!reduceMotion) start();
+    }).catch(function () { /* остаётся картинка-заглушка */ });
+  }
+
+  // ---------- Мобильное меню ----------
+  const menuBtn = document.querySelector('.menu-btn');
+  const menu = document.getElementById('mobileMenu');
+  function setMenu(open) {
+    root.classList.toggle('menu-open', open);
+    if (menuBtn) {
+      menuBtn.setAttribute('aria-expanded', String(open));
+      menuBtn.setAttribute('aria-label', open ? t('js.menu.close', 'Закрыть меню') : t('js.menu.open', 'Открыть меню'));
+    }
+    if (menu) menu.setAttribute('aria-hidden', String(!open));
+  }
+  if (menuBtn && menu) {
+    setMenu(false);
+    document.addEventListener('onyx:lang', function () { setMenu(root.classList.contains('menu-open')); });
+    menuBtn.addEventListener('click', function () {
+      setMenu(!root.classList.contains('menu-open'));
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setMenu(false); });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setMenu(false);
+    });
+  }
+
+  // ---------- Год в подвале ----------
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // ---------- Форма заявки ----------
+  const form = document.getElementById('requestForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const resultEl = document.getElementById('formResult');
+
+  const ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbx95IK1qzW2LIgArSapuitUUtnW2rdqaqtQQdEniaLhxntVgdwAGLoy6t6kMV_8BU2w/exec';
+
+  if (!form) return;
+
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const name = form.name.value.trim();
+    const phone = form.phone.value.trim();
+    const message = form.message.value.trim();
+
+    if (!name || !phone) {
+      showResult(t('js.form.required', 'Пожалуйста, заполните имя и телефон.'), 'error');
+      return;
+    }
+
+    setLoading(true);
+    clearResult();
+
+    try {
+      await fetch(ENDPOINT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, phone, message }),
+      });
+
+      // В режиме no-cors ответ сервера непрозрачен для JS,
+      // поэтому считаем отправку успешной, если запрос не выбросил ошибку.
+      showResult(t('js.form.success', 'Заявка отправлена, мы свяжемся с вами'), 'success');
+      form.reset();
+    } catch (error) {
+      showResult(t('js.form.error', 'Не удалось отправить заявку. Попробуйте ещё раз.'), 'error');
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  function setLoading(isLoading) {
+    submitBtn.disabled = isLoading;
+    submitBtn.querySelector('.btn__text').textContent = isLoading
+      ? t('js.form.sending', 'Отправка...')
+      : t('form.submit', 'Отправить заявку');
+  }
+
+  function showResult(text, type) {
+    resultEl.textContent = text;
+    resultEl.classList.remove('is-success', 'is-error');
+    resultEl.classList.add(type === 'success' ? 'is-success' : 'is-error');
+  }
+
+  function clearResult() {
+    resultEl.textContent = '';
+    resultEl.classList.remove('is-success', 'is-error');
+  }
+})();
+</script>
