@@ -17,7 +17,6 @@
 
   --font-display: 'Unbounded', 'Arial Black', sans-serif;
   --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
 
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
   --r-xl: 32px;
@@ -52,13 +51,9 @@ h1, h2, h3 {
   text-wrap: balance;
 }
 
-/* курсивная антиква — акцент в заголовках */
+/* акцент в заголовках: тот же шрифт, только цветом */
 h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 500;
-  font-size: 1.1em;
-  letter-spacing: -0.01em;
+  font-style: normal;
   color: var(--accent-warm);
 }
 
@@ -121,13 +116,17 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 
 .section-head { margin-bottom: clamp(40px, 5vw, 72px); }
 
-.section-head--row {
+/* заголовок раздела по центру — над рядами карточек */
+.section-head--center {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
+
+.section-head--center .link-arrow { margin-top: 28px; }
+
+.kicker--center { justify-content: center; }
 
 .pill {
   display: inline-flex;
@@ -336,9 +335,9 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
   left: 0;
   right: 0;
   z-index: 50;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 20px;
   padding: calc(22px + env(safe-area-inset-top, 0px)) var(--gutter) 22px;
   border-bottom: 1px solid transparent;
@@ -354,12 +353,18 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 }
 
 .logo {
-  font: 800 20px/1 var(--font-display);
-  letter-spacing: 0.04em;
+  grid-column: 2;
+  grid-row: 1;
+  font: 800 22px/1 var(--font-display);
+  letter-spacing: 0.02em;
   text-decoration: none;
 }
 
-.nav { display: flex; gap: 30px; }
+/* пока ONYX с первого экрана летит в шапку, логотип спрятан (script.js) */
+.logo.is-hidden { opacity: 0; pointer-events: none; }
+.menu-open .logo.is-hidden { opacity: 1; pointer-events: auto; }
+
+.nav { grid-column: 1; grid-row: 1; justify-self: start; display: flex; gap: 30px; }
 
 .nav a {
   position: relative;
@@ -386,7 +391,8 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 .nav a:hover { color: #fff; }
 .nav a:hover::after { transform: scaleX(1); }
 
-.header__side { display: flex; align-items: center; gap: 12px; }
+.header__side { grid-column: 3; grid-row: 1; justify-self: end; display: flex; align-items: center; gap: 12px; }
+.header__actions { display: flex; align-items: center; gap: 12px; }
 
 .status-badge {
   display: inline-flex;
@@ -869,7 +875,9 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 /* ===== О студии ===== */
 .manifesto {
   max-width: 1120px;
-  margin-bottom: clamp(56px, 7vw, 100px);
+  margin: 0 auto clamp(56px, 7vw, 100px);
+  text-align: center;
+  text-wrap: balance;
   font-size: clamp(26px, 3.7vw, 54px);
   line-height: 1.16;
   font-weight: 500;
@@ -1050,8 +1058,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.stat { padding-inline: clamp(12px, 2vw, 32px); }
-.stat:first-child { padding-left: 0; }
+.stat { padding-inline: clamp(12px, 2vw, 32px); text-align: center; }
 .stat + .stat { border-left: 1px solid var(--line); }
 
 .stat__value {
@@ -1061,7 +1068,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   font-variant-numeric: tabular-nums;
 }
 
-.stat__label { max-width: 200px; font-size: 14px; color: var(--text-muted); }
+.stat__label { max-width: 200px; margin-inline: auto; font-size: 14px; color: var(--text-muted); }
 
 /* ===== Направления ===== */
 .panels {
@@ -1416,9 +1423,21 @@ address.footer__col { font-style: normal; }
 .motion [data-reveal].is-in { opacity: 1; transform: none; }
 
 /* ===== Адаптив ===== */
+@media (max-width: 1280px) {
+  /* в шапке тесно: меню, логотип и кнопки — статус короче */
+  .status-badge__text { display: none; }
+  .status-badge__short { display: inline; }
+}
+
 @media (max-width: 1080px) {
   .nav { display: none; }
   .menu-btn { display: block; }
+  /* меню спрятано: статус переезжает влево, кнопки остаются справа */
+  .header__side { display: contents; }
+  .status-badge { grid-column: 1; grid-row: 1; justify-self: start; }
+  .header__actions { grid-column: 3; grid-row: 1; justify-self: end; }
+  .status-badge__text { display: inline; }
+  .status-badge__short { display: none; }
 
   /* лента: листается вбок, карточки прилипают к краю экрана */
   .rail {
@@ -1507,14 +1526,29 @@ address.footer__col { font-style: normal; }
 
 @media (max-width: 760px) {
   .header__cta { display: none; }
+  .status-badge__text { display: none; }
+  .status-badge__short { display: inline; }
   .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
-  .stat:nth-child(3) { border-left: none; padding-left: 0; }
+  .stat:nth-child(3) { border-left: none; }
   .panels { height: 460px; }
 }
 
 @media (max-width: 560px) {
-  .status-badge__text { display: none; }
-  .status-badge__short { display: inline; }
+  /* статус — подпись в две строки, чтобы логотип остался ровно по центру */
+  .status-badge {
+    max-width: 96px;
+    padding: 0;
+    border: 0;
+    background: none;
+    backdrop-filter: none;
+    font-size: 10px;
+    line-height: 1.25;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: normal;
+  }
+  .status-badge__dot { flex: none; }
+  .logo { font-size: 20px; }
   .lead__meta { grid-template-columns: repeat(2, minmax(0, auto)); gap: 16px 32px; }
   .lead__meta div:last-child { grid-column: 1 / -1; }
   .hero { min-height: 640px; padding-top: 92px; }

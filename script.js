@@ -86,10 +86,80 @@
     });
   }
 
-  // ---------- Шапка при прокрутке ----------
+  // ---------- ONYX с первого экрана уезжает в центр шапки ----------
+  // При прокрутке большое слово уменьшается и встаёт ровно на место логотипа
+  // в шапке, а там его подменяет сам логотип. Каска остаётся на месте.
   const header = document.getElementById('header');
+  const logo = header && header.querySelector('.logo');
+  const heroLetters = document.querySelector('.hero__letters');
+  const heroWrap = document.querySelector('.hero__word-wrap');
+  // сплошные буквы (за каской) и контур (перед ней) двигаем по отдельности:
+  // общий transform на обёртке сломал бы порядок слоёв с каской
+  const flyWords = heroWrap ? Array.from(heroWrap.querySelectorAll('.hero__word')) : [];
+  const heroSolid = flyWords[0];
+  const heroOutline = heroWrap && heroWrap.querySelector('.hero__word--outline');
+  const FADE_FROM = 0.9; // с этой доли пути слово сменяется логотипом
+  let fly = null;        // положение слова без сдвига
+  let flyProgress = 0;
+
+  function measureFly() {
+    if (reduceMotion || !logo || !heroLetters || !flyWords.length) return;
+    flyWords.forEach(function (el) { el.style.transform = ''; });
+    const r = heroLetters.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    // масштабируем вокруг центра букв, а не центра блока
+    flyWords.forEach(function (el) {
+      const b = el.getBoundingClientRect();
+      el.style.transformOrigin = (cx - b.left).toFixed(1) + 'px ' + (cy - b.top).toFixed(1) + 'px';
+    });
+    fly = { cx: cx, cy: cy + window.scrollY, w: r.width };
+  }
+
+  function updateLogo() {
+    if (!fly) return;
+    const l = logo.getBoundingClientRect();
+    const lx = l.left + l.width / 2;
+    const ly = l.top + l.height / 2;
+    const y = window.scrollY;
+    // путь чуть длиннее, чем расстояние до шапки: слово отстаёт от страницы
+    const path = Math.max(fly.cy - ly, window.innerHeight * 0.55);
+    const p = Math.min(1, Math.max(0, y / path));
+    flyProgress = p;
+
+    if (p >= 1) {
+      heroWrap.style.visibility = 'hidden';
+    } else {
+      // центр слова идёт от своего места к логотипу, размер — к размеру логотипа
+      const scale = Math.pow(l.width / fly.w, p);
+      const dx = (lx - fly.cx) * p;
+      const dy = y + (ly - fly.cy) * p;
+      const t = p ? 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + scale.toFixed(4) + ')' : '';
+      flyWords.forEach(function (el) { el.style.transform = t; });
+      heroWrap.style.visibility = '';
+
+      // Слово отстаёт от страницы, и каска наезжает на сплошные буквы.
+      // Поэтому контур (он лежит поверх каски) заливается цветом — слово
+      // выходит вперёд. В конце пути слово гаснет, а логотип проявляется.
+      // Прозрачность меняем цветом, а не opacity: opacity поменяла бы
+      // порядок слоёв, и слово ушло бы за каску.
+      const fade = p > FADE_FROM ? 1 - (p - FADE_FROM) / (1 - FADE_FROM) : 1;
+      const fill = Math.min(1, p / 0.12) * fade;
+      if (heroOutline) {
+        heroOutline.style.color = p ? 'rgba(243, 239, 235, ' + fill.toFixed(3) + ')' : '';
+        heroOutline.style.webkitTextStrokeColor = fade < 1 ? 'rgba(243, 239, 235, ' + (0.55 * fade).toFixed(3) + ')' : '';
+      }
+      if (heroSolid) heroSolid.style.opacity = fade < 1 ? fade.toFixed(3) : '';
+    }
+    logo.classList.toggle('is-hidden', p <= FADE_FROM);
+    logo.style.opacity = p > FADE_FROM && p < 1 ? String((p - FADE_FROM) / (1 - FADE_FROM)) : '';
+  }
+
+  // ---------- Шапка при прокрутке ----------
   function updateHeader() {
-    if (header) header.classList.toggle('is-scrolled', window.scrollY > 30);
+    if (!header) return;
+    // пока ONYX летит в шапку, у неё нет фона — иначе она закрыла бы слово
+    header.classList.toggle('is-scrolled', fly ? flyProgress >= 1 : window.scrollY > 30);
   }
 
   let ticking = false;
@@ -98,6 +168,7 @@
     ticking = true;
     requestAnimationFrame(function () {
       ticking = false;
+      updateLogo();
       updateHeader();
       if (!reduceMotion) {
         updateManifesto();
@@ -106,8 +177,14 @@
     });
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
+  window.addEventListener('resize', function () { measureFly(); onScroll(); });
+  measureFly();
   onScroll();
+  // размер слова зависит от шрифта: пересчитываем, когда он загрузится
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { measureFly(); onScroll(); });
+  }
+  window.addEventListener('load', function () { measureFly(); onScroll(); });
 
   // ---------- Счётчики ----------
   function countUp(el) {

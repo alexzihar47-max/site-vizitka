@@ -194,7 +194,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -233,8 +233,6 @@
 
   <!-- ================= ШАПКА ================= -->
   <header class="header" id="header">
-    <a class="logo" href="#top" aria-label="ONYX — на главную">ONYX</a>
-
     <nav class="nav" aria-label="Разделы сайта">
       <a href="#about">О студии</a>
       <a href="#services">Услуги</a>
@@ -243,19 +241,23 @@
       <a href="#contacts">Контакты</a>
     </nav>
 
+    <a class="logo" href="#top" aria-label="ONYX — на главную">ONYX</a>
+
     <div class="header__side">
       <div class="status-badge" id="statusBadge">
         <span class="status-badge__dot"></span>
         <span class="status-badge__text">Открыты для новых проектов</span>
         <span class="status-badge__short">Принимаем заявки</span>
       </div>
-      <a class="pill pill--light header__cta" href="#request-form">
-        Обсудить проект
-        <span class="pill__arrow" aria-hidden="true">→</span>
-      </a>
-      <button class="menu-btn" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
-        <span></span><span></span>
-      </button>
+      <div class="header__actions">
+        <a class="pill pill--light header__cta" href="#request-form">
+          Обсудить проект
+          <span class="pill__arrow" aria-hidden="true">→</span>
+        </a>
+        <button class="menu-btn" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -486,7 +488,7 @@
     <!-- ================= О СТУДИИ ================= -->
     <section class="section about" id="about">
       <div class="container">
-        <h2 class="kicker" data-reveal><span>(01)</span> О студии</h2>
+        <h2 class="kicker kicker--center" data-reveal><span>(01)</span> О студии</h2>
 
         <p class="manifesto" data-words>
           Мы — бюро ONYX. Проектируем интерьеры и дома, в которых <em>каждая деталь</em> работает на вашу жизнь: от планировки и света до розетки у кровати.
@@ -516,7 +518,7 @@
     <!-- ================= УСЛУГИ ================= -->
     <section class="section services" id="services">
       <div class="container">
-        <div class="section-head" data-reveal>
+        <div class="section-head section-head--center" data-reveal>
           <p class="kicker"><span>(02)</span> Услуги</p>
           <h2 class="title">Берём на себя <em>всё</em> —<br>от идеи до ключей</h2>
           <p class="section-head__text">Дизайн интерьера квартир, домов и коммерческих помещений, архитектурное проектирование частных домов, рабочая документация и авторский надзор — в <span class="ph">Москве и Московской области</span>.</p>
@@ -562,11 +564,9 @@
     <!-- ================= ПРОЕКТЫ ================= -->
     <section class="section projects" id="projects">
       <div class="container">
-        <div class="section-head section-head--row" data-reveal>
-          <div>
-            <p class="kicker"><span>(03)</span> Проекты</p>
-            <h2 class="title">Избранные <em>работы</em></h2>
-          </div>
+        <div class="section-head section-head--center" data-reveal>
+          <p class="kicker"><span>(03)</span> Проекты</p>
+          <h2 class="title">Избранные <em>работы</em></h2>
           <a class="link-arrow" href="#request-form">Хочу так же <span aria-hidden="true">→</span></a>
         </div>
 
@@ -635,7 +635,7 @@
     <!-- ================= НАПРАВЛЕНИЯ ================= -->
     <section class="section directions" id="directions">
       <div class="container">
-        <div class="section-head" data-reveal>
+        <div class="section-head section-head--center" data-reveal>
           <p class="kicker"><span>(04)</span> Направления</p>
           <h2 class="title">Два направления —<br><em>одна команда</em></h2>
         </div>

@@ -1,7 +1,7 @@
 <title>ONYX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* =====================================================================
    ONYX — стили
@@ -22,7 +22,6 @@
 
   --font-display: 'Unbounded', 'Arial Black', sans-serif;
   --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
 
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
   --r-xl: 32px;
@@ -57,13 +56,9 @@ h1, h2, h3 {
   text-wrap: balance;
 }
 
-/* курсивная антиква — акцент в заголовках */
+/* акцент в заголовках: тот же шрифт, только цветом */
 h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 500;
-  font-size: 1.1em;
-  letter-spacing: -0.01em;
+  font-style: normal;
   color: var(--accent-warm);
 }
 
@@ -126,13 +121,17 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 
 .section-head { margin-bottom: clamp(40px, 5vw, 72px); }
 
-.section-head--row {
+/* заголовок раздела по центру — над рядами карточек */
+.section-head--center {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
+
+.section-head--center .link-arrow { margin-top: 28px; }
+
+.kicker--center { justify-content: center; }
 
 .pill {
   display: inline-flex;
@@ -341,9 +340,9 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
   left: 0;
   right: 0;
   z-index: 50;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 20px;
   padding: calc(22px + env(safe-area-inset-top, 0px)) var(--gutter) 22px;
   border-bottom: 1px solid transparent;
@@ -359,12 +358,18 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 }
 
 .logo {
-  font: 800 20px/1 var(--font-display);
-  letter-spacing: 0.04em;
+  grid-column: 2;
+  grid-row: 1;
+  font: 800 22px/1 var(--font-display);
+  letter-spacing: 0.02em;
   text-decoration: none;
 }
 
-.nav { display: flex; gap: 30px; }
+/* пока ONYX с первого экрана летит в шапку, логотип спрятан (script.js) */
+.logo.is-hidden { opacity: 0; pointer-events: none; }
+.menu-open .logo.is-hidden { opacity: 1; pointer-events: auto; }
+
+.nav { grid-column: 1; grid-row: 1; justify-self: start; display: flex; gap: 30px; }
 
 .nav a {
   position: relative;
@@ -391,7 +396,8 @@ h1 em, h2 em, h3 em, .manifesto em, .footer__lead em {
 .nav a:hover { color: #fff; }
 .nav a:hover::after { transform: scaleX(1); }
 
-.header__side { display: flex; align-items: center; gap: 12px; }
+.header__side { grid-column: 3; grid-row: 1; justify-self: end; display: flex; align-items: center; gap: 12px; }
+.header__actions { display: flex; align-items: center; gap: 12px; }
 
 .status-badge {
   display: inline-flex;
@@ -874,7 +880,9 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 /* ===== О студии ===== */
 .manifesto {
   max-width: 1120px;
-  margin-bottom: clamp(56px, 7vw, 100px);
+  margin: 0 auto clamp(56px, 7vw, 100px);
+  text-align: center;
+  text-wrap: balance;
   font-size: clamp(26px, 3.7vw, 54px);
   line-height: 1.16;
   font-weight: 500;
@@ -1055,8 +1063,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.stat { padding-inline: clamp(12px, 2vw, 32px); }
-.stat:first-child { padding-left: 0; }
+.stat { padding-inline: clamp(12px, 2vw, 32px); text-align: center; }
 .stat + .stat { border-left: 1px solid var(--line); }
 
 .stat__value {
@@ -1066,7 +1073,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
   font-variant-numeric: tabular-nums;
 }
 
-.stat__label { max-width: 200px; font-size: 14px; color: var(--text-muted); }
+.stat__label { max-width: 200px; margin-inline: auto; font-size: 14px; color: var(--text-muted); }
 
 /* ===== Направления ===== */
 .panels {
@@ -1421,9 +1428,21 @@ address.footer__col { font-style: normal; }
 .motion [data-reveal].is-in { opacity: 1; transform: none; }
 
 /* ===== Адаптив ===== */
+@media (max-width: 1280px) {
+  /* в шапке тесно: меню, логотип и кнопки — статус короче */
+  .status-badge__text { display: none; }
+  .status-badge__short { display: inline; }
+}
+
 @media (max-width: 1080px) {
   .nav { display: none; }
   .menu-btn { display: block; }
+  /* меню спрятано: статус переезжает влево, кнопки остаются справа */
+  .header__side { display: contents; }
+  .status-badge { grid-column: 1; grid-row: 1; justify-self: start; }
+  .header__actions { grid-column: 3; grid-row: 1; justify-self: end; }
+  .status-badge__text { display: inline; }
+  .status-badge__short { display: none; }
 
   /* лента: листается вбок, карточки прилипают к краю экрана */
   .rail {
@@ -1512,14 +1531,29 @@ address.footer__col { font-style: normal; }
 
 @media (max-width: 760px) {
   .header__cta { display: none; }
+  .status-badge__text { display: none; }
+  .status-badge__short { display: inline; }
   .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
-  .stat:nth-child(3) { border-left: none; padding-left: 0; }
+  .stat:nth-child(3) { border-left: none; }
   .panels { height: 460px; }
 }
 
 @media (max-width: 560px) {
-  .status-badge__text { display: none; }
-  .status-badge__short { display: inline; }
+  /* статус — подпись в две строки, чтобы логотип остался ровно по центру */
+  .status-badge {
+    max-width: 96px;
+    padding: 0;
+    border: 0;
+    background: none;
+    backdrop-filter: none;
+    font-size: 10px;
+    line-height: 1.25;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: normal;
+  }
+  .status-badge__dot { flex: none; }
+  .logo { font-size: 20px; }
   .lead__meta { grid-template-columns: repeat(2, minmax(0, auto)); gap: 16px 32px; }
   .lead__meta div:last-child { grid-column: 1 / -1; }
   .hero { min-height: 640px; padding-top: 92px; }
@@ -2103,8 +2137,6 @@ address.footer__col { font-style: normal; }
 
   <!-- ================= ШАПКА ================= -->
   <header class="header" id="header">
-    <a class="logo" href="#top" aria-label="ONYX — на главную">ONYX</a>
-
     <nav class="nav" aria-label="Разделы сайта">
       <a href="#about">О студии</a>
       <a href="#services">Услуги</a>
@@ -2113,19 +2145,23 @@ address.footer__col { font-style: normal; }
       <a href="#contacts">Контакты</a>
     </nav>
 
+    <a class="logo" href="#top" aria-label="ONYX — на главную">ONYX</a>
+
     <div class="header__side">
       <div class="status-badge" id="statusBadge">
         <span class="status-badge__dot"></span>
         <span class="status-badge__text">Открыты для новых проектов</span>
         <span class="status-badge__short">Принимаем заявки</span>
       </div>
-      <a class="pill pill--light header__cta" href="#request-form">
-        Обсудить проект
-        <span class="pill__arrow" aria-hidden="true">→</span>
-      </a>
-      <button class="menu-btn" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
-        <span></span><span></span>
-      </button>
+      <div class="header__actions">
+        <a class="pill pill--light header__cta" href="#request-form">
+          Обсудить проект
+          <span class="pill__arrow" aria-hidden="true">→</span>
+        </a>
+        <button class="menu-btn" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -2356,7 +2392,7 @@ address.footer__col { font-style: normal; }
     <!-- ================= О СТУДИИ ================= -->
     <section class="section about" id="about">
       <div class="container">
-        <h2 class="kicker" data-reveal><span>(01)</span> О студии</h2>
+        <h2 class="kicker kicker--center" data-reveal><span>(01)</span> О студии</h2>
 
         <p class="manifesto" data-words>
           Мы — бюро ONYX. Проектируем интерьеры и дома, в которых <em>каждая деталь</em> работает на вашу жизнь: от планировки и света до розетки у кровати.
@@ -2386,7 +2422,7 @@ address.footer__col { font-style: normal; }
     <!-- ================= УСЛУГИ ================= -->
     <section class="section services" id="services">
       <div class="container">
-        <div class="section-head" data-reveal>
+        <div class="section-head section-head--center" data-reveal>
           <p class="kicker"><span>(02)</span> Услуги</p>
           <h2 class="title">Берём на себя <em>всё</em> —<br>от идеи до ключей</h2>
           <p class="section-head__text">Дизайн интерьера квартир, домов и коммерческих помещений, архитектурное проектирование частных домов, рабочая документация и авторский надзор — в <span class="ph">Москве и Московской области</span>.</p>
@@ -2432,11 +2468,9 @@ address.footer__col { font-style: normal; }
     <!-- ================= ПРОЕКТЫ ================= -->
     <section class="section projects" id="projects">
       <div class="container">
-        <div class="section-head section-head--row" data-reveal>
-          <div>
-            <p class="kicker"><span>(03)</span> Проекты</p>
-            <h2 class="title">Избранные <em>работы</em></h2>
-          </div>
+        <div class="section-head section-head--center" data-reveal>
+          <p class="kicker"><span>(03)</span> Проекты</p>
+          <h2 class="title">Избранные <em>работы</em></h2>
           <a class="link-arrow" href="#request-form">Хочу так же <span aria-hidden="true">→</span></a>
         </div>
 
@@ -2505,7 +2539,7 @@ address.footer__col { font-style: normal; }
     <!-- ================= НАПРАВЛЕНИЯ ================= -->
     <section class="section directions" id="directions">
       <div class="container">
-        <div class="section-head" data-reveal>
+        <div class="section-head section-head--center" data-reveal>
           <p class="kicker"><span>(04)</span> Направления</p>
           <h2 class="title">Два направления —<br><em>одна команда</em></h2>
         </div>
@@ -2815,10 +2849,80 @@ address.footer__col { font-style: normal; }
     });
   }
 
-  // ---------- Шапка при прокрутке ----------
+  // ---------- ONYX с первого экрана уезжает в центр шапки ----------
+  // При прокрутке большое слово уменьшается и встаёт ровно на место логотипа
+  // в шапке, а там его подменяет сам логотип. Каска остаётся на месте.
   const header = document.getElementById('header');
+  const logo = header && header.querySelector('.logo');
+  const heroLetters = document.querySelector('.hero__letters');
+  const heroWrap = document.querySelector('.hero__word-wrap');
+  // сплошные буквы (за каской) и контур (перед ней) двигаем по отдельности:
+  // общий transform на обёртке сломал бы порядок слоёв с каской
+  const flyWords = heroWrap ? Array.from(heroWrap.querySelectorAll('.hero__word')) : [];
+  const heroSolid = flyWords[0];
+  const heroOutline = heroWrap && heroWrap.querySelector('.hero__word--outline');
+  const FADE_FROM = 0.9; // с этой доли пути слово сменяется логотипом
+  let fly = null;        // положение слова без сдвига
+  let flyProgress = 0;
+
+  function measureFly() {
+    if (reduceMotion || !logo || !heroLetters || !flyWords.length) return;
+    flyWords.forEach(function (el) { el.style.transform = ''; });
+    const r = heroLetters.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    // масштабируем вокруг центра букв, а не центра блока
+    flyWords.forEach(function (el) {
+      const b = el.getBoundingClientRect();
+      el.style.transformOrigin = (cx - b.left).toFixed(1) + 'px ' + (cy - b.top).toFixed(1) + 'px';
+    });
+    fly = { cx: cx, cy: cy + window.scrollY, w: r.width };
+  }
+
+  function updateLogo() {
+    if (!fly) return;
+    const l = logo.getBoundingClientRect();
+    const lx = l.left + l.width / 2;
+    const ly = l.top + l.height / 2;
+    const y = window.scrollY;
+    // путь чуть длиннее, чем расстояние до шапки: слово отстаёт от страницы
+    const path = Math.max(fly.cy - ly, window.innerHeight * 0.55);
+    const p = Math.min(1, Math.max(0, y / path));
+    flyProgress = p;
+
+    if (p >= 1) {
+      heroWrap.style.visibility = 'hidden';
+    } else {
+      // центр слова идёт от своего места к логотипу, размер — к размеру логотипа
+      const scale = Math.pow(l.width / fly.w, p);
+      const dx = (lx - fly.cx) * p;
+      const dy = y + (ly - fly.cy) * p;
+      const t = p ? 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + scale.toFixed(4) + ')' : '';
+      flyWords.forEach(function (el) { el.style.transform = t; });
+      heroWrap.style.visibility = '';
+
+      // Слово отстаёт от страницы, и каска наезжает на сплошные буквы.
+      // Поэтому контур (он лежит поверх каски) заливается цветом — слово
+      // выходит вперёд. В конце пути слово гаснет, а логотип проявляется.
+      // Прозрачность меняем цветом, а не opacity: opacity поменяла бы
+      // порядок слоёв, и слово ушло бы за каску.
+      const fade = p > FADE_FROM ? 1 - (p - FADE_FROM) / (1 - FADE_FROM) : 1;
+      const fill = Math.min(1, p / 0.12) * fade;
+      if (heroOutline) {
+        heroOutline.style.color = p ? 'rgba(243, 239, 235, ' + fill.toFixed(3) + ')' : '';
+        heroOutline.style.webkitTextStrokeColor = fade < 1 ? 'rgba(243, 239, 235, ' + (0.55 * fade).toFixed(3) + ')' : '';
+      }
+      if (heroSolid) heroSolid.style.opacity = fade < 1 ? fade.toFixed(3) : '';
+    }
+    logo.classList.toggle('is-hidden', p <= FADE_FROM);
+    logo.style.opacity = p > FADE_FROM && p < 1 ? String((p - FADE_FROM) / (1 - FADE_FROM)) : '';
+  }
+
+  // ---------- Шапка при прокрутке ----------
   function updateHeader() {
-    if (header) header.classList.toggle('is-scrolled', window.scrollY > 30);
+    if (!header) return;
+    // пока ONYX летит в шапку, у неё нет фона — иначе она закрыла бы слово
+    header.classList.toggle('is-scrolled', fly ? flyProgress >= 1 : window.scrollY > 30);
   }
 
   let ticking = false;
@@ -2827,6 +2931,7 @@ address.footer__col { font-style: normal; }
     ticking = true;
     requestAnimationFrame(function () {
       ticking = false;
+      updateLogo();
       updateHeader();
       if (!reduceMotion) {
         updateManifesto();
@@ -2835,8 +2940,14 @@ address.footer__col { font-style: normal; }
     });
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
+  window.addEventListener('resize', function () { measureFly(); onScroll(); });
+  measureFly();
   onScroll();
+  // размер слова зависит от шрифта: пересчитываем, когда он загрузится
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { measureFly(); onScroll(); });
+  }
+  window.addEventListener('load', function () { measureFly(); onScroll(); });
 
   // ---------- Счётчики ----------
   function countUp(el) {
