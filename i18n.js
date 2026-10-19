@@ -8,12 +8,12 @@
   const DICT = {
     // ---------- заголовок вкладки и описание для поиска ----------
     'meta.title': {
-      en: 'Interior design and architecture in Moscow — ONYX studio',
-      ar: 'التصميم الداخلي والعمارة في موسكو — استوديو ONYX',
+      en: 'Interior design and turnkey renovation in Moscow — ONYX',
+      ar: 'التصميم الداخلي والتشطيب المتكامل في موسكو — ONYX',
     },
     'meta.description': {
-      en: 'Interior design for apartments and houses, architectural design and design supervision in Moscow and the Moscow region. The price is fixed in the contract. +7 925 376-03-75',
-      ar: 'تصميم داخلي للشقق والمنازل، وتصميم معماري، وإشراف على التنفيذ في موسكو ومنطقة موسكو. السعر ثابت في العقد. ‎+7 925 376-03-75',
+      en: 'On-site measurements, interior design projects for apartments and houses and turnkey renovation to the design in Moscow. The price is fixed in the contract. +7 925 376-03-75',
+      ar: 'زيارة الموقع وأخذ القياسات، ومشاريع التصميم الداخلي للشقق والمنازل، والتشطيب المتكامل وفق التصميم في موسكو. السعر ثابت في العقد. ‎+7 925 376-03-75',
     },
 
     // ---------- шапка и меню ----------
@@ -35,16 +35,16 @@
     'cta.discuss': { en: 'Discuss a project', ar: 'ناقش مشروعك' },
 
     // ---------- главный экран ----------
-    'hero.eyebrow': { en: 'Interior & architecture studio', ar: 'استوديو التصميم الداخلي والعمارة' },
+    'hero.eyebrow': { en: 'Design & turnkey renovation', ar: 'التصميم والتشطيب المتكامل' },
     'hero.h1': {
-      en: 'ONYX — interior design and architectural design in Moscow',
-      ar: 'ONYX — تصميم داخلي وتصميم معماري في موسكو',
+      en: 'ONYX — interior design and turnkey renovation in Moscow',
+      ar: 'ONYX — تصميم داخلي وتشطيب متكامل في موسكو',
     },
     'hero.chip1': { en: 'completed projects', ar: 'مشروعاً منجزاً' },
     'hero.chip2.value': { en: '<span class="ph">9 years</span>', ar: '<span class="ph">9 سنوات</span>' },
-    'hero.chip2': { en: 'in architecture and&nbsp;interiors', ar: 'في العمارة والتصميم الداخلي' },
+    'hero.chip2': { en: 'in design and&nbsp;renovation', ar: 'في التصميم والتشطيب' },
     'hero.tag1': { en: 'Our own working drawings', ar: 'مخططات تنفيذية من إعدادنا' },
-    'hero.tag2': { en: 'Design supervision', ar: 'الإشراف على التنفيذ' },
+    'hero.tag2': { en: 'Turnkey renovation', ar: 'تشطيب متكامل' },
     'hero.contact': { en: 'Contact', ar: 'تواصل' },
     'hero.call': { en: 'Call +7 925 376-03-75', ar: 'اتصل على ‎+7 925 376-03-75' },
     'hero.request': { en: 'Leave a request', ar: 'اترك طلباً' },
@@ -63,23 +63,23 @@
 
     // бегущая строка
     'mq.interiors': { en: 'Interior design', ar: 'التصميم الداخلي' },
-    'mq.architecture': { en: 'Architecture', ar: 'العمارة' },
+    'mq.renovation': { en: 'Turnkey renovation', ar: 'تشطيب متكامل' },
     'mq.drawings': { en: 'Working drawings', ar: 'المخططات التنفيذية' },
-    'mq.supervision': { en: 'Design supervision', ar: 'الإشراف على التنفيذ' },
+    'mq.measure': { en: 'On-site measurements', ar: 'القياسات في الموقع' },
 
     // ---------- интро ----------
     'lead.title': { en: 'We design <em>spaces</em> for living', ar: 'نصمّم <em>مساحات</em> للحياة' },
     'lead.text': {
-      en: 'Interiors and homes you want to live in. From the first sketch to working drawings and handover — one architect leads the project from start to finish.',
-      ar: 'تصاميم داخلية ومنازل يطيب العيش فيها. من الرسم الأول حتى المخططات التنفيذية وتسليم المشروع — مهندس معماري واحد يقود المشروع من بدايته إلى نهايته.',
+      en: 'Apartments and houses you want to live in. We measure the property, create the design project and renovate to it — one team is responsible for the result from start to finish.',
+      ar: 'شقق ومنازل يطيب العيش فيها. نأخذ القياسات في الموقع، ونُعدّ المشروع التصميمي، وننفّذ التشطيب وفقه — فريق واحد مسؤول عن النتيجة من البداية إلى النهاية.',
     },
     'lead.more': { en: 'View projects', ar: 'شاهد المشاريع' },
     'lead.city': { en: 'City', ar: 'المدينة' },
-    'lead.city.v': { en: '<span class="ph">Moscow and region</span>', ar: '<span class="ph">موسكو ومنطقتها</span>' },
+    'lead.city.v': { en: 'Moscow', ar: 'موسكو' },
     'lead.since': { en: 'Working since', ar: 'نعمل منذ' },
     'lead.since.v': { en: '<span class="ph">2016</span>', ar: '<span class="ph">2016</span>' },
     'lead.format': { en: 'Scope', ar: 'المجال' },
-    'lead.format.v': { en: 'Interiors · Architecture', ar: 'تصميم داخلي · عمارة' },
+    'lead.format.v': { en: 'Design · Renovation', ar: 'تصميم · تشطيب' },
     'lead.alt': { en: 'Residential building under construction', ar: 'مبنى سكني قيد الإنشاء' },
     'lead.label': { en: 'Your photo · property · 1200×1500', ar: 'صورتك · العقار · 1200×1500' },
     'lead.caption': { en: 'Project', ar: 'المشروع' },
@@ -89,8 +89,8 @@
     // ---------- о студии ----------
     'about.kicker': { en: '<span>(01)</span> About', ar: '<span>(01)</span> عن الاستوديو' },
     'about.manifesto': {
-      en: 'We are ONYX studio. We design interiors and homes where <em>every detail</em> works for your life: from the layout and lighting to the socket by the bed.',
-      ar: 'نحن استوديو ONYX. نصمّم مساحات داخلية ومنازل تعمل فيها <em>كل تفصيلة</em> لخدمة حياتك: من المخطط والإضاءة حتى المقبس بجانب السرير.',
+      en: 'We are ONYX. We design interiors and renovate them so that <em>every detail</em> works for your life: from the layout and lighting to the socket by the bed.',
+      ar: 'نحن ONYX. نصمّم المساحات الداخلية وننفّذ تشطيبها لتعمل <em>كل تفصيلة</em> لخدمة حياتك: من المخطط والإضاءة حتى المقبس بجانب السرير.',
     },
     'about.alt': {
       en: 'Apartment plan with furniture layout — ONYX drawing',
@@ -117,28 +117,28 @@
       ar: 'نتولّى <em>كل شيء</em> —<br>من الفكرة حتى المفاتيح',
     },
     'services.text': {
-      en: 'Interior design for apartments, houses and commercial spaces, architectural design of private houses, working drawings and design supervision — in <span class="ph">Moscow and the Moscow region</span>.',
-      ar: 'تصميم داخلي للشقق والمنازل والمساحات التجارية، وتصميم معماري للمنازل الخاصة، ومخططات تنفيذية وإشراف على التنفيذ — في <span class="ph">موسكو ومنطقة موسكو</span>.',
+      en: 'On-site measurements, interior design for apartments, houses and commercial spaces and turnkey renovation to the design — in Moscow.',
+      ar: 'القياسات في الموقع، والتصميم الداخلي للشقق والمنازل والمساحات التجارية، والتشطيب المتكامل وفق التصميم — في موسكو.',
     },
-    's1.title': { en: 'Interior design project', ar: 'مشروع التصميم الداخلي' },
+    's1.title': { en: 'On-site measurements', ar: 'القياسات في الموقع' },
     's1.text': {
-      en: 'Apartments and houses: layout, 3D visualisations, lighting, choice of materials and furniture.',
-      ar: 'للشقق والمنازل: المخطط، والتصورات ثلاثية الأبعاد، والإضاءة، واختيار المواد والأثاث.',
+      en: 'We visit the property, take measurements and discuss the brief, budget and timeline.',
+      ar: 'نزور العقار ونأخذ القياسات ونناقش المهمة والميزانية والمدة.',
     },
-    's2.title': { en: 'Architectural design', ar: 'التصميم المعماري' },
+    's2.title': { en: 'Interior design project', ar: 'مشروع التصميم الداخلي' },
     's2.text': {
-      en: 'Private house projects: facades, reconstruction and landscaping.',
-      ar: 'مشاريع المنازل الخاصة: الواجهات وإعادة التأهيل وتنسيق الموقع.',
+      en: 'Layout, 3D visualisations, lighting, working drawings, choice of materials and furniture.',
+      ar: 'المخطط، والتصورات ثلاثية الأبعاد، والإضاءة، والمخططات التنفيذية، واختيار المواد والأثاث.',
     },
-    's3.title': { en: 'Working drawings', ar: 'المخططات التنفيذية' },
+    's3.title': { en: 'Turnkey renovation', ar: 'تشطيب متكامل' },
     's3.text': {
-      en: 'A complete set for builders: wall elevations, electrical, plumbing.',
-      ar: 'مجموعة كاملة للمقاولين: مساقط الجدران والكهرباء والسباكة.',
+      en: 'Rough and finishing works, electrical, plumbing and decoration — strictly to the design.',
+      ar: 'أعمال التأسيس والتشطيب والكهرباء والسباكة والديكور — وفق التصميم تماماً.',
     },
     's4.title': { en: 'Design supervision', ar: 'الإشراف على التنفيذ' },
     's4.text': {
-      en: 'We visit the site and make sure it is built to the design.',
-      ar: 'نزور الموقع ونتأكد من أن البناء يسير وفق التصميم.',
+      en: 'The designer visits the site and makes sure everything is done to the design.',
+      ar: 'يزور المصمم الموقع ويتأكد من تنفيذ كل شيء وفق التصميم.',
     },
 
     // ---------- проекты ----------
@@ -149,10 +149,10 @@
     'p1.label': { en: 'Your photo · project 1 · 1200×1500', ar: 'صورتك · المشروع 1 · 1200×1500' },
     'p1.title': { en: '<span class="ph">Family apartment</span>', ar: '<span class="ph">شقة لعائلة</span>' },
     'p1.meta': { en: '<span class="ph">Residential interior · 86 m² · 2024</span>', ar: '<span class="ph">تصميم سكني · 86 م² · 2024</span>' },
-    'p2.alt': { en: 'Architectural design of a country house — ONYX', ar: 'تصميم معماري لمنزل ريفي — ONYX' },
+    'p2.alt': { en: 'Turnkey apartment renovation — ONYX project', ar: 'تشطيب متكامل لشقة — مشروع ONYX' },
     'p2.label': { en: 'Your photo · project 2 · 1200×1500', ar: 'صورتك · المشروع 2 · 1200×1500' },
-    'p2.title': { en: '<span class="ph">Country house</span>', ar: '<span class="ph">منزل ريفي</span>' },
-    'p2.meta': { en: '<span class="ph">Architecture · 210 m² · 2023</span>', ar: '<span class="ph">عمارة · 210 م² · 2023</span>' },
+    'p2.title': { en: '<span class="ph">New-build apartment</span>', ar: '<span class="ph">شقة في مبنى جديد</span>' },
+    'p2.meta': { en: '<span class="ph">Turnkey renovation · 64 m² · 2023</span>', ar: '<span class="ph">تشطيب متكامل · 64 م² · 2023</span>' },
     'p3.alt': { en: 'Interior design of an IT company office — ONYX', ar: 'تصميم داخلي لمكتب شركة تقنية — ONYX' },
     'p3.label': { en: 'Your photo · project 3 · 1200×1500', ar: 'صورتك · المشروع 3 · 1200×1500' },
     'p3.title': { en: '<span class="ph">IT company office</span>', ar: '<span class="ph">مكتب شركة تقنية</span>' },
@@ -161,8 +161,8 @@
     // ---------- цифры ----------
     'stats.label': { en: 'The studio in numbers', ar: 'الاستوديو بالأرقام' },
     'stat1': { en: 'completed projects', ar: 'مشروعاً منجزاً' },
-    'stat2': { en: 'years in architecture', ar: 'سنوات في العمارة' },
-    'stat3': { en: 'm² designed', ar: 'م² من التصميم' },
+    'stat2': { en: 'years in design and renovation', ar: 'سنوات في التصميم والتشطيب' },
+    'stat3': { en: 'm² designed and renovated', ar: 'م² من التصميم والتشطيب' },
     'stat4': { en: 'of clients come by recommendation', ar: 'من العملاء يأتون بالتوصية' },
 
     // ---------- направления ----------
@@ -170,22 +170,22 @@
     'dir.title': { en: 'Two disciplines —<br><em>one team</em>', ar: 'اتجاهان —<br><em>فريق واحد</em>' },
     'd1.alt': { en: 'Apartment interior design by ONYX', ar: 'تصميم داخلي لشقة من استوديو ONYX' },
     'd1.label': { en: 'Your photo · interior · 1000×1300', ar: 'صورتك · تصميم داخلي · 1000×1300' },
-    'd1.tag': { en: 'Interiors', ar: 'التصميم الداخلي' },
+    'd1.tag': { en: 'Design', ar: 'التصميم' },
     'd1.title': { en: 'An interior shaped <em>around your life</em>', ar: 'تصميم داخلي <em>على مقاس حياتك</em>' },
     'd1.text': {
       en: 'Apartments, houses, offices and cafés. We plan how you live, the lighting and the storage before the first wall goes up.',
       ar: 'شقق ومنازل ومكاتب ومقاهٍ. نخطط لطريقة الاستخدام والإضاءة والتخزين قبل أن يُبنى أول جدار.',
     },
     'd1.more': { en: 'Discuss an interior →', ar: 'ناقش تصميمك الداخلي ←' },
-    'd2.alt': { en: 'Private house design by ONYX', ar: 'تصميم منزل خاص من استوديو ONYX' },
-    'd2.label': { en: 'Your photo · architecture · 1000×1300', ar: 'صورتك · عمارة · 1000×1300' },
-    'd2.tag': { en: 'Architecture', ar: 'العمارة' },
-    'd2.title': { en: 'A house <em>that fits its site</em>', ar: 'منزل <em>منسجم مع موقعه</em>' },
+    'd2.alt': { en: 'Turnkey apartment renovation by ONYX', ar: 'تشطيب متكامل لشقة من ONYX' },
+    'd2.label': { en: 'Your photo · renovation · 1000×1300', ar: 'صورتك · تشطيب · 1000×1300' },
+    'd2.tag': { en: 'Renovation', ar: 'التشطيب' },
+    'd2.title': { en: 'A renovation <em>that matches the design</em>', ar: 'تشطيب <em>يطابق التصميم</em>' },
     'd2.text': {
-      en: 'We take into account the terrain, orientation and views so that the house works for you all year round.',
-      ar: 'نراعي التضاريس واتجاهات الشمس والإطلالات ليخدمك المنزل طوال العام.',
+      en: 'Rough and finishing works, utilities and decoration. We build exactly what we drew and hand over the property with the keys.',
+      ar: 'أعمال التأسيس والتشطيب والتمديدات والديكور. ننفّذ تماماً ما رسمناه ونسلّم العقار مع المفاتيح.',
     },
-    'd2.more': { en: 'Discuss a house →', ar: 'ناقش منزلك ←' },
+    'd2.more': { en: 'Discuss a renovation →', ar: 'ناقش التشطيب ←' },
 
     // ---------- этапы ----------
     'proc.kicker': { en: '<span>(05)</span> Process', ar: '<span>(05)</span> مراحل العمل' },
@@ -196,13 +196,13 @@
     },
     'proc.cta': { en: 'Start with a meeting', ar: 'ابدأ بلقاء' },
     'proc.alt': {
-      en: 'Construction works on site — the architect’s supervision',
-      ar: 'أعمال بناء في الموقع — إشراف المهندس المعماري',
+      en: 'Renovation works on an ONYX site',
+      ar: 'أعمال تشطيب في موقع من مواقع ONYX',
     },
     'proc.label': { en: 'Your photo · on site · 1000×800', ar: 'صورتك · في الموقع · 1000×800' },
     'proc.caption': {
-      en: 'Design supervision — on site, not over the phone',
-      ar: 'الإشراف على التنفيذ — في الموقع، لا عبر الهاتف',
+      en: 'We oversee the renovation on site, not over the phone',
+      ar: 'نتابع التشطيب في الموقع، لا عبر الهاتف',
     },
     'step1': { en: 'Meeting and measurements', ar: 'اللقاء والقياسات' },
     'step1.text': {
@@ -218,20 +218,20 @@
     'step2.time': { en: '<span class="ph">1–2 weeks</span>', ar: '<span class="ph">أسبوع إلى أسبوعين</span>' },
     'step3': { en: 'Concept and 3D', ar: 'الفكرة والتصور ثلاثي الأبعاد' },
     'step3.text': {
-      en: 'Style, materials and visualisations of every room — you see the result before construction.',
-      ar: 'الأسلوب والمواد وتصورات لكل غرفة — ترى النتيجة قبل البدء بالبناء.',
+      en: 'Style, materials and visualisations of every room — you see the result before the renovation.',
+      ar: 'الأسلوب والمواد وتصورات لكل غرفة — ترى النتيجة قبل البدء بالتشطيب.',
     },
     'step3.time': { en: '<span class="ph">2–4 weeks</span>', ar: '<span class="ph">2–4 أسابيع</span>' },
     'step4': { en: 'Working drawings', ar: 'المخططات التنفيذية' },
     'step4.text': {
-      en: 'A complete set of documents that builders can follow without extra questions.',
-      ar: 'مجموعة كاملة من الوثائق يبني عليها المقاول دون أسئلة إضافية.',
+      en: 'A complete set of documents the crew can follow without extra questions.',
+      ar: 'مجموعة كاملة من الوثائق يعمل وفقها الحرفيون دون أسئلة إضافية.',
     },
     'step4.time': { en: '<span class="ph">2–3 weeks</span>', ar: '<span class="ph">2–3 أسابيع</span>' },
-    'step5': { en: 'Design supervision', ar: 'الإشراف على التنفيذ' },
+    'step5': { en: 'Turnkey renovation', ar: 'تشطيب متكامل' },
     'step5.text': {
-      en: 'We visit the site and oversee construction until the keys are handed over.',
-      ar: 'نزور الموقع ونتابع البناء حتى تسليم المفاتيح.',
+      en: 'We renovate to the design, check every stage and hand over the property with the keys.',
+      ar: 'ننفّذ التشطيب وفق التصميم، ونتحقق من كل مرحلة، ونسلّم العقار مع المفاتيح.',
     },
     'step5.time': { en: 'until handover', ar: 'حتى التسليم' },
 
@@ -239,8 +239,8 @@
     'faq.kicker': { en: '<span>(06)</span> FAQ', ar: '<span>(06)</span> الأسئلة' },
     'faq.title': { en: 'Frequently asked <em>questions</em>', ar: 'الأسئلة <em>الشائعة</em>' },
     'faq.text': {
-      en: 'Didn’t find an answer? Call <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> or leave a request — an architect will reply within one working day.',
-      ar: 'لم تجد إجابتك؟ اتصل على <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> أو اترك طلباً — وسيرد عليك مهندس معماري خلال يوم عمل.',
+      en: 'Didn’t find an answer? Call <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> or leave a request — we will reply within one working day.',
+      ar: 'لم تجد إجابتك؟ اتصل على <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> أو اترك طلباً — وسنرد عليك خلال يوم عمل.',
     },
     'q1': { en: 'How much does an interior design project cost?', ar: 'كم تبلغ تكلفة مشروع التصميم الداخلي؟' },
     'a1': {
@@ -257,28 +257,28 @@
       en: 'A measured plan, layout solutions, 3D visualisations of every room, working drawings — wall, electrical, plumbing, ceiling and floor plans and wall elevations — and a specification of materials and furniture.',
       ar: 'مخطط القياسات، وحلول التوزيع، وتصورات ثلاثية الأبعاد لجميع الغرف، والمخططات التنفيذية — مخططات الجدران والكهرباء والسباكة والأسقف والأرضيات ومساقط الجدران — إضافةً إلى جدول مواصفات المواد والأثاث.',
     },
-    'q4': { en: 'Do you design private houses?', ar: 'هل تصممون منازل خاصة؟' },
+    'q4': { en: 'Do you do turnkey renovation?', ar: 'هل تنفّذون التشطيب المتكامل؟' },
     'a4': {
-      en: 'Yes. We create architectural designs for private houses: sketch, floor plans, facades, working documents and landscaping. We can handle both the architecture and the interior of the same property.',
-      ar: 'نعم. نُعدّ التصميم المعماري للمنازل الخاصة: المسودة، والمخططات، والواجهات، والوثائق التنفيذية، وتنسيق الموقع. ويمكننا تولّي العمارة والتصميم الداخلي للمشروع نفسه.',
+      en: 'Yes. We renovate apartments and houses to the design project: rough and finishing works, electrical, plumbing and decoration. We fix the estimate in the contract before work begins.',
+      ar: 'نعم. ننفّذ تشطيب الشقق والمنازل وفق المشروع التصميمي: أعمال التأسيس والتشطيب والكهرباء والسباكة والديكور. نثبّت التقدير في العقد قبل بدء العمل.',
     },
     'q5': { en: 'Why is design supervision needed?', ar: 'لماذا نحتاج إلى الإشراف على التنفيذ؟' },
     'a5': {
-      en: 'So that construction follows the design exactly. The architect visits the site, answers the builders’ questions, checks details and materials and makes adjustments. This protects you from mistakes that are expensive to fix.',
-      ar: 'لكي يسير البناء وفق التصميم تماماً. يزور المهندس المعماري الموقع، ويجيب عن أسئلة المقاولين، ويتحقق من التفاصيل والمواد، ويُجري التعديلات اللازمة. وهذا يحميك من أخطاء يكلّف إصلاحها كثيراً.',
+      en: 'So that the renovation follows the design exactly. The designer visits the site, answers the crew’s questions, checks details and materials and makes adjustments. This protects you from mistakes that are expensive to fix.',
+      ar: 'لكي يسير التشطيب وفق التصميم تماماً. يزور المصمم الموقع، ويجيب عن أسئلة الحرفيين، ويتحقق من التفاصيل والمواد، ويُجري التعديلات اللازمة. وهذا يحميك من أخطاء يكلّف إصلاحها كثيراً.',
     },
     'q6': { en: 'Which cities do you work in?', ar: 'في أي المدن تعملون؟' },
     'a6': {
-      en: 'In <span class="ph">Moscow and the Moscow region</span>. For other cities we can work remotely, with the architect visiting at key stages.',
-      ar: 'في <span class="ph">موسكو ومنطقة موسكو</span>. وفي المدن الأخرى يمكننا العمل عن بُعد مع زيارات المهندس المعماري في المراحل الرئيسية.',
+      en: 'In Moscow. We come to the property to take measurements.',
+      ar: 'في موسكو. نأتي إلى العقار لأخذ القياسات.',
     },
 
     // ---------- заявка ----------
     'req.kicker': { en: '<span>(07)</span> Enquiry', ar: '<span>(07)</span> الطلب' },
     'req.title': { en: 'Let’s discuss <em>your project</em>', ar: 'لنناقش <em>مشروعك</em>' },
     'req.text': {
-      en: 'Leave a request — an architect will contact you within one working day and explain where to start.',
-      ar: 'اترك طلباً — وسيتواصل معك مهندس معماري خلال يوم عمل ويشرح لك من أين نبدأ.',
+      en: 'Leave a request — we will contact you within one working day and arrange a site visit.',
+      ar: 'اترك طلباً — وسنتواصل معك خلال يوم عمل ونحدد موعداً لأخذ القياسات.',
     },
     'form.name': { en: 'Name', ar: 'الاسم' },
     'form.name.ph': { en: 'How should we address you', ar: 'كيف نناديك' },
@@ -293,8 +293,8 @@
 
     // ---------- подвал ----------
     'footer.lead': {
-      en: 'Have an idea or a plot?<br><em>Write to us</em> — we reply the same day.',
-      ar: 'لديك فكرة أو قطعة أرض؟<br><em>راسلنا</em> — نرد في اليوم نفسه.',
+      en: 'Need a renovation or a design?<br><em>Write to us</em> — we reply the same day.',
+      ar: 'تحتاج إلى تشطيب أو تصميم؟<br><em>راسلنا</em> — نرد في اليوم نفسه.',
     },
     'footer.sections': { en: 'Sections', ar: 'الأقسام' },
     'footer.contacts': { en: 'Contacts', ar: 'التواصل' },
@@ -302,8 +302,8 @@
     'footer.social': { en: 'Social', ar: 'التواصل الاجتماعي' },
     'footer.vk': { en: 'VK', ar: 'VK' },
     'footer.copy': {
-      en: 'ONYX — interior design and architectural design in Moscow and the Moscow region.',
-      ar: 'ONYX — تصميم داخلي وتصميم معماري في موسكو ومنطقة موسكو.',
+      en: 'ONYX — interior design and turnkey renovation in Moscow.',
+      ar: 'ONYX — تصميم داخلي وتشطيب متكامل في موسكو.',
     },
     'footer.top': { en: 'Back to top', ar: 'إلى الأعلى' },
 
