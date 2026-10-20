@@ -106,8 +106,8 @@
     'facts.3.v': { en: 'In stages — after each stage is approved.', ar: 'على مراحل — بعد اعتماد كل مرحلة.' },
     'facts.4': { en: 'Timeline', ar: 'المدة' },
     'facts.4.v': {
-      en: 'Design project — in <span class="ph">6–10 weeks</span>.',
-      ar: 'المشروع التصميمي — خلال <span class="ph">6–10 أسابيع</span>.',
+      en: 'Calculated after measurements and fixed in the contract.',
+      ar: 'نحسبها بعد أخذ القياسات ونثبّتها في العقد.',
     },
 
     // ---------- услуги ----------
@@ -209,48 +209,43 @@
       en: 'We discuss the brief, budget and timeline, then visit the site and take measurements.',
       ar: 'نناقش المهمة والميزانية والمدة، ثم نزور الموقع ونأخذ القياسات.',
     },
-    'step1.time': { en: '<span class="ph">1–3 days</span>', ar: '<span class="ph">1–3 أيام</span>' },
     'step2': { en: 'Layout', ar: 'المخطط' },
     'step2.text': {
       en: 'We offer 2–3 options for walls and furniture and refine the one you choose.',
       ar: 'نقدّم 2–3 خيارات لتوزيع الجدران والأثاث ونطوّر الخيار الذي تختاره.',
     },
-    'step2.time': { en: '<span class="ph">1–2 weeks</span>', ar: '<span class="ph">أسبوع إلى أسبوعين</span>' },
     'step3': { en: 'Concept and 3D', ar: 'الفكرة والتصور ثلاثي الأبعاد' },
     'step3.text': {
       en: 'Style, materials and visualisations of every room — you see the result before the renovation.',
       ar: 'الأسلوب والمواد وتصورات لكل غرفة — ترى النتيجة قبل البدء بالتشطيب.',
     },
-    'step3.time': { en: '<span class="ph">2–4 weeks</span>', ar: '<span class="ph">2–4 أسابيع</span>' },
     'step4': { en: 'Working drawings', ar: 'المخططات التنفيذية' },
     'step4.text': {
       en: 'A complete set of documents the crew can follow without extra questions.',
       ar: 'مجموعة كاملة من الوثائق يعمل وفقها الحرفيون دون أسئلة إضافية.',
     },
-    'step4.time': { en: '<span class="ph">2–3 weeks</span>', ar: '<span class="ph">2–3 أسابيع</span>' },
     'step5': { en: 'Turnkey renovation', ar: 'تشطيب متكامل' },
     'step5.text': {
       en: 'We renovate to the design, check every stage and hand over the property with the keys.',
       ar: 'ننفّذ التشطيب وفق التصميم، ونتحقق من كل مرحلة، ونسلّم العقار مع المفاتيح.',
     },
-    'step5.time': { en: 'until handover', ar: 'حتى التسليم' },
 
     // ---------- вопросы ----------
     'faq.kicker': { en: '<span>(06)</span> FAQ', ar: '<span>(06)</span> الأسئلة' },
     'faq.title': { en: 'Frequently asked <em>questions</em>', ar: 'الأسئلة <em>الشائعة</em>' },
     'faq.text': {
-      en: 'Didn’t find an answer? Call <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> or leave a request — we will reply within one working day.',
-      ar: 'لم تجد إجابتك؟ اتصل على <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> أو اترك طلباً — وسنرد عليك خلال يوم عمل.',
+      en: 'Didn’t find an answer? Call <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> or leave a request — we will calculate the cost and timeline for your property.',
+      ar: 'لم تجد إجابتك؟ اتصل على <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a> أو اترك طلباً — وسنحسب التكلفة والمدة لعقارك.',
     },
     'q1': { en: 'How much does an interior design project cost?', ar: 'كم تبلغ تكلفة مشروع التصميم الداخلي؟' },
     'a1': {
-      en: 'The cost depends on the area and the scope and is calculated per square metre — from <span class="ph">2,500 ₽/m²</span>. We fix the total in the contract before work begins, and it does not change.',
-      ar: 'تعتمد التكلفة على المساحة ونطاق المشروع وتُحتسب لكل متر مربع — ابتداءً من <span class="ph">2,500 روبل/م²</span>. نثبّت المبلغ النهائي في العقد قبل بدء العمل، ولا يتغيّر.',
+      en: 'The cost depends on the area and the scope of work. Give us a call: after measurements we will calculate the cost and timeline and fix them in the contract, after which the price does not change.',
+      ar: 'تعتمد التكلفة على المساحة ونطاق العمل. اتصل بنا: بعد أخذ القياسات نحسب التكلفة والمدة ونثبّتهما في العقد، ولا يتغيّر السعر بعد ذلك.',
     },
     'q2': { en: 'How long does an apartment design project take?', ar: 'كم يستغرق مشروع تصميم شقة؟' },
     'a2': {
-      en: 'On average <span class="ph">6–10 weeks</span>: measurements, layout, a concept with 3D visualisations and working drawings. The timing of each stage is set out in the contract.',
-      ar: 'في المتوسط <span class="ph">6–10 أسابيع</span>: القياسات، والمخطط، والفكرة مع تصورات ثلاثية الأبعاد، والمخططات التنفيذية. نحدد مدة كل مرحلة في العقد.',
+      en: 'It depends on the area and the scope of work. Give us a call: after measurements we will calculate the timeline and set out each stage in the contract.',
+      ar: 'يعتمد ذلك على المساحة ونطاق العمل. اتصل بنا: بعد أخذ القياسات نحسب المدة ونحدد كل مرحلة في العقد.',
     },
     'q3': { en: 'What does a design project include?', ar: 'ماذا يشمل المشروع التصميمي؟' },
     'a3': {
@@ -277,8 +272,8 @@
     'req.kicker': { en: '<span>(07)</span> Enquiry', ar: '<span>(07)</span> الطلب' },
     'req.title': { en: 'Let’s discuss <em>your project</em>', ar: 'لنناقش <em>مشروعك</em>' },
     'req.text': {
-      en: 'Leave a request — we will contact you within one working day and arrange a site visit.',
-      ar: 'اترك طلباً — وسنتواصل معك خلال يوم عمل ونحدد موعداً لأخذ القياسات.',
+      en: 'Call us or leave a request — we will come to take measurements and calculate the cost and timeline.',
+      ar: 'اتصل بنا أو اترك طلباً — سنأتي لأخذ القياسات ونحسب التكلفة والمدة.',
     },
     'form.name': { en: 'Name', ar: 'الاسم' },
     'form.name.ph': { en: 'How should we address you', ar: 'كيف نناديك' },
@@ -293,8 +288,8 @@
 
     // ---------- подвал ----------
     'footer.lead': {
-      en: 'Need a renovation or a design?<br><em>Write to us</em> — we reply the same day.',
-      ar: 'تحتاج إلى تشطيب أو تصميم؟<br><em>راسلنا</em> — نرد في اليوم نفسه.',
+      en: 'Need a renovation or a design?<br><em>Call us</em> — we will calculate the cost and timeline.',
+      ar: 'تحتاج إلى تشطيب أو تصميم؟<br><em>اتصل بنا</em> — نحسب التكلفة والمدة.',
     },
     'footer.sections': { en: 'Sections', ar: 'الأقسام' },
     'footer.contacts': { en: 'Contacts', ar: 'التواصل' },
