@@ -1201,7 +1201,7 @@ path.bp-accent[d$="z"], path.bp-accent[d$="Z"] { fill: rgba(255, 106, 43, 0.5); 
 
 .stats__grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .stat { padding-inline: clamp(12px, 2vw, 32px); text-align: center; }
@@ -1672,7 +1672,7 @@ address.footer__col { font-style: normal; }
 
 @media (max-width: 760px) {
   .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
-  .stat:nth-child(3) { border-inline-start: none; }
+  .stat:nth-child(3) { border-inline-start: none; grid-column: 1 / -1; }
   .panels { height: 460px; }
 }
 
@@ -2354,8 +2354,6 @@ html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__t
 
       <div class="menu__info">
         <p class="menu__city" data-i18n="menu.city">Москва</p>
-        <!-- ВАШИ ДАННЫЕ: адрес студии -->
-        <p class="menu__address" data-i18n="menu.address"><span class="ph">ул. Примерная, 1, офис 1</span></p>
       </div>
 
       <div class="menu__contacts">
@@ -2481,7 +2479,7 @@ html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__t
         </div>
 
         <div class="hero__chip hero__chip--left intro">
-          <strong><span class="ph">120+</span></strong>
+          <strong>36+</strong>
           <span data-i18n="hero.chip1">реализованных проектов</span>
         </div>
         <div class="hero__chip hero__chip--right intro">
@@ -2704,7 +2702,7 @@ html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__t
     <section class="stats" aria-label="Студия в цифрах" data-i18n-attr="aria-label=stats.label">
       <div class="container stats__grid">
         <div class="stat" data-reveal>
-          <p class="stat__value" data-count><span class="ph">120+</span></p>
+          <p class="stat__value" data-count>36+</p>
           <p class="stat__label" data-i18n="stat1">реализованных проектов</p>
         </div>
         <div class="stat" data-reveal>
@@ -2712,12 +2710,8 @@ html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__t
           <p class="stat__label" data-i18n="stat2">года в дизайне и ремонте</p>
         </div>
         <div class="stat" data-reveal>
-          <p class="stat__value" data-count><span class="ph">18 000</span></p>
+          <p class="stat__value" data-count>2 000+</p>
           <p class="stat__label" data-i18n="stat3">м² спроектировано и отремонтировано</p>
-        </div>
-        <div class="stat" data-reveal>
-          <p class="stat__value" data-count><span class="ph">70%</span></p>
-          <p class="stat__label" data-i18n="stat4">клиентов приходят по рекомендации</p>
         </div>
       </div>
     </section>
@@ -2920,7 +2914,7 @@ html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__t
           <h3 data-i18n="footer.contacts">Контакты</h3>
           <a href="tel:+79253760375" dir="ltr">+7 925 376-03-75</a>
           <a href="mailto:alex687zhiharev@yandex.ru">alex687zhiharev@yandex.ru</a>
-          <p data-i18n="footer.address"><span class="ph">г. Москва, ул. Примерная, 1</span></p>
+          <p data-i18n="footer.address">Москва</p>
         </address>
 
         <div class="footer__col">
@@ -2974,7 +2968,6 @@ html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__t
     'lang.label': { en: 'Site language', ar: 'لغة الموقع' },
     'menu.label': { en: 'Menu', ar: 'القائمة' },
     'menu.city': { en: 'Moscow', ar: 'موسكو' },
-    'menu.address': { en: '<span class="ph">1 Primernaya St, office 1</span>', ar: '<span class="ph">شارع بريميرنايا، 1، مكتب 1</span>' },
     'menu.write': { en: 'Write to us', ar: 'راسلنا' },
     'cta.discuss': { en: 'Discuss a project', ar: 'ناقش مشروعك' },
 
@@ -3107,7 +3100,6 @@ html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__t
     'stat1': { en: 'completed projects', ar: 'مشروعاً منجزاً' },
     'stat2': { en: 'years in design and renovation', ar: 'سنوات في التصميم والتشطيب' },
     'stat3': { en: 'm² designed and renovated', ar: 'م² من التصميم والتشطيب' },
-    'stat4': { en: 'of clients come by recommendation', ar: 'من العملاء يأتون بالتوصية' },
 
     // ---------- направления ----------
     'dir.kicker': { en: '<span>(04)</span> Disciplines', ar: '<span>(04)</span> الاتجاهات' },
@@ -3237,7 +3229,7 @@ html[lang="ar"] :is(.title, .lead__title, .manifesto, .panel__title, .service__t
     },
     'footer.sections': { en: 'Sections', ar: 'الأقسام' },
     'footer.contacts': { en: 'Contacts', ar: 'التواصل' },
-    'footer.address': { en: '<span class="ph">1 Primernaya St, Moscow</span>', ar: '<span class="ph">موسكو، شارع بريميرنايا، 1</span>' },
+    'footer.address': { en: 'Moscow', ar: 'موسكو' },
     'footer.social': { en: 'Social', ar: 'التواصل الاجتماعي' },
     'footer.vk': { en: 'VK', ar: 'VK' },
     'footer.copy': {

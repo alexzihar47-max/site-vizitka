@@ -30,7 +30,6 @@
     'lang.label': { en: 'Site language', ar: 'لغة الموقع' },
     'menu.label': { en: 'Menu', ar: 'القائمة' },
     'menu.city': { en: 'Moscow', ar: 'موسكو' },
-    'menu.address': { en: '<span class="ph">1 Primernaya St, office 1</span>', ar: '<span class="ph">شارع بريميرنايا، 1، مكتب 1</span>' },
     'menu.write': { en: 'Write to us', ar: 'راسلنا' },
     'cta.discuss': { en: 'Discuss a project', ar: 'ناقش مشروعك' },
 
@@ -163,7 +162,6 @@
     'stat1': { en: 'completed projects', ar: 'مشروعاً منجزاً' },
     'stat2': { en: 'years in design and renovation', ar: 'سنوات في التصميم والتشطيب' },
     'stat3': { en: 'm² designed and renovated', ar: 'م² من التصميم والتشطيب' },
-    'stat4': { en: 'of clients come by recommendation', ar: 'من العملاء يأتون بالتوصية' },
 
     // ---------- направления ----------
     'dir.kicker': { en: '<span>(04)</span> Disciplines', ar: '<span>(04)</span> الاتجاهات' },
@@ -293,7 +291,7 @@
     },
     'footer.sections': { en: 'Sections', ar: 'الأقسام' },
     'footer.contacts': { en: 'Contacts', ar: 'التواصل' },
-    'footer.address': { en: '<span class="ph">1 Primernaya St, Moscow</span>', ar: '<span class="ph">موسكو، شارع بريميرنايا، 1</span>' },
+    'footer.address': { en: 'Moscow', ar: 'موسكو' },
     'footer.social': { en: 'Social', ar: 'التواصل الاجتماعي' },
     'footer.vk': { en: 'VK', ar: 'VK' },
     'footer.copy': {
