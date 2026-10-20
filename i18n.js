@@ -68,10 +68,10 @@
     'mq.measure': { en: 'On-site measurements', ar: 'القياسات في الموقع' },
 
     // ---------- интро ----------
-    'lead.title': { en: 'We design <em>spaces</em> for living', ar: 'نصمّم <em>مساحات</em> للحياة' },
+    'lead.title': { en: 'We design and <em>renovate</em> apartments', ar: 'نصمّم الشقق <em>وننفّذ تشطيبها</em>' },
     'lead.text': {
-      en: 'Apartments and houses you want to live in. We measure the property, create the design project and renovate to it — one team is responsible for the result from start to finish.',
-      ar: 'شقق ومنازل يطيب العيش فيها. نأخذ القياسات في الموقع، ونُعدّ المشروع التصميمي، وننفّذ التشطيب وفقه — فريق واحد مسؤول عن النتيجة من البداية إلى النهاية.',
+      en: 'We measure the property, create the design project and renovate the apartment or house to it. One team is responsible for everything.',
+      ar: 'نأخذ القياسات في الموقع، ونُعدّ المشروع التصميمي، وننفّذ تشطيب الشقة أو المنزل وفقه. فريق واحد مسؤول عن كل شيء.',
     },
     'lead.more': { en: 'View projects', ar: 'شاهد المشاريع' },
     'lead.city': { en: 'City', ar: 'المدينة' },
@@ -89,8 +89,8 @@
     // ---------- о студии ----------
     'about.kicker': { en: '<span>(01)</span> About', ar: '<span>(01)</span> عن الاستوديو' },
     'about.manifesto': {
-      en: 'We are ONYX. We design interiors and renovate them so that <em>every detail</em> works for your life: from the layout and lighting to the socket by the bed.',
-      ar: 'نحن ONYX. نصمّم المساحات الداخلية وننفّذ تشطيبها لتعمل <em>كل تفصيلة</em> لخدمة حياتك: من المخطط والإضاءة حتى المقبس بجانب السرير.',
+      en: 'We are ONYX. We design interiors, renovate them and think through <em>every detail</em>: from the layout and lighting to the socket by the bed.',
+      ar: 'نحن ONYX. نصمّم المساحات الداخلية وننفّذ تشطيبها ونهتمّ <em>بكل تفصيلة</em>: من المخطط والإضاءة حتى المقبس بجانب السرير.',
     },
     'about.alt': {
       en: 'Apartment plan with furniture layout — ONYX drawing',
@@ -99,7 +99,7 @@
     'about.label': { en: 'Your photo · studio or project · 1200×900', ar: 'صورتك · الاستوديو أو المشروع · 1200×900' },
     'about.caption': { en: 'Alexander Zhikharev, founder of ONYX', ar: 'ألكسندر جيخاريف، مؤسس ONYX' },
     'facts.1': { en: 'Turnkey', ar: 'تسليم مفتاح' },
-    'facts.1.v': { en: 'Full cycle — from measurements to handover.', ar: 'دورة كاملة — من القياسات حتى تسليم المشروع.' },
+    'facts.1.v': { en: 'Measurements, design project and renovation through to handover.', ar: 'القياسات والمشروع التصميمي والتشطيب حتى تسليم المشروع.' },
     'facts.2': { en: 'Price', ar: 'السعر' },
     'facts.2.v': { en: 'Fixed in the contract before work begins.', ar: 'نثبّته في العقد قبل بدء العمل.' },
     'facts.3': { en: 'Payment', ar: 'الدفع' },
@@ -113,8 +113,8 @@
     // ---------- услуги ----------
     'services.kicker': { en: '<span>(02)</span> Services', ar: '<span>(02)</span> الخدمات' },
     'services.title': {
-      en: 'We take care of <em>everything</em> —<br>from idea to keys',
-      ar: 'نتولّى <em>كل شيء</em> —<br>من الفكرة حتى المفاتيح',
+      en: 'We take care of <em>everything</em> —<br>from measurements to keys',
+      ar: 'نتولّى <em>كل شيء</em> —<br>من القياسات حتى المفاتيح',
     },
     'services.text': {
       en: 'On-site measurements, interior design for apartments, houses and commercial spaces and turnkey renovation to the design — in Moscow.',
@@ -171,7 +171,7 @@
     'd1.alt': { en: 'Apartment interior design by ONYX', ar: 'تصميم داخلي لشقة من استوديو ONYX' },
     'd1.label': { en: 'Your photo · interior · 1000×1300', ar: 'صورتك · تصميم داخلي · 1000×1300' },
     'd1.tag': { en: 'Design', ar: 'التصميم' },
-    'd1.title': { en: 'An interior shaped <em>around your life</em>', ar: 'تصميم داخلي <em>على مقاس حياتك</em>' },
+    'd1.title': { en: 'An interior shaped <em>around how you live</em>', ar: 'تصميم داخلي <em>على مقاس حياتك</em>' },
     'd1.text': {
       en: 'Apartments, houses, offices and cafés. We plan how you live, the lighting and the storage before the first wall goes up.',
       ar: 'شقق ومنازل ومكاتب ومقاهٍ. نخطط لطريقة الاستخدام والإضاءة والتخزين قبل أن يُبنى أول جدار.',
